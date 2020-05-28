@@ -44,8 +44,10 @@ class DatToJSONConverter
             $datHeader = new DatHeader(self::INPUT_DIR . '/' . $inputFile);
 
             // We use the name embedded in the DAT file, because the filename might differ from it.
-            $oldFile = self::OUTPUT_DIR . '/other/' . DatHeader::TYPE_TO_FOLDER[$datHeader->getType()] . '/other.' . strtolower($datHeader->name) . '.json';
-            $newDir = self::OUTPUT_DIR . '/official/' . DatHeader::TYPE_TO_FOLDER[$datHeader->getType()] . '/official.' . strtolower($datHeader->name);
+            $datName = strtolower(trim($datHeader->name));
+            $typeFolder = DatHeader::TYPE_TO_FOLDER[$datHeader->getType()];
+            $oldFile = self::OUTPUT_DIR . "/other/{$typeFolder}/other.{$datName}.json";
+            $newDir = self::OUTPUT_DIR . "/official/{$typeFolder}/official.{$datName}";
             if (!mkdir($newDir, 0777, true) && !is_dir($newDir))
             {
                 throw new RuntimeException(sprintf('Directory "%s" was not created', $newDir));
