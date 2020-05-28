@@ -43,8 +43,8 @@ class DatToJSONConverter
 
             $datHeader = new DatHeader(self::INPUT_DIR . '/' . $inputFile);
 
-            $jsonName = str_replace('.dat', '.json', strtolower($inputFile));
-            $oldDir = self::OUTPUT_DIR . '/other/' . DatHeader::TYPE_TO_FOLDER[$datHeader->getType()];
+            // We use the name embedded in the DAT file, because the filename might differ from it.
+            $oldFile = self::OUTPUT_DIR . '/other/' . DatHeader::TYPE_TO_FOLDER[$datHeader->getType()] . '/other.' . strtolower($datHeader->name) . '.json';
             $newDir = self::OUTPUT_DIR . '/official/' . DatHeader::TYPE_TO_FOLDER[$datHeader->getType()] . '/official.' . strtolower($datHeader->name);
             if (!mkdir($newDir, 0777, true) && !is_dir($newDir))
             {
@@ -52,7 +52,7 @@ class DatToJSONConverter
             }
             $newFile = "$newDir/object.json";
 
-            rename("$oldDir/other.$jsonName", $newFile);
+            rename($oldFile, $newFile);
 
             $images = $this->extractImages($newDir, $datHeader);
 
