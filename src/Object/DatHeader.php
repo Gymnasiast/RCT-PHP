@@ -1,5 +1,5 @@
 <?php
-namespace RCTPHP;
+namespace RCTPHP\Object;
 
 use RuntimeException;
 
@@ -34,15 +34,20 @@ class DatHeader
         "scenery_group",
         "park_entrance",
         "water",
-        "", // Scenario text objects are not supposed to be converted
+        "scenario_text", // Scenario text objects are not supposed to be converted
     ];
 
-    public int $flags;
-    public string $name;
-    public int $checksum;
+    public int $flags = 0;
+    public string $name = '';
+    public int $checksum = 0;
 
-    public function __construct(string $filename)
+    public function __construct(?string $filename = null)
     {
+        if ($filename === null)
+        {
+            return;
+        }
+
         $fp = fopen($filename, 'rb');
         if ($fp === false)
         {
@@ -59,5 +64,15 @@ class DatHeader
     public function getType(): int
     {
         return $this->flags & 0x0F;
+    }
+
+    public static function fromStream(&$stream): self
+    {
+        $header = new self();
+        $header->flags = unpack('V', (fread($stream, 4)))[1]; // 32-bit little endian
+        $header->name = fread($stream, 8); // ASCII string
+        $header->checksum = unpack('V', (fread($stream, 4)))[1];   // 32-bit little endian
+
+        return $header;
     }
 }

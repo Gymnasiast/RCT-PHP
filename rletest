@@ -1,0 +1,28 @@
+#!/usr/bin/php
+<?php
+
+use RCTPHP\Util;
+
+require __DIR__ . '/vendor/autoload.php';
+
+const SRC = [0x00, 0x47, 0xFF, 0x6F, 0x05, 0x64, 0x20, 0x6A, 0x6F, 0x62,0x21 ];
+const OUTPUT = 'Good job!';
+
+$srcString = '';
+foreach (SRC as $char)
+{
+    $srcString .= chr($char);
+}
+
+//for ($i = 0; $i < strlen($srcString); $i++)
+//{
+//    Util::printLn(ord($srcString[$i]));
+//}
+
+$decodedRle = Util::decodeRLE($srcString);
+
+Util::printLn('Expected:' . OUTPUT);
+Util::printLn('Actual: ' . $decodedRle);
+Util::printLn((OUTPUT === $decodedRle) ? 'Success!' : 'Fail!');
+
+var_dump($decodedRle);

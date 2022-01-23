@@ -1,6 +1,7 @@
 <?php
 namespace RCTPHP;
 
+use RCTPHP\Object\DatHeader;
 use RuntimeException;
 
 /**
