@@ -16,8 +16,10 @@ use function rewind;
 use const SEEK_CUR;
 use const STR_PAD_LEFT;
 
-class SceneryGroupObject
+class SceneryGroupObject implements StringTableOwner
 {
+    use StringTableDecoder;
+
     public DatHeader $header;
     /** @var RCT2String[] */
     public array $stringTable = [];
@@ -54,29 +56,7 @@ class SceneryGroupObject
 //        $entertainerCostumes = unpack('V', (fread($fp, 4)))[1]; // 32-bit little endian
 
 
-        while(true)
-        {
-            $languageCode = ord(fread($fp, 1));
-            if ($languageCode === 0xFF)
-            {
-                break;
-            }
-
-            $string = '';
-            while (true)
-            {
-                $character = fread($fp, 1);
-                //echo ord($character) . '-';
-                if (ord($character) === 0)
-                {
-                    break;
-                }
-
-                $string .= $character;
-            }
-
-            $this->stringTable[] = new RCT2String($languageCode, $string);
-        }
+        $this->readStringTable($fp);
 
         while (true)
         {
@@ -106,7 +86,6 @@ class SceneryGroupObject
             {
                 Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
             }
-
         }
 
         Util::printLn('');
