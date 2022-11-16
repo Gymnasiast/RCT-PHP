@@ -1,0 +1,15 @@
+{
+    "name": "gymnasiast/rct-php",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "ext-mbstring": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "RCTPHP\\": "src/"
+        }
+    }
+}
