@@ -8,8 +8,9 @@ final class SceneryGroupObject extends BaseObject
     public function __construct()
     {
         $this->objectType = ObjectType::SCENERY_GROUP;
+        $this->properties = new SceneryGroupProperties();
     }
 
-    public array $properties = [];
+    public SceneryGroupProperties $properties;
     public array $images = [];
 }
