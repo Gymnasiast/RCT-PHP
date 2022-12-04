@@ -7,4 +7,5 @@ enum ObjectType : string
 {
     case MUSIC = 'music';
     case SCENERY_GROUP = 'scenery_group';
+    case WATER = 'water';
 }

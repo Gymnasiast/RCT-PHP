@@ -22,12 +22,19 @@ final class ObjectSerializer
         $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR);
         $vars = json_decode($firstPass, true, 512, JSON_THROW_ON_ERROR);
 
-        // Ensure the object _ends_ with the string table.
+        // Ensure the object _ends_ with the string table. Change _ to -.
         $strings = $vars['strings'];
         unset($vars['strings']);
-        $vars['strings'] = $strings;
+        $out = [];
+        foreach ($vars as $key => $value)
+        {
+            $key = str_replace('_', '-', $key);
+            $out[$key] = $value;
+        }
 
-        return $vars;
+        $out['strings'] = $strings;
+
+        return $out;
     }
 
     public function serializeToJson(): string
