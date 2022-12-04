@@ -1,7 +1,11 @@
 <?php
-namespace RCTPHP\Object;
+namespace RCTPHP\Object\RCT2;
 
 use RuntimeException;
+use function dechex;
+use function str_pad;
+use function strtoupper;
+use const STR_PAD_LEFT;
 
 /**
  * Class DatHeader
@@ -74,5 +78,11 @@ class DatHeader
         $header->checksum = unpack('V', (fread($stream, 4)))[1];   // 32-bit little endian
 
         return $header;
+    }
+
+    public function toOpenRCT2SceneryGroupNotation(): string
+    {
+        $flags = str_pad(strtoupper(dechex($this->flags)), 8, '0', STR_PAD_LEFT);
+        return "\$DAT:{$flags}|{$this->name}";
     }
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object;
+namespace RCTPHP\Object\RCT2;
 
 use RCTPHP\RCT2String;
 use function fread;

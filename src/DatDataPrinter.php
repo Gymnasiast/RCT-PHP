@@ -1,10 +1,11 @@
 <?php
 namespace RCTPHP;
 
-use RCTPHP\Object\DatHeader;
-use RCTPHP\Object\DATObject;
-use RCTPHP\Object\GenericObject;
-use RCTPHP\Object\SceneryGroupObject;
+use RCTPHP\Object\RCT2\DatHeader;
+use RCTPHP\Object\RCT2\DATObject;
+use RCTPHP\Object\RCT2\GenericObject;
+use RCTPHP\Object\RCT2\SceneryGroupObject;
+use RCTPHP\Object\RCT2\WaterObject;
 
 class DatDataPrinter
 {
@@ -26,6 +27,9 @@ class DatDataPrinter
         {
             case DatHeader::OBJECT_TYPE_SCENERY_GROUP:
                 $this->object = new SceneryGroupObject($this->filename);
+                return;
+            case DatHeader::OBJECT_TYPE_WATER:
+                $this->object = new WaterObject($this->filename);
                 return;
             default:
                 $this->object = new GenericObject($this->filename);

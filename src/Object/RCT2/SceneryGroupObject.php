@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object;
+namespace RCTPHP\Object\RCT2;
 
+use RCTPHP\Object\OpenRCT2\BaseObject;
+use RCTPHP\Object\OpenRCT2\SceneryGroupObject as OpenRCT2SceneryGroupObject;
+use RCTPHP\Object\OpenRCT2\SceneryGroupProperties;
 use RCTPHP\RCT2String;
 use RCTPHP\Util;
 use RuntimeException;
@@ -16,8 +19,9 @@ use function rewind;
 use const SEEK_CUR;
 use const STR_PAD_LEFT;
 
-class SceneryGroupObject implements DATObject, StringTableOwner
+class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
+    use ImageTableDecoder;
     use StringTableDecoder;
 
     public DatHeader $header;
@@ -25,6 +29,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner
     public array $stringTable = [];
     /** @var DatHeader[] */
     public array $objects = [];
+    public array $imageTable = [];
     public int $numEntries = 0;
     public int $priority;
     // Bitset.
@@ -76,6 +81,8 @@ class SceneryGroupObject implements DATObject, StringTableOwner
         $this->readStringTable($fp);
 
         $this->readObjects($fp);
+
+        //$this->readImageTable($fp);
 
 
         fclose($fp);
@@ -146,6 +153,24 @@ class SceneryGroupObject implements DATObject, StringTableOwner
                 $ret[] = $custume;
             }
         }
+
+        return $ret;
+    }
+
+    public function toOpenRCT2Object(): OpenRCT2SceneryGroupObject
+    {
+        $entries = array_map(static function (DatHeader $header)
+        {
+            return $header->toOpenRCT2SceneryGroupNotation();
+        }, $this->objects);
+
+        $ret = new OpenRCT2SceneryGroupObject();
+        $ret->properties = new SceneryGroupProperties(
+            $entries,
+            $this->priority,
+            $this->getEntertainerCostumes(),
+        );
+        // TODO: images
 
         return $ret;
     }
