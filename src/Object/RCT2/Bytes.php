@@ -50,7 +50,7 @@ final class Bytes
      */
     public static function readUint8(&$fp): int
     {
-        return (int)fread($fp, 1);
+        return ord(fread($fp, 1));
     }
 
     /**
