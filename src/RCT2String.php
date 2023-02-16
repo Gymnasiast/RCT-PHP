@@ -31,21 +31,16 @@ final class RCT2String
         $this->string = $string;
     }
 
-    public static function getSourceEncoding(int $languageCode)
+    public static function getSourceEncoding(int $languageCode): string
     {
-        switch ($languageCode)
+        return match ($languageCode)
         {
-            case self::JA_JP;
-            return 'SJIS';
-            case self::KO_KR:
-                return 'CP949';
-            case self::ZH_CN:
-                return 'GB2312';
-            case self::ZH_TW:
-                return 'BIG-5';
-            default:
-                return 'Windows-1252';
-        }
+            self::JA_JP => 'SJIS',
+            self::KO_KR => 'CP949',
+            self::ZH_CN => 'GB2312',
+            self::ZH_TW => 'BIG-5',
+            default => 'Windows-1252',
+        };
     }
 
     public function toUtf8(): string
