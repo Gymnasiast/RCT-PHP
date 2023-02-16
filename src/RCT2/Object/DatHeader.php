@@ -1,5 +1,5 @@
 <?php
-namespace RCTPHP\Object\RCT2;
+namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Binary;
 use function dechex;

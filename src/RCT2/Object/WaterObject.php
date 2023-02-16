@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object\RCT2;
+namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Object\OpenRCT2\WaterObject as OpenRCT2WaterObject;
 use RCTPHP\Object\OpenRCT2\WaterProperties;

@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object\RCT2;
+namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Sawyer\Object\ImageTable;
-use RCTPHP\Util;
 use function file_put_contents;
 use function fread;
 use function printf;
-use const PHP_EOL;
 
 trait ImageTableDecoder
 {

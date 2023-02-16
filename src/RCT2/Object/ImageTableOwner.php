@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object\RCT2;
+namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Sawyer\Object\ImageTable;
 
