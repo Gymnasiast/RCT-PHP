@@ -7,6 +7,7 @@ use RCTPHP\Object\OpenRCT2\BaseObject;
 use RCTPHP\Object\OpenRCT2\SceneryGroupObject as OpenRCT2SceneryGroupObject;
 use RCTPHP\Object\OpenRCT2\SceneryGroupProperties;
 use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\Object\ImageTable;
 use RCTPHP\Util;
 use RuntimeException;
 use function fclose;
@@ -21,7 +22,6 @@ use const STR_PAD_LEFT;
 
 class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
-    use ImageTableDecoder;
     use StringTableDecoder;
 
     public DatHeader $header;
@@ -29,7 +29,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
     public array $stringTable = [];
     /** @var DatHeader[] */
     public array $objects = [];
-    public array $imageTable = [];
+    public ImageTable $imageTable;
     public int $numEntries = 0;
     public int $priority;
     // Bitset.
@@ -57,7 +57,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             throw new RuntimeException('Could not open file!');
         }
 
-        $this->header = DatHeader::fromStream($fp);
+        $this->header = DatHeader::try($fp);
         $restLength = filesize($filename) - 16;
         $rest = fread($fp, $restLength);
         fclose($fp);
@@ -82,6 +82,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
 
         $this->readObjects($fp);
 
+        $this->imageTable = new ImageTable(fread($fp, strlen($rledecoded) - ftell($fp)));
         //$this->readImageTable($fp);
 
 
@@ -121,6 +122,8 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             Util::printLn($string);
         }
 
+        $this->imageTable->exportToFile('scengroupg0.dat');
+
         Util::printLn('');
     }
 
@@ -139,7 +142,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             }
 
             fseek($fp, -1, SEEK_CUR);
-            $this->objects[] = DatHeader::fromStream($fp);
+            $this->objects[] = DatHeader::try($fp);
         }
     }
 
@@ -173,5 +176,10 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         // TODO: images
 
         return $ret;
+    }
+
+    public function getImageTable(): ImageTable
+    {
+        return $this->imageTable;
     }
 }
