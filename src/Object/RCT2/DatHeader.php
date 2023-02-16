@@ -1,10 +1,13 @@
 <?php
 namespace RCTPHP\Object\RCT2;
 
-use RuntimeException;
+use RCTPHP\Binary;
 use function dechex;
+use function fread;
+use function fseek;
 use function str_pad;
 use function strtoupper;
+use const SEEK_CUR;
 use const STR_PAD_LEFT;
 
 /**
@@ -26,6 +29,8 @@ class DatHeader
     public const OBJECT_TYPE_WATER = 9;
     public const OBJECT_TYPE_SCENARIO_TEXT = 10;
 
+    public const DAT_HEADER_SIZE = 16;
+
     // Folders as used by the objexport tool
     public const TYPE_TO_FOLDER = [
         "ride",
@@ -41,28 +46,18 @@ class DatHeader
         "scenario_text", // Scenario text objects are not supposed to be converted
     ];
 
-    public int $flags = 0;
-    public string $name = '';
-    public int $checksum = 0;
+    public readonly int $flags;
+    public readonly string $name;
+    public readonly int $checksum;
 
-    public function __construct(?string $filename = null)
+    /**
+     * @param resource $stream
+     */
+    public function __construct($stream)
     {
-        if ($filename === null)
-        {
-            return;
-        }
-
-        $fp = fopen($filename, 'rb');
-        if ($fp === false)
-        {
-            throw new RuntimeException('Could not open file!');
-        }
-
-        $this->flags = unpack('V', (fread($fp, 4)))[1]; // 32-bit little endian
-        $this->name = fread($fp, 8); // ASCII string
-        $this->checksum = unpack('V', (fread($fp, 4)))[1];   // 32-bit little endian
-
-        fclose($fp);
+        $this->flags = Binary::readUint32($stream);
+        $this->name = fread($stream, 8); // ASCII string
+        $this->checksum = Binary::readUint32($stream);
     }
 
     public function getType(): int
@@ -70,14 +65,22 @@ class DatHeader
         return $this->flags & 0x0F;
     }
 
-    public static function fromStream(&$stream): self
+    /**
+     * @param resource $stream
+     * @return static|null
+     */
+    public static function try(&$stream): self|null
     {
-        $header = new self();
-        $header->flags = unpack('V', (fread($stream, 4)))[1]; // 32-bit little endian
-        $header->name = fread($stream, 8); // ASCII string
-        $header->checksum = unpack('V', (fread($stream, 4)))[1];   // 32-bit little endian
+        // A "null entry" or end of list is marked by setting the first byte to 0xFF.
+        $peek = Binary::readUint8($stream);
+        if ($peek === 0xFF)
+        {
+            fseek($stream, self::DAT_HEADER_SIZE - 1, SEEK_CUR);
+            return null;
+        }
 
-        return $header;
+        fseek($stream, -1, SEEK_CUR);
+        return new static($stream);
     }
 
     public function toOpenRCT2SceneryGroupNotation(): string
