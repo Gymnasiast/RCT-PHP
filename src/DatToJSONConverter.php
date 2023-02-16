@@ -1,7 +1,7 @@
 <?php
 namespace RCTPHP;
 
-use RCTPHP\Object\DatHeader;
+use RCTPHP\Object\DATHeader;
 use RuntimeException;
 
 /**
@@ -42,11 +42,11 @@ class DatToJSONConverter
                 continue;
             }
 
-            $datHeader = new DatHeader(self::INPUT_DIR . '/' . $inputFile);
+            $DATHeader = new DATHeader(self::INPUT_DIR . '/' . $inputFile);
 
             // We use the name embedded in the DAT file, because the filename might differ from it.
-            $datName = strtolower(trim($datHeader->name));
-            $typeFolder = DatHeader::TYPE_TO_FOLDER[$datHeader->getType()];
+            $datName = strtolower(trim($DATHeader->name));
+            $typeFolder = DATHeader::TYPE_TO_FOLDER[$DATHeader->getType()];
             $oldFile = self::OUTPUT_DIR . "/other/{$typeFolder}/other.{$datName}.json";
             $newDir = self::OUTPUT_DIR . "/official/{$typeFolder}/official.{$datName}";
             if (!mkdir($newDir, 0777, true) && !is_dir($newDir))
@@ -57,7 +57,7 @@ class DatToJSONConverter
 
             rename($oldFile, $newFile);
 
-            $images = $this->extractImages($newDir, $datHeader);
+            $images = $this->extractImages($newDir, $DATHeader);
 
             $json = file_get_contents($newFile);
             $json = preg_replace('/"images": \[.*],/', $images, $json);
@@ -75,12 +75,12 @@ class DatToJSONConverter
         return scandir(self::INPUT_DIR);
     }
 
-    private function extractImages(string $newDir, DatHeader $datHeader): string
+    private function extractImages(string $newDir, DATHeader $DATHeader): string
     {
         $output = [];
         $images = '';
         chdir($newDir);
-        @exec(self::OPENRCT2_PATH . " sprite exportalldat {$datHeader->name} images/ 2> /dev/null", $output);
+        @exec(self::OPENRCT2_PATH . " sprite exportalldat {$DATHeader->name} images/ 2> /dev/null", $output);
         // The output may also include warnings. Just save the actual JSON output.
         foreach ($output as $outputLine)
         {

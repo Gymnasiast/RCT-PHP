@@ -23,10 +23,10 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
 {
     use StringTableDecoder;
 
-    public DatHeader $header;
+    public DATHeader $header;
     /** @var RCT2String[] */
     public array $stringTable = [];
-    /** @var DatHeader[] */
+    /** @var DATHeader[] */
     public array $objects = [];
     public ImageTable $imageTable;
     public int $numEntries = 0;
@@ -48,16 +48,11 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         "pirate",
     ];
 
-    public function __construct(string $filename)
+    public function __construct($header, $fp, int $filesize)
     {
-        $fp = fopen($filename, 'rb');
-        if ($fp === false)
-        {
-            throw new RuntimeException('Could not open file!');
-        }
-
-        $this->header = DatHeader::try($fp);
-        $restLength = filesize($filename) - 16;
+        $this->header = $header;
+        fseek($fp, DATHeader::DAT_HEADER_SIZE);
+        $restLength = $filesize - DATHeader::DAT_HEADER_SIZE;
         $rest = fread($fp, $restLength);
         fclose($fp);
 
@@ -141,7 +136,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             }
 
             fseek($fp, -1, SEEK_CUR);
-            $this->objects[] = DatHeader::try($fp);
+            $this->objects[] = DATHeader::try($fp);
         }
     }
 
@@ -161,7 +156,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
 
     public function toOpenRCT2Object(): OpenRCT2SceneryGroupObject
     {
-        $entries = array_map(static function (DatHeader $header)
+        $entries = array_map(static function (DATHeader $header)
         {
             return $header->toOpenRCT2SceneryGroupNotation();
         }, $this->objects);

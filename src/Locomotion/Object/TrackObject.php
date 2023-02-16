@@ -1,16 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT2\Object;
+namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\Object\OpenRCT2\WaterObject as OpenRCT2WaterObject;
-use RCTPHP\Object\OpenRCT2\WaterProperties;
-use RCTPHP\Object\OpenRCT2\WaterPropertiesPalettes;
+use RCTPHP\RCT2\Object\DATObject;
+use RCTPHP\RCT2\Object\StringTableDecoder;
+use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\RCT2String;
 use RCTPHP\Util;
-use RuntimeException;
 use function fclose;
-use function filesize;
+use function file_put_contents;
 use function fopen;
 use function fread;
 use function fseek;
@@ -18,17 +17,15 @@ use function fwrite;
 use function rewind;
 use const SEEK_CUR;
 
-class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Counterpart
+class TrackObject implements DATObject, StringTableOwner
 {
     use StringTableDecoder;
-
-    public bool $allowDucks = true;
 
     public DATHeader $header;
     /** @var RCT2String[] */
     public array $stringTable = [];
 
-    public function __construct($header, $fp, int $filesize)
+    public function __construct($header, $fp, $filesize)
     {
         $this->header = $header;
         fseek($fp, DATHeader::DAT_HEADER_SIZE);
@@ -39,13 +36,19 @@ class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Coun
         $rledecoded = Util::decodeRLE($rest);
 
         $fp = fopen('php://memory', 'rwb+');
+        //file_put_contents('rledecoded', $rledecoded);
         fwrite($fp, $rledecoded);
 
         rewind($fp);
-        fseek($fp, 14, SEEK_CUR);
-        $this->allowDucks = (bool)Bytes::readUint16($fp);
+        fseek($fp, 0x36, SEEK_CUR);
+        // WHY???
+        fseek($fp, 0x3, SEEK_CUR);
 
         $this->readStringTable($fp);
+
+        fseek($fp, 0x2A0, SEEK_SET);
+        $imageTable = fread($fp, $restLength - 0x2A0);
+        file_put_contents('imagetable-g0.dat', $imageTable);
         // imagetable!
 
         fclose($fp);
@@ -53,24 +56,11 @@ class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Coun
 
     public function printData(): void
     {
-        $allowDucks = $this->allowDucks ? 'true' : 'false';
         Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Allow ducks: {$allowDucks}");
 
         foreach ($this->stringTable as $stringTableItem)
         {
             Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
         }
-    }
-
-    public function toOpenRCT2Object(): OpenRCT2WaterObject
-    {
-        $ret = new OpenRCT2WaterObject();
-        $ret->properties = new WaterProperties(
-            $this->allowDucks,
-            new WaterPropertiesPalettes(),
-        );
-
-        return $ret;
     }
 }

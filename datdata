@@ -10,7 +10,9 @@ if ($argc < 2)
     exit(1);
 }
 
+$isLocomotion = !empty($argv[2]) ? (bool)(int)$argv[2] : false;
+
 $filename = $argv[1] ?? '';
 
-$printer = new DatDataPrinter($filename);
+$printer = new DatDataPrinter($filename, $isLocomotion);
 $printer->printData();

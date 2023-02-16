@@ -21,14 +21,14 @@ class WallObject implements DATObject, StringTableOwner
 {
     use StringTableDecoder;
 
-    public DatHeader $header;
+    public DATHeader $header;
 
 
 
     /** @var RCT2String[] */
     public array $stringTable = [];
 
-    public DatHeader|null $attachTo;
+    public DATHeader|null $attachTo;
 
     // Binary
     public readonly string $imageTable;
@@ -42,10 +42,11 @@ class WallObject implements DATObject, StringTableOwner
     /**
      * @param resource $fp
      */
-    public function __construct($fp, int $filesize)
+    public function __construct($header, $fp, int $filesize)
     {
-        $this->header = DatHeader::fromStream($fp);
-        $restLength = $filesize - 16;
+        $this->header = $header;
+        fseek($fp, DATHeader::DAT_HEADER_SIZE);
+        $restLength = $filesize - DATHeader::DAT_HEADER_SIZE;
         $rest = fread($fp, $restLength);
         fclose($fp);
 
@@ -72,7 +73,7 @@ class WallObject implements DATObject, StringTableOwner
 
         $this->readStringTable($fp);
 
-        $this->attachTo = DatHeader::try($fp);
+        $this->attachTo = DATHeader::try($fp);
 
         $imageTableSize = strlen($rledecoded) - ftell($fp);
         $this->imageTable = fread($fp, $imageTableSize);

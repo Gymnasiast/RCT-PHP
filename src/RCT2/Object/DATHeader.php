@@ -1,21 +1,17 @@
 <?php
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\Binary;
 use function dechex;
-use function fread;
-use function fseek;
 use function str_pad;
 use function strtoupper;
-use const SEEK_CUR;
 use const STR_PAD_LEFT;
 
 /**
- * Class DatHeader
+ * Class DATHeader
  *
  * Reads the header of an RCT2 .DAT object file and saves its metadata.
  */
-class DatHeader
+final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
 {
     public const OBJECT_TYPE_RIDE = 0;
     public const OBJECT_TYPE_SMALL_SCENERY = 1;
@@ -28,8 +24,6 @@ class DatHeader
     public const OBJECT_TYPE_PARK_ENTRANCE = 8;
     public const OBJECT_TYPE_WATER = 9;
     public const OBJECT_TYPE_SCENARIO_TEXT = 10;
-
-    public const DAT_HEADER_SIZE = 16;
 
     // Folders as used by the objexport tool
     public const TYPE_TO_FOLDER = [
@@ -50,37 +44,9 @@ class DatHeader
     public readonly string $name;
     public readonly int $checksum;
 
-    /**
-     * @param resource $stream
-     */
-    public function __construct($stream)
-    {
-        $this->flags = Binary::readUint32($stream);
-        $this->name = fread($stream, 8); // ASCII string
-        $this->checksum = Binary::readUint32($stream);
-    }
-
     public function getType(): int
     {
         return $this->flags & 0x0F;
-    }
-
-    /**
-     * @param resource $stream
-     * @return static|null
-     */
-    public static function try(&$stream): self|null
-    {
-        // A "null entry" or end of list is marked by setting the first byte to 0xFF.
-        $peek = Binary::readUint8($stream);
-        if ($peek === 0xFF)
-        {
-            fseek($stream, self::DAT_HEADER_SIZE - 1, SEEK_CUR);
-            return null;
-        }
-
-        fseek($stream, -1, SEEK_CUR);
-        return new static($stream);
     }
 
     public function toOpenRCT2SceneryGroupNotation(): string
