@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\Object\OpenRCT2\SceneryGroupObject as OpenRCT2SceneryGroupObject;
-use RCTPHP\Object\OpenRCT2\SceneryGroupProperties;
+use RCTPHP\OpenRCT2\Object\SceneryGroupObject as OpenRCT2SceneryGroupObject;
+use RCTPHP\OpenRCT2\Object\SceneryGroupProperties;
 use RCTPHP\RCT2String;
 use RCTPHP\Sawyer\Object\ImageTable;
 use RCTPHP\Util;
-use RuntimeException;
 use function fclose;
-use function filesize;
 use function fopen;
 use function fread;
 use function fseek;

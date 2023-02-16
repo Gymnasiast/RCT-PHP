@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Object\OpenRCT2;
+namespace RCTPHP\OpenRCT2\Object;
 
 final class WaterProperties
 {

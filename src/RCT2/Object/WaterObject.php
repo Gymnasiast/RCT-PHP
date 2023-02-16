@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\Object\OpenRCT2\WaterObject as OpenRCT2WaterObject;
-use RCTPHP\Object\OpenRCT2\WaterProperties;
-use RCTPHP\Object\OpenRCT2\WaterPropertiesPalettes;
+use RCTPHP\OpenRCT2\Object\WaterObject as OpenRCT2WaterObject;
+use RCTPHP\OpenRCT2\Object\WaterProperties;
+use RCTPHP\OpenRCT2\Object\WaterPropertiesPalettes;
 use RCTPHP\RCT2String;
 use RCTPHP\Util;
-use RuntimeException;
 use function fclose;
-use function filesize;
 use function fopen;
 use function fread;
 use function fseek;
