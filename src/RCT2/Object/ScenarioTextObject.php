@@ -1,29 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Locomotion\Object;
+namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
-use RCTPHP\RCT2\Object\StringTableDecoder;
-use RCTPHP\RCT2\Object\StringTableOwner;
+use RCTPHP\Binary;
 use RCTPHP\RCT2String;
 use RCTPHP\Util;
 use function fclose;
-use function file_put_contents;
 use function fopen;
-use function fread;
 use function fseek;
 use function fwrite;
 use function rewind;
 use const SEEK_CUR;
 
-class TrackObject implements DATObject, StringTableOwner
+class ScenarioTextObject implements DATObject, StringTableOwner
 {
     use StringTableDecoder;
 
     public DATHeader $header;
     /** @var RCT2String[][] */
     public array $stringTable = [];
+
+    public readonly bool $isSixFlags;
 
     public function __construct($header, string $decoded)
     {
@@ -32,22 +30,22 @@ class TrackObject implements DATObject, StringTableOwner
         fwrite($fp, $decoded);
 
         rewind($fp);
-        fseek($fp, 0x36, SEEK_CUR);
+        fseek($fp, 0x6, SEEK_CUR);
+        $this->isSixFlags = (bool)Binary::readUint8($fp);
+        fseek($fp, 0x1, SEEK_CUR);
 
-        $this->readStringTable($fp);
-
-        // TODO: properly read the object table!
-        fseek($fp, 0x2A0, SEEK_SET);
-        $imageTable = fread($fp, strlen($decoded) - 0x2A0);
-        file_put_contents('imagetable-g0.dat', $imageTable);
-        // imagetable!
+        $this->readStringTable($fp, 0);
+        $this->readStringTable($fp, 1);
+        $this->readStringTable($fp, 2);
 
         fclose($fp);
     }
 
     public function printData(): void
     {
+        $isSixFlags = $this->isSixFlags ? 'yes' : 'no';
         Util::printLn("DAT name: {$this->header->name}");
+        Util::printLn("Six Flags park: {$isSixFlags}");
 
         $this->printStringTables();
     }

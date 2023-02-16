@@ -12,6 +12,7 @@ use function fclose;
 use function fopen;
 use function fread;
 use function fseek;
+use function fwrite;
 use function ord;
 use function rewind;
 use const SEEK_CUR;
@@ -22,7 +23,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[] */
+    /** @var RCT2String[][] */
     public array $stringTable = [];
     /** @var DATHeader[] */
     public array $objects = [];
@@ -46,18 +47,11 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         "pirate",
     ];
 
-    public function __construct($header, $fp, int $filesize)
+    public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        fseek($fp, DATHeader::DAT_HEADER_SIZE);
-        $restLength = $filesize - DATHeader::DAT_HEADER_SIZE;
-        $rest = fread($fp, $restLength);
-        fclose($fp);
-
-        $rledecoded = Util::decodeRLE($rest);
-
         $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $rledecoded);
+        fwrite($fp, $decoded);
 
         rewind($fp);
         fseek($fp, 0x10B, SEEK_CUR);
@@ -86,7 +80,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         Util::printLn("DAT name: {$this->header->name}");
         Util::printLn("Priority: {$this->priority}");
 
-        foreach ($this->stringTable as $stringTableItem)
+        foreach ($this->stringTable[0] as $stringTableItem)
         {
             //if ($stringTableItem->languageCode === 0)
             {

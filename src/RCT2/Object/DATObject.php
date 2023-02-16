@@ -10,10 +10,9 @@ interface DATObject
 {
     /**
      * @param $header
-     * @param $stream
-     * @param int $filesize
+     * @param string $decoded
      */
-    public function __construct($header, $stream, int $filesize);
+    public function __construct($header, string $decoded);
 
     public function printData(): void;
 }

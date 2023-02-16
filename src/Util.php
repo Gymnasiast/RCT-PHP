@@ -3,8 +3,15 @@ declare(strict_types=1);
 
 namespace RCTPHP;
 
+use Exception;
+use RCTPHP\Sawyer\ChunkEncoding;
 use RuntimeException;
+use ValueError;
+use function fclose;
+use function fread;
 use function ord;
+use function str_pad;
+use function strlen;
 
 final class Util
 {
@@ -63,5 +70,50 @@ final class Util
         }
 
         return $output;
+    }
+
+    public static function ror8(int $input, int $shift): int
+    {
+         $rotated = ($input >> $shift) | $input << (8 - $shift);
+         return $rotated & 0b11111111;
+    }
+
+    public static function decodeRotate(string $input)
+    {
+        $srcLength = strlen($input);
+        $output = str_pad('', $srcLength, chr(0));
+        $code = 1;
+
+        for ($i = 0; $i < $srcLength; $i++)
+        {
+            $byte = ord($input[$i]);
+            $out = self::ror8($byte, $code);
+            $code = ($code + 2) % 8;
+            $output[$i] = chr($out);
+        }
+
+        return $output;
+    }
+
+    /**
+     * @param resource $stream
+     * @return string
+     *
+     * @throws ValueError
+     * @throws Exception
+     */
+    public static function readChunk($stream): string
+    {
+        $encoding = ChunkEncoding::from(Binary::readUint8($stream));
+        $restLength = Binary::readUint32($stream);
+        $rest = fread($stream, $restLength);
+
+        return match ($encoding)
+        {
+            ChunkEncoding::NONE => $rest,
+            ChunkEncoding::RLE => self::decodeRLE($rest),
+            ChunkEncoding::RLE_COMPRESSED => throw new \Exception('To be implemented'),
+            ChunkEncoding::ROTATE => self::decodeRotate($rest),
+        };
     }
 }

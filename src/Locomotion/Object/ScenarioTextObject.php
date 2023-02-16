@@ -17,7 +17,7 @@ use function fwrite;
 use function rewind;
 use const SEEK_CUR;
 
-class TrackObject implements DATObject, StringTableOwner
+class ScenarioTextObject implements DATObject, StringTableOwner
 {
     use StringTableDecoder;
 
@@ -32,15 +32,10 @@ class TrackObject implements DATObject, StringTableOwner
         fwrite($fp, $decoded);
 
         rewind($fp);
-        fseek($fp, 0x36, SEEK_CUR);
+        fseek($fp, 0x6, SEEK_CUR);
 
-        $this->readStringTable($fp);
-
-        // TODO: properly read the object table!
-        fseek($fp, 0x2A0, SEEK_SET);
-        $imageTable = fread($fp, strlen($decoded) - 0x2A0);
-        file_put_contents('imagetable-g0.dat', $imageTable);
-        // imagetable!
+        $this->readStringTable($fp, 0);
+        $this->readStringTable($fp, 1);
 
         fclose($fp);
     }

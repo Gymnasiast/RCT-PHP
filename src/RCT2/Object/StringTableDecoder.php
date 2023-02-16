@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\RCT2String;
+use RCTPHP\Util;
 use function fread;
 use function ord;
 
@@ -13,7 +14,7 @@ trait StringTableDecoder
      * @param resource $fp
      * @return void
      */
-    public function readStringTable(&$fp): void
+    public function readStringTable(&$fp, int $index = 0): void
     {
         while (true)
         {
@@ -35,12 +36,24 @@ trait StringTableDecoder
                 $string .= $character;
             }
 
-            $this->stringTable[] = new RCT2String($languageCode, $string);
+            $this->stringTable[$index][] = new RCT2String($languageCode, $string);
         }
     }
 
-    public function getStringTable(): array
+    public function getStringTable(int $index = 0): array
     {
-        return $this->stringTable;
+        return $this->stringTable[$index];
+    }
+
+    public function printStringTables(): void
+    {
+        foreach ($this->stringTable as $index => $stringTable)
+        {
+            Util::printLn("String table #{$index}:");
+            foreach ($stringTable as $stringTableItem)
+            {
+                Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
+            }
+        }
     }
 }

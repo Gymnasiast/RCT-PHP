@@ -25,7 +25,7 @@ class WallObject implements DATObject, StringTableOwner
 
 
 
-    /** @var RCT2String[] */
+    /** @var RCT2String[][] */
     public array $stringTable = [];
 
     public DATHeader|null $attachTo;
@@ -39,29 +39,15 @@ class WallObject implements DATObject, StringTableOwner
     public readonly SawyerPrice $price;
     public readonly int $scrollingMode;
 
-    /**
-     * @param resource $fp
-     */
-    public function __construct($header, $fp, int $filesize)
+    public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        fseek($fp, DATHeader::DAT_HEADER_SIZE);
-        $restLength = $filesize - DATHeader::DAT_HEADER_SIZE;
-        $rest = fread($fp, $restLength);
-        fclose($fp);
-
-        $rledecoded = Util::decodeRLE($rest);
-
         $fp = fopen('php://memory', 'rwb+');
-        file_put_contents('rledecoded', $rledecoded);
-        fwrite($fp, $rledecoded);
+        fwrite($fp, $decoded);
 
         rewind($fp);
 
         fseek($fp, 0x6, SEEK_CUR);
-
-        // Again 3???
-        fseek($fp, 0x3, SEEK_CUR);
 
         $this->toolId = Binary::readUint8($fp);
         $this->flags = Binary::readUint8($fp);
@@ -75,7 +61,7 @@ class WallObject implements DATObject, StringTableOwner
 
         $this->attachTo = DATHeader::try($fp);
 
-        $imageTableSize = strlen($rledecoded) - ftell($fp);
+        $imageTableSize = strlen($decoded) - ftell($fp);
         $this->imageTable = fread($fp, $imageTableSize);
 
         file_put_contents('imagetable-g0.dat', $this->imageTable);
@@ -89,10 +75,6 @@ class WallObject implements DATObject, StringTableOwner
         Util::printLn("Height: {$this->height} units ({$this->height->asMetres()})");
         Util::printLn("Price: {$this->price->asGBP()}");
 
-        foreach ($this->stringTable as $stringTableItem)
-        {
-            Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
-        }
+        $this->printStringTables();
     }
-
 }

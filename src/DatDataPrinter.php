@@ -2,9 +2,11 @@
 namespace RCTPHP;
 
 use RCTPHP\Locomotion\Object\DATHeader as LocoDATHeader;
+use RCTPHP\Locomotion\Object\ScenarioTextObject as LocoScenarioTextObject;
 use RCTPHP\Locomotion\Object\TrackObject;
 use RCTPHP\RCT2\Object\DATHeader as RCT2DATHeader;
 use RCTPHP\RCT2\Object\DATObject;
+use RCTPHP\RCT2\Object\ScenarioTextObject as RCT2ScenarioTextObject;
 use RCTPHP\RCT2\Object\SceneryGroupObject;
 use RCTPHP\RCT2\Object\WallObject;
 use RCTPHP\RCT2\Object\WaterObject;
@@ -18,16 +20,19 @@ class DatDataPrinter
 {
     private string $filename;
     private DATHeader $header;
+    private string $rest;
     private ?DATObject $object = null;
 
     private const OBJECT_MAPPING_RCT2 = [
         RCT2DATHeader::OBJECT_TYPE_WALLS => WallObject::class,
         RCT2DATHeader::OBJECT_TYPE_SCENERY_GROUP => SceneryGroupObject::class,
         RCT2DATHeader::OBJECT_TYPE_WATER => WaterObject::class,
+        RCT2DATHeader::OBJECT_TYPE_SCENARIO_TEXT => RCT2ScenarioTextObject::class,
     ];
 
     private const OBJECT_MAPPING_LOCOMOTION = [
         LocoDATHeader::OBJECT_TYPE_TRACK => TrackObject::class,
+        LocoDATHeader::OBJECT_TYPE_SCENARIO_TEXT => LocoScenarioTextObject::class,
     ];
 
     public function __construct(string $filename, bool $isLocomotion)
@@ -43,6 +48,8 @@ class DatDataPrinter
         else
             $this->header = new RCT2DATHeader($fp);
 
+        $this->rest =  Util::readChunk($fp);
+
         fclose($fp);
         $this->filename = $filename;
         $this->read();
@@ -50,8 +57,6 @@ class DatDataPrinter
 
     private function read(): void
     {
-        $fp = fopen($this->filename, 'rb');
-        $filesize = fstat($fp)['size'];
         $type = $this->header->getType();
         $class = GenericObject::class;
 
@@ -70,7 +75,7 @@ class DatDataPrinter
             }
         }
 
-        $this->object = new $class($this->header, $fp, $filesize);
+        $this->object = new $class($this->header, $this->rest);
     }
 
     public function printData(): void

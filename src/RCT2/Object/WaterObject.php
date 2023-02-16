@@ -23,21 +23,14 @@ class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Coun
     public bool $allowDucks = true;
 
     public DATHeader $header;
-    /** @var RCT2String[] */
+    /** @var RCT2String[][] */
     public array $stringTable = [];
 
-    public function __construct($header, $fp, int $filesize)
+    public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        fseek($fp, DATHeader::DAT_HEADER_SIZE);
-        $restLength = $filesize - DATHeader::DAT_HEADER_SIZE;
-        $rest = fread($fp, $restLength);
-        fclose($fp);
-
-        $rledecoded = Util::decodeRLE($rest);
-
         $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $rledecoded);
+        fwrite($fp, $decoded);
 
         rewind($fp);
         fseek($fp, 14, SEEK_CUR);
@@ -55,10 +48,7 @@ class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Coun
         Util::printLn("DAT name: {$this->header->name}");
         Util::printLn("Allow ducks: {$allowDucks}");
 
-        foreach ($this->stringTable as $stringTableItem)
-        {
-            Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
-        }
+        $this->printStringTables();
     }
 
     public function toOpenRCT2Object(): OpenRCT2WaterObject

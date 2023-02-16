@@ -6,7 +6,9 @@ namespace RCTPHP\Sawyer\Object;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\Sawyer\Object\DATHeader as GenericDATHeader;
 use RCTPHP\Util;
+use function fopen;
 use function fseek;
+use function fwrite;
 
 final class GenericObject implements DATObject
 {
@@ -14,13 +16,15 @@ final class GenericObject implements DATObject
 
     /**
      * @param GenericDATHeader $header
-     * @param resource $stream
-     * @param int $filesize
+     * @param string $decoded
      */
-    public function __construct($header, $stream, int $filesize)
+    public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        fseek($stream, DATHeader::DAT_HEADER_SIZE);
+        $fp = fopen('php://memory', 'rwb+');
+        fwrite($fp, $decoded);
+
+        fclose($fp);
     }
 
     public function printData(): void

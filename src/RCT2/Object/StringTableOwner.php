@@ -5,5 +5,5 @@ namespace RCTPHP\RCT2\Object;
 
 interface StringTableOwner
 {
-    public function getStringTable(): array;
+    public function getStringTable(int $index = 0): array;
 }
