@@ -2,9 +2,13 @@
 namespace RCTPHP\Sawyer\Object;
 
 use RCTPHP\Binary;
+use function dechex;
 use function fread;
 use function fseek;
+use function str_pad;
+use function strtoupper;
 use const SEEK_CUR;
+use const STR_PAD_LEFT;
 
 /**
  * Class DATHeader
@@ -48,4 +52,27 @@ abstract class DATHeader
     }
 
     abstract public function getType(): int;
+
+    final public function getFlagsFormatted(): string
+    {
+        return str_pad(strtoupper(dechex($this->flags)), 8, '0', STR_PAD_LEFT);
+    }
+
+    final public function getChecksumFormatted(): string
+    {
+        return str_pad(strtoupper(dechex($this->checksum)), 8, '0', STR_PAD_LEFT);
+    }
+
+    final public function getAsOriginalId(): string
+    {
+        $flags = $this->getFlagsFormatted();
+        $checksum = $this->getChecksumFormatted();
+        return "{$flags}|{$this->name}|{$checksum}";
+    }
+
+    final public function getAsSceneryGroupListEntry(): string
+    {
+        $flags = $this->getFlagsFormatted();
+        return "\$DAT:{$flags}|{$this->name}";
+    }
 }
