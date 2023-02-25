@@ -1,7 +1,9 @@
 <?php
 namespace RCTPHP;
 
+use RCTPHP\Locomotion\Object\CurrencyObject;
 use RCTPHP\Locomotion\Object\DATHeader as LocoDATHeader;
+use RCTPHP\Locomotion\Object\InterfaceObject;
 use RCTPHP\Locomotion\Object\ScenarioTextObject as LocoScenarioTextObject;
 use RCTPHP\Locomotion\Object\TrackObject;
 use RCTPHP\RCT2\Object\DATHeader as RCT2DATHeader;
@@ -31,6 +33,8 @@ class DatDataPrinter
     ];
 
     private const OBJECT_MAPPING_LOCOMOTION = [
+        LocoDATHeader::OBJECT_TYPE_INTERFACE => InterfaceObject::class,
+        LocoDATHeader::OBJECT_TYPE_CURRENCY => CurrencyObject::class,
         LocoDATHeader::OBJECT_TYPE_TRACK => TrackObject::class,
         LocoDATHeader::OBJECT_TYPE_SCENARIO_TEXT => LocoScenarioTextObject::class,
     ];
