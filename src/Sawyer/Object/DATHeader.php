@@ -62,17 +62,4 @@ abstract class DATHeader
     {
         return str_pad(strtoupper(dechex($this->checksum)), 8, '0', STR_PAD_LEFT);
     }
-
-    final public function getAsOriginalId(): string
-    {
-        $flags = $this->getFlagsFormatted();
-        $checksum = $this->getChecksumFormatted();
-        return "{$flags}|{$this->name}|{$checksum}";
-    }
-
-    final public function getAsSceneryGroupListEntry(): string
-    {
-        $flags = $this->getFlagsFormatted();
-        return "\$DAT:{$flags}|{$this->name}";
-    }
 }

@@ -150,7 +150,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
     {
         $entries = array_map(static function (DATHeader $header)
         {
-            return $header->toOpenRCT2SceneryGroupNotation();
+            return $header->getAsSceneryGroupListEntry();
         }, $this->objects);
 
         $ret = new OpenRCT2SceneryGroupObject();

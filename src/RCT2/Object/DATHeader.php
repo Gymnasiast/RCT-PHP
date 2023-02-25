@@ -49,9 +49,16 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
         return $this->flags & 0x0F;
     }
 
-    public function toOpenRCT2SceneryGroupNotation(): string
+    public function getAsOriginalId(): string
     {
-        $flags = str_pad(strtoupper(dechex($this->flags)), 8, '0', STR_PAD_LEFT);
+        $flags = $this->getFlagsFormatted();
+        $checksum = $this->getChecksumFormatted();
+        return "{$flags}|{$this->name}|{$checksum}";
+    }
+
+    public function getAsSceneryGroupListEntry(): string
+    {
+        $flags = $this->getFlagsFormatted();
         return "\$DAT:{$flags}|{$this->name}";
     }
 }
