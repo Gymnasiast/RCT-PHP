@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use RCTPHP\Binary;
 use RCTPHP\OpenRCT2\Object\WaterObject as OpenRCT2WaterObject;
 use RCTPHP\OpenRCT2\Object\WaterProperties;
 use RCTPHP\OpenRCT2\Object\WaterPropertiesPalettes;
@@ -34,7 +35,7 @@ class WaterObject implements DATObject, StringTableOwner, ObjectWithOpenRCT2Coun
 
         rewind($fp);
         fseek($fp, 14, SEEK_CUR);
-        $this->allowDucks = (bool)Bytes::readUint16($fp);
+        $this->allowDucks = (bool)Binary::readUint16($fp);
 
         $this->readStringTable($fp);
         // imagetable!

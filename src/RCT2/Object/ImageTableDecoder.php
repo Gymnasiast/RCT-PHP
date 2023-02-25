@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use RCTPHP\Binary;
 use RCTPHP\Sawyer\Object\ImageTable;
 use function file_put_contents;
 use function fread;
@@ -21,8 +22,8 @@ trait ImageTableDecoder
      */
     public function readImageTable($fp): void
     {
-        $numImages = Bytes::readUint32($fp);
-        $imageDataSize = Bytes::readUint32($fp);
+        $numImages = Binary::readUint32($fp);
+        $imageDataSize = Binary::readUint32($fp);
 
         $headerTableSize = $numImages * 16;
 
@@ -30,7 +31,7 @@ trait ImageTableDecoder
         $entries = [];
 
         for ($i = 0; $i < $numImages; $i++) {
-            $entries[] = Bytes::readImageHeader($fp);
+            $entries[] = self::readImageHeader($fp);
         }
 
         $imageData = fread($fp, $imageDataSize);
@@ -155,5 +156,22 @@ trait ImageTableDecoder
         }
 
         return $dst0;
+    }
+
+    /**
+     * @param resource $fp
+     * @return ImageHeader
+     */
+    public static function readImageHeader(&$fp): ImageHeader
+    {
+        $header = new ImageHeader();
+        $header->startAddress = Binary::readUint32($fp);
+        $header->width = Binary::readUint16($fp);
+        $header->height = Binary::readUint16($fp);
+        $header->xOffset = Binary::readUint16($fp);
+        $header->yOffset = Binary::readUint16($fp);
+        $header->flags = Binary::readUint16($fp);
+        $header->zoomedOffset = Binary::readUint16($fp);
+        return $header;
     }
 }
