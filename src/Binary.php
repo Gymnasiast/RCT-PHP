@@ -24,4 +24,10 @@ final class Binary
     {
         return unpack('V', (fread($stream, 4)))[1];
     }
+
+    public static function readSint16(&$stream): int
+    {
+        // FIXME: actually return signed!
+        return unpack('v', fread($stream, 2))[1];
+    }
 }
