@@ -7,7 +7,9 @@ use Exception;
 use RCTPHP\Sawyer\ChunkEncoding;
 use RuntimeException;
 use ValueError;
+use function chr;
 use function fclose;
+use function file_put_contents;
 use function fread;
 use function ord;
 use function str_pad;
@@ -78,7 +80,7 @@ final class Util
          return $rotated & 0b11111111;
     }
 
-    public static function decodeRotate(string $input)
+    public static function decodeRotate(string $input): string
     {
         $srcLength = strlen($input);
         $output = str_pad('', $srcLength, chr(0));
@@ -93,6 +95,49 @@ final class Util
         }
 
         return $output;
+    }
+
+    public static function decodeRepeat(string $src8): string
+    {
+        $srcLength = strlen($src8);
+        $output = '';
+
+        for ($i = 0; $i < $srcLength; $i++)
+        {
+            if (ord($src8[$i]) === 0xFF)
+            {
+                $output .= $src8[++$i];
+            }
+            else
+            {
+                $count = (ord($src8[$i]) & 7) + 1;
+                $copySrc = strlen($output) + (ord($src8[$i]) >> 3) - 32;
+
+                if ($copySrc < 0)
+                {
+                    throw new RuntimeException('EXCEPTION_MSG_CORRUPT_RLE');
+                }
+                if (($copySrc < (strlen($output) + $count) && $copySrc >= strlen($output))
+                    || (($copySrc + $count) <= (strlen($output) + $count) && ($copySrc + $count) > strlen($output)))
+                {
+                    throw new RuntimeException('EXCEPTION_MSG_CORRUPT_RLE');
+                }
+
+                $output .= substr($output, $copySrc, $count);
+            }
+        }
+        return $output;
+    }
+
+    public static function decodeRLERepeat(string $input): string
+    {
+        $rleDecoded = self::decodeRLE($input);
+        file_put_contents('decoded1', $rleDecoded);
+
+        $repeatDecoded = self::decodeRepeat($rleDecoded);
+        file_put_contents('decoded2', $repeatDecoded);
+
+        return $repeatDecoded;
     }
 
     /**
@@ -112,7 +157,7 @@ final class Util
         {
             ChunkEncoding::NONE => $rest,
             ChunkEncoding::RLE => self::decodeRLE($rest),
-            ChunkEncoding::RLE_COMPRESSED => throw new \Exception('To be implemented'),
+            ChunkEncoding::RLE_REPEAT => self::decodeRLERepeat($rest),
             ChunkEncoding::ROTATE => self::decodeRotate($rest),
         };
     }

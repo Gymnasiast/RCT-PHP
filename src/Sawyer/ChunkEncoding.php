@@ -7,6 +7,6 @@ enum ChunkEncoding : int
 {
     case NONE = 0;
     case RLE = 1;
-    case RLE_COMPRESSED = 2;
+    case RLE_REPEAT = 2;
     case ROTATE = 3;
 }
