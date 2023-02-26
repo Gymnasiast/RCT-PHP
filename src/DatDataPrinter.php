@@ -5,6 +5,7 @@ use RCTPHP\Locomotion\Object\CurrencyObject;
 use RCTPHP\Locomotion\Object\DATHeader as LocoDATHeader;
 use RCTPHP\Locomotion\Object\InterfaceObject;
 use RCTPHP\Locomotion\Object\ScenarioTextObject as LocoScenarioTextObject;
+use RCTPHP\Locomotion\Object\SoundObject;
 use RCTPHP\Locomotion\Object\TrackObject;
 use RCTPHP\RCT2\Object\DATHeader as RCT2DATHeader;
 use RCTPHP\RCT2\Object\DATObject;
@@ -16,6 +17,7 @@ use RCTPHP\Sawyer\Object\DATHeader;
 use RCTPHP\Sawyer\Object\GenericObject;
 use RuntimeException;
 use function array_key_exists;
+use function file_put_contents;
 use function fopen;
 
 class DatDataPrinter
@@ -34,6 +36,7 @@ class DatDataPrinter
 
     private const OBJECT_MAPPING_LOCOMOTION = [
         LocoDATHeader::OBJECT_TYPE_INTERFACE => InterfaceObject::class,
+        LocoDATHeader::OBJECT_TYPE_SOUNDS => SoundObject::class,
         LocoDATHeader::OBJECT_TYPE_CURRENCY => CurrencyObject::class,
         LocoDATHeader::OBJECT_TYPE_TRACK => TrackObject::class,
         LocoDATHeader::OBJECT_TYPE_SCENARIO_TEXT => LocoScenarioTextObject::class,
@@ -53,6 +56,7 @@ class DatDataPrinter
             $this->header = new RCT2DATHeader($fp);
 
         $this->rest =  Util::readChunk($fp);
+        file_put_contents('rest', $this->rest);
 
         fclose($fp);
         $this->filename = $filename;

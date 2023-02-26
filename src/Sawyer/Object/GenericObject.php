@@ -32,5 +32,6 @@ final class GenericObject implements DATObject
         Util::printLn("DAT name: {$this->header->name}");
         Util::printLn("Flags: {$this->header->flags}");
         Util::printLn("Checksum: {$this->header->checksum}");
+        Util::printLn("Type: {$this->header->getType()}");
     }
 }
