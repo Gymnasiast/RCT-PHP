@@ -1,47 +1,23 @@
 <?php
+
+use RCTPHP\RCT1\TP4\TP4File;
+
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/src/RCT1/TP4/Palette.php';
 
-
-if ($argc < 2)
+if ($argc < 3)
 {
-    echo "No filename specified!\n";
+    echo "Usage: tp4reader.php <inputfile> <outputfile>\n";
     exit(1);
 }
 
-$filename = $argv[1];
+$inputFilename = $argv[1];
+$outputFilename = $argv[2];
 
-$fp = fopen($filename, 'rb');
-fseek($fp, 400);
-
-const HEIGHT = 200;
-const WIDTH = 254;
-
-$image = imagecreate(WIDTH, HEIGHT);
-foreach (\RCTPHP\RCT1\TP4\PALETTE as $index => $color)
+$fp = fopen($inputFilename, 'rb');
+if ($fp === false)
 {
-    $id = imagecolorallocate($image, $color->r, $color->g, $color->b);
-    if ($id !== $index)
-    {
-        throw new \Exception("Incorrect index for color {$index}!");
-    }
+    throw new RuntimeException('Cannot open input file!');
 }
 
-
-for ($lineNum = 0; $lineNum < HEIGHT; $lineNum++)
-{
-    $startFlag = \RCTPHP\Binary::readUint16($fp);
-    for ($i = 0; $i < 127; $i++)
-    {
-        $index = \RCTPHP\Binary::readUint8($fp);
-        imagesetpixel($image, $i, $lineNum, $index);
-    }
-    $midFlag = \RCTPHP\Binary::readUint16($fp);
-    for ($i = 0; $i < 127; $i++)
-    {
-        $index = \RCTPHP\Binary::readUint8($fp);
-        imagesetpixel($image, $i + 127, $lineNum, $index);
-    }
-}
-
-imagepng($image, 'converted.png');
+$tp4File = TP4File::createFromFile($fp);
+$tp4File->writeImage($outputFilename);
