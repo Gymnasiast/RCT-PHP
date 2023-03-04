@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT2\Object;
+namespace RCTPHP\Sawyer\Object;
 
-use RCTPHP\Sawyer\Object\ImageTable;
+use RCTPHP\Sawyer\ImageTable\ImageTable;
 
 interface ImageTableOwner
 {

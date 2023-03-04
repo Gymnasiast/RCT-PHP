@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT2\Object;
+namespace RCTPHP\Sawyer\ImageTable;
 
 use RCTPHP\Binary;
-use RCTPHP\Sawyer\Object\ImageTable;
 use function file_put_contents;
 use function fread;
 use function printf;

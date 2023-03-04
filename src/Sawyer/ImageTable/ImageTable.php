@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Sawyer\Object;
+namespace RCTPHP\Sawyer\ImageTable;
 
 use function file_put_contents;
 

@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace RCTPHP\Locomotion\Object;
 
 use RCTPHP\RCT2\Object\DATObject;
-use RCTPHP\RCT2\Object\ImageTableOwner;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\RCT2String;
-use RCTPHP\Sawyer\Object\ImageTable;
+use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Util;
 use function fclose;
 use function fopen;
