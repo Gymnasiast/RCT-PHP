@@ -5,7 +5,8 @@
     "minimum-stability": "dev",
     "require": {
         "ext-mbstring": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-gd": "*"
     },
     "autoload": {
         "psr-4": {
