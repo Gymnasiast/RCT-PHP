@@ -8,6 +8,8 @@ use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Util;
 use function fclose;
 use function file_put_contents;
@@ -19,7 +21,7 @@ use function fwrite;
 use function rewind;
 use const SEEK_CUR;
 
-class TrackObject implements DATObject, StringTableOwner
+class TrackObject implements DATObject, StringTableOwner, ImageTableOwner
 {
     use StringTableDecoder;
 
@@ -38,6 +40,7 @@ class TrackObject implements DATObject, StringTableOwner
     public array $bridges = [];
     /** @var DATHeader[] */
     public array $stations = [];
+    private readonly ImageTable $imageTable;
 
 
     public function __construct($header, string $decoded)
@@ -119,7 +122,7 @@ class TrackObject implements DATObject, StringTableOwner
         }
 
         $imageTable = fread($fp, strlen($decoded) - ftell($fp));
-        file_put_contents('imagetable-g0.dat', $imageTable);
+        $this->imageTable = new ImageTable($imageTable);
 
         fclose($fp);
     }
@@ -144,5 +147,10 @@ class TrackObject implements DATObject, StringTableOwner
         }
 
         Util::printLn('Tunnel: ' . ($this->tunnel ? $this->tunnel->name : 'N/A'));
+    }
+
+    public function getImageTable(): ImageTable
+    {
+        return $this->imageTable;
     }
 }

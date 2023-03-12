@@ -4,6 +4,7 @@ namespace RCTPHP;
 use RCTPHP\Locomotion\Object\CurrencyObject;
 use RCTPHP\Locomotion\Object\DATHeader as LocoDATHeader;
 use RCTPHP\Locomotion\Object\InterfaceObject;
+use RCTPHP\Locomotion\Object\ObjectType as LocoObjectType;
 use RCTPHP\Locomotion\Object\ScenarioTextObject as LocoScenarioTextObject;
 use RCTPHP\Locomotion\Object\SoundObject;
 use RCTPHP\Locomotion\Object\TrackObject;
@@ -15,10 +16,12 @@ use RCTPHP\RCT2\Object\WallObject;
 use RCTPHP\RCT2\Object\WaterObject;
 use RCTPHP\Sawyer\Object\DATHeader;
 use RCTPHP\Sawyer\Object\GenericObject;
+use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RuntimeException;
 use function array_key_exists;
 use function file_put_contents;
 use function fopen;
+use function var_dump;
 
 class DatDataPrinter
 {
@@ -95,5 +98,13 @@ class DatDataPrinter
         }
 
         $this->object->printData();
+        if ($this->object instanceof ImageTableOwner)
+        {
+            $imageTable = $this->object->getImageTable();
+            foreach ($imageTable->entries as $entry)
+            {
+                var_dump($entry);
+            }
+        }
     }
 }

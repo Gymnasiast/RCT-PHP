@@ -167,10 +167,10 @@ trait ImageTableDecoder
         $header->startAddress = Binary::readUint32($fp);
         $header->width = Binary::readUint16($fp);
         $header->height = Binary::readUint16($fp);
-        $header->xOffset = Binary::readUint16($fp);
-        $header->yOffset = Binary::readUint16($fp);
+        $header->xOffset = Binary::readSint16($fp);
+        $header->yOffset = Binary::readSint16($fp);
         $header->flags = Binary::readUint16($fp);
-        $header->zoomedOffset = Binary::readUint16($fp);
+        $header->zoomedOffset = Binary::readSint16($fp);
         return $header;
     }
 }

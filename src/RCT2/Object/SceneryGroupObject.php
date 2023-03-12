@@ -69,7 +69,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
 
         $this->readObjects($fp);
 
-        $this->imageTable = new ImageTable(fread($fp, strlen($rledecoded) - ftell($fp)));
+        $this->imageTable = new ImageTable(fread($fp, strlen($decoded) - ftell($fp)));
         //$this->readImageTable($fp);
 
 
@@ -160,7 +160,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             $this->priority,
             $this->getEntertainerCostumes(),
         );
-        // TODO: images
+        $ret->images = $this->imageTable;
 
         return $ret;
     }

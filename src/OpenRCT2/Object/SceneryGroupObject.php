@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\OpenRCT2\Object;
 
+use RCTPHP\Sawyer\ImageTable\ImageTable;
+
 final class SceneryGroupObject extends BaseObject
 {
     public function __construct()
@@ -12,5 +14,5 @@ final class SceneryGroupObject extends BaseObject
     }
 
     public SceneryGroupProperties $properties;
-    public array $images = [];
+    public array|ImageTable $images = [];
 }

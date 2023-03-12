@@ -5,6 +5,8 @@ namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Binary;
 use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
@@ -17,7 +19,7 @@ use function fwrite;
 use function rewind;
 use const SEEK_CUR;
 
-class WallObject implements DATObject, StringTableOwner
+class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 {
     use StringTableDecoder;
 
@@ -30,8 +32,7 @@ class WallObject implements DATObject, StringTableOwner
 
     public DATHeader|null $attachTo;
 
-    // Binary
-    public readonly string $imageTable;
+    public readonly ImageTable $imageTable;
     public readonly int $toolId;
     public readonly int $flags;
     public readonly SawyerTileHeight $height;
@@ -62,9 +63,8 @@ class WallObject implements DATObject, StringTableOwner
         $this->attachTo = DATHeader::try($fp);
 
         $imageTableSize = strlen($decoded) - ftell($fp);
-        $this->imageTable = fread($fp, $imageTableSize);
-
-        file_put_contents('imagetable-g0.dat', $this->imageTable);
+        $imageTable = fread($fp, $imageTableSize);
+        $this->imageTable = new ImageTable($imageTable);
 
         fclose($fp);
     }
@@ -76,5 +76,10 @@ class WallObject implements DATObject, StringTableOwner
         Util::printLn("Price: {$this->price->asGBP()}");
 
         $this->printStringTables();
+    }
+
+    public function getImageTable(): ImageTable
+    {
+        return $this->imageTable;
     }
 }
