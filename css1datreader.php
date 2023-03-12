@@ -7,15 +7,14 @@ use RCTPHP\Wave\WavFile;
 
 require __DIR__ . '/vendor/autoload.php';
 
-if ($argc < 2)
+if ($argc < 3)
 {
-    echo "No filename specified!\n";
+    echo "Usage: css1datreader.php <input file> <output folder>!\n";
     exit(1);
 }
 
-
-
 $filename = $argv[1];
+$outputFolder = rtrim($argv[2], '/');
 
 $fp = fopen($filename, 'rb');
 $numSamples = Binary::readUint32($fp);
@@ -27,14 +26,15 @@ for ($i = 0; $i < $numSamples; $i++)
 // To allow +1
 $offsetList[$numSamples] = fstat($fp)['size'];
 
-//$soundDataSize = Binary::readUint32($fp);
+$soundDataSize = Binary::readUint32($fp);
+$realSoundDataSize = fstat($fp)['size'] - ftell($fp);
 
 Util::printLn("Num samples: {$numSamples}");
 for ($i = 0; $i < $numSamples; $i++)
 {
     Util::printLn("Offset #{$i}: {$offsetList[$i]}");
 }
-//Util::printLn("Sound data size: {$soundDataSize}");
+Util::printLn("Sound data size: {$soundDataSize} / {$realSoundDataSize}");
 
 //var_dump(ftell($fp));
 
@@ -51,6 +51,6 @@ for ($i = 0; $i < $numSamples; $i++)
     //shell_exec("sox -r {$struct->samplesPerSec} -e signed -b {$struct->bitsPerSample} -c {$struct->channels} {$pcmFilename} {$wavFilename}");
 
     $file = new WavFile($header, $pcm);
-    $file->write("ex/{$i}.wav");
+    $file->write("{$outputFolder}/{$i}.wav");
 }
 

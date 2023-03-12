@@ -31,6 +31,7 @@ class SoundObject implements DATObject, StringTableOwner
     public array $stringTable = [];
 
     public readonly int $volume;
+    /** @var WavFile[] */
     public readonly array $soundData;
 
     public function __construct($header, string $decoded)

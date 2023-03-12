@@ -2,7 +2,9 @@
 namespace RCTPHP;
 
 use function fread;
+use function fwrite;
 use function ord;
+use function pack;
 use function unpack;
 
 /**
@@ -62,5 +64,10 @@ final class Binary
     public static function readSint32(&$stream): int
     {
         return unpack('l', (fread($stream, 4)))[1];
+    }
+
+    public static function writeUint32(&$stream, int $value): void
+    {
+        fwrite($stream, pack('V', $value));
     }
 }

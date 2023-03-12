@@ -3,9 +3,14 @@ declare(strict_types=1);
 
 namespace RCTPHP\Wave;
 
+use RCTPHP\Binary;
 use function fopen;
+use function fread;
+use function fseek;
 use function fwrite;
 use function rewind;
+use function var_dump;
+use const SEEK_CUR;
 
 final class WavFile
 {
@@ -36,5 +41,26 @@ final class WavFile
         $file = "RIFF" . $headerSizeBytes . $file;
 
         file_put_contents($filename, $file);
+    }
+
+    /**
+     * @param resource $fp
+     * @return static
+     */
+    public static function createFromFile($fp): self
+    {
+        fseek($fp, 4, SEEK_CUR); // RIFF
+        fseek($fp, 4, SEEK_CUR); // size
+        fseek($fp, 4, SEEK_CUR); // WAVE
+        fseek($fp, 4, SEEK_CUR); // fmt
+        fseek($fp, 4, SEEK_CUR); // \x10\x00\x00\x00
+
+        $header = fread($fp, Header::SIZE);
+
+        fseek($fp, 4, SEEK_CUR); // data
+        $pcmDataSize = Binary::readUint32($fp);
+        var_dump($pcmDataSize);
+        $pcmData = fread($fp, $pcmDataSize);
+        return new self($header, $pcmData);
     }
 }
