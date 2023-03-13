@@ -6,9 +6,10 @@ namespace RCTPHP\Locomotion\Object;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
-use RCTPHP\RCT2String;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use function fclose;
 use function fopen;
@@ -23,7 +24,7 @@ class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
     public readonly ImageTable $imageTable;
 
@@ -36,9 +37,9 @@ class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
         rewind($fp);
         fseek($fp, 0x0C, SEEK_CUR);
 
-        $this->readStringTable($fp, 0);
-        $this->readStringTable($fp, 1);
-        $this->readStringTable($fp, 2);
+        $this->readStringTable($fp, 'name');
+        $this->readStringTable($fp, 'prefix');
+        $this->readStringTable($fp, 'suffix');
 
         $this->imageTable = new ImageTable(fread($fp, strlen($decoded) - ftell($fp)));
         $this->imageTable->exportToFile('imagetable-g0.dat');

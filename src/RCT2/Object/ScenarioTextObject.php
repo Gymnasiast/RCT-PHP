@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Binary;
-use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use function fclose;
 use function fopen;
@@ -18,7 +19,7 @@ class ScenarioTextObject implements DATObject, StringTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
 
     public readonly bool $isSixFlags;
@@ -34,9 +35,9 @@ class ScenarioTextObject implements DATObject, StringTableOwner
         $this->isSixFlags = (bool)Binary::readUint8($fp);
         fseek($fp, 0x1, SEEK_CUR);
 
-        $this->readStringTable($fp, 0);
-        $this->readStringTable($fp, 1);
-        $this->readStringTable($fp, 2);
+        $this->readStringTable($fp, 'scenario_name');
+        $this->readStringTable($fp, 'park_name');
+        $this->readStringTable($fp, 'description');
 
         fclose($fp);
     }

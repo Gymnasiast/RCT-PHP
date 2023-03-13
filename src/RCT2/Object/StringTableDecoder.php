@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
+use function array_key_exists;
 use function fread;
 use function ord;
 
@@ -12,10 +14,16 @@ trait StringTableDecoder
 {
     /**
      * @param resource $fp
+     * @param int $index
      * @return void
      */
-    public function readStringTable(&$fp, int $index = 0): void
+    public function readStringTable(&$fp, string $name): void
     {
+        if (!array_key_exists($name, $this->stringTable))
+        {
+            $this->stringTable[$name] = new StringTable();
+        }
+
         while (true)
         {
             $languageCode = ord(fread($fp, 1));
@@ -36,21 +44,21 @@ trait StringTableDecoder
                 $string .= $character;
             }
 
-            $this->stringTable[$index][] = new RCT2String($languageCode, $string);
+            $this->stringTable[$name]->strings[] = new SawyerString($languageCode, $string);
         }
     }
 
-    public function getStringTable(int $index = 0): array
+    public function getStringTable(string $name = 'name'): StringTable
     {
-        return $this->stringTable[$index];
+        return $this->stringTable[$name];
     }
 
     public function printStringTables(): void
     {
-        foreach ($this->stringTable as $index => $stringTable)
+        foreach ($this->stringTable as $name => $stringTable)
         {
-            Util::printLn("String table #{$index}:");
-            foreach ($stringTable as $stringTableItem)
+            Util::printLn("String table “{$name}”:");
+            foreach ($stringTable->strings as $stringTableItem)
             {
                 Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
             }

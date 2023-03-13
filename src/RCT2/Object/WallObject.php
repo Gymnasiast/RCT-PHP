@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Binary;
-use RCTPHP\RCT2String;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
 use function fclose;
-use function file_put_contents;
 use function fopen;
 use function fread;
 use function fseek;
@@ -25,9 +25,7 @@ class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 
     public DATHeader $header;
 
-
-
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
 
     public DATHeader|null $attachTo;
@@ -58,7 +56,7 @@ class WallObject implements DATObject, StringTableOwner, ImageTableOwner
         fseek($fp, 0x1, SEEK_CUR);
         $this->scrollingMode = Binary::readUint8($fp);
 
-        $this->readStringTable($fp);
+        $this->readStringTable($fp, 'name');
 
         $this->attachTo = DATHeader::try($fp);
 

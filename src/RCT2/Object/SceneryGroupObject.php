@@ -5,9 +5,9 @@ namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\OpenRCT2\Object\SceneryGroupObject as OpenRCT2SceneryGroupObject;
 use RCTPHP\OpenRCT2\Object\SceneryGroupProperties;
-use RCTPHP\RCT2String;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
+use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use function fclose;
 use function fopen;
@@ -24,7 +24,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
     /** @var DATHeader[] */
     public array $objects = [];
@@ -65,7 +65,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         fseek($fp, 1, SEEK_CUR);
         $this->entertainerCostumes = unpack('V', (fread($fp, 4)))[1] >> 4; // 32-bit little endian
 
-        $this->readStringTable($fp);
+        $this->readStringTable($fp, 'name');
 
         $this->readObjects($fp);
 
@@ -81,7 +81,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         Util::printLn("DAT name: {$this->header->name}");
         Util::printLn("Priority: {$this->priority}");
 
-        foreach ($this->stringTable[0] as $stringTableItem)
+        foreach ($this->stringTable['name'] as $stringTableItem)
         {
             //if ($stringTableItem->languageCode === 0)
             {

@@ -7,7 +7,8 @@ use RCTPHP\Binary;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
-use RCTPHP\RCT2String;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
@@ -27,7 +28,7 @@ class SoundObject implements DATObject, StringTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
 
     public readonly int $volume;
@@ -46,7 +47,7 @@ class SoundObject implements DATObject, StringTableOwner
         $pad07 = Binary::readUint8($fp);
         $this->volume = Binary::readSint32($fp);
 
-        $this->readStringTable($fp, 0);
+        $this->readStringTable($fp, 'name');
 
         $numSamples = Binary::readUint32($fp);
         $lengthOfSoundData = Binary::readUint32($fp);

@@ -69,9 +69,9 @@ final class TP4File
         }
 
         $colors = imagecolorsforindex($this->image, $colorNumber);
-        foreach (PALETTE as $index => $paletteColour)
+        foreach (PALETTE as $index => $paletteColor)
         {
-            if ($paletteColour->r === $colors['red'] && $paletteColour->g === $colors['green'] && $paletteColour->b === $colors['blue'])
+            if ($paletteColor->r === $colors['red'] && $paletteColor->g === $colors['green'] && $paletteColor->b === $colors['blue'])
             {
                 return $index;
             }

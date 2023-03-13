@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\ImageTable;
 
 use RCTPHP\Binary;
+use RCTPHP\Util\RGB;
 use function array_fill;
 use function file_put_contents;
 use function fopen;
@@ -16,7 +17,6 @@ use function imagepng;
 use function imagesetpixel;
 use function rewind;
 use function substr;
-use function var_dump;
 
 require_once __DIR__ . '/../../RCT1/TP4/Palette.php';
 
@@ -26,6 +26,8 @@ final class ImageTable
     public readonly array $entries;
     /** @var string[] */
     public readonly array $binaryImageData;
+
+    public readonly array $paletteParts;
 
     public function __construct(public readonly string $binaryData)
     {
@@ -39,6 +41,7 @@ final class ImageTable
     {
         $numImages = Binary::readUint32($fp);
         $imageDataSize = Binary::readUint32($fp);
+        $paletteParts = [];
 
         /** @var ImageHeader[] $entries */
         $entries = [];
@@ -95,11 +98,29 @@ final class ImageTable
 
                 imagepng($image, "rledecoded-{$i}.png");
             }
+            else
+            {
+                file_put_contents("palette-{$i}.bin", $dataForThisImage);
+                $numColors = $currentEntry->width;
+                $index = $currentEntry->xOffset;
+                $colors = [];
+                for ($j = 0; $j < $numColors; $j++)
+                {
+                    $b = ord($dataForThisImage[($j * 3) + 0]);
+                    $g = ord($dataForThisImage[($j * 3) + 1]);
+                    $r = ord($dataForThisImage[($j * 3) + 2]);
+
+                    $colors[] = new RGB($r, $g, $b);
+                }
+
+                $paletteParts[] = new Palette($index, $numColors, $colors);
+            }
 
             $binaryImageData[] = $dataForThisImage;
         }
 
         $this->binaryImageData = $binaryImageData;
+        $this->paletteParts = $paletteParts;
     }
 
     private function readImage(ImageHeader $entry, $dataForThisImage): PalettizedImage

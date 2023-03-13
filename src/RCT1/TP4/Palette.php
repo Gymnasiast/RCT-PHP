@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT1\TP4;
 
+use RCTPHP\Util\RGB;
+
 const PALETTE = [
     /* 0x00 => */new RGB(0, 0, 0),
     /* 0x01 => */new RGB(0, 0, 0),

@@ -1,9 +1,10 @@
 <?php
-namespace RCTPHP;
+namespace RCTPHP\Sawyer;
 
+use JsonSerializable;
 use function mb_convert_encoding;
 
-final class RCT2String
+final class SawyerString implements JsonSerializable
 {
     public const EN_GB = 0;
     public const EN_US = 1;
@@ -19,6 +20,23 @@ final class RCT2String
     public const ZH_TW = 11;
     public const PL_PL = 12;
     public const PT_BR = 13;
+
+    public const ISO_MAPPING = [
+        self::EN_GB => 'en-GB',
+        self::EN_US => 'en-US',
+        self::FR_FR => 'fr-FR',
+        self::DE_DE => 'de-DE',
+        self::ES_ES => 'es-ES',
+        self::IT_IT => 'it-IT',
+        self::NL_NL => 'nl-NL',
+        self::SV_SE => 'sv-SE',
+        self::JA_JP => 'ja-JP',
+        self::KO_KR => 'ko-KR',
+        self::ZH_CN => 'zh-CN',
+        self::ZH_TW => 'zh-TW',
+        self::PL_PL => 'pl-PL',
+        self::PT_BR => 'pt-BR',
+    ];
 
     private const MULTIBYTE_MARKER = 0xFF;
 
@@ -67,4 +85,8 @@ final class RCT2String
         return $output;
     }
 
+    public function jsonSerialize(): string
+    {
+        return $this->toUtf8();
+    }
 }

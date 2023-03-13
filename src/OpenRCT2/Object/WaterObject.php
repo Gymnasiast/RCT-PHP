@@ -5,11 +5,12 @@ namespace RCTPHP\OpenRCT2\Object;
 
 final class WaterObject extends BaseObject
 {
-    public function __construct()
+    public WaterProperties $properties;
+
+    public function __construct(WaterProperties $properties = new WaterProperties(true))
     {
         $this->objectType = ObjectType::WATER;
-        $this->properties = new WaterProperties(true);
+        $this->properties = $properties;
     }
 
-    public WaterProperties $properties;
 }

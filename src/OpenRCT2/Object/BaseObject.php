@@ -9,7 +9,10 @@ abstract class BaseObject
     /** @var string[] */
     public array $authors = [];
     public string $version = '1.0';
+    public string|null $originalId = null;
     public string $sourceGame = 'custom';
     public ObjectType $objectType;
     public array $strings = [];
+
+
 }

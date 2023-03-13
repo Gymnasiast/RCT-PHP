@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\OpenRCT2\Object;
 
+use function array_key_exists;
 use function json_decode;
 use function json_encode;
 use const JSON_PRETTY_PRINT;
@@ -19,8 +20,13 @@ final class ObjectSerializer
 
     public function serializeToArray(): array
     {
-        $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR);
+        $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         $vars = json_decode($firstPass, true, 512, JSON_THROW_ON_ERROR);
+
+        if (array_key_exists('originalId', $vars) && empty($vars['originalId']))
+        {
+            unset($vars['originalId']);
+        }
 
         // Ensure the object _ends_ with the string table. Change _ to -.
         $strings = $vars['strings'];
@@ -40,6 +46,6 @@ final class ObjectSerializer
     public function serializeToJson(): string
     {
         $contents = $this->serializeToArray();
-        return json_encode($contents, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+        return json_encode($contents, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }

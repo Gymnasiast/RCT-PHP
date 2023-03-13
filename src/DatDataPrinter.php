@@ -8,8 +8,10 @@ use RCTPHP\Locomotion\Object\ObjectType as LocoObjectType;
 use RCTPHP\Locomotion\Object\ScenarioTextObject as LocoScenarioTextObject;
 use RCTPHP\Locomotion\Object\SoundObject;
 use RCTPHP\Locomotion\Object\TrackObject;
+use RCTPHP\OpenRCT2\Object\ObjectSerializer;
 use RCTPHP\RCT2\Object\DATHeader as RCT2DATHeader;
 use RCTPHP\RCT2\Object\DATObject;
+use RCTPHP\RCT2\Object\ObjectWithOpenRCT2Counterpart;
 use RCTPHP\RCT2\Object\ScenarioTextObject as RCT2ScenarioTextObject;
 use RCTPHP\RCT2\Object\SceneryGroupObject;
 use RCTPHP\RCT2\Object\WallObject;
@@ -45,7 +47,7 @@ class DatDataPrinter
         LocoDATHeader::OBJECT_TYPE_SCENARIO_TEXT => LocoScenarioTextObject::class,
     ];
 
-    public function __construct(string $filename, bool $isLocomotion)
+    public function __construct(string $filename, bool $isLocomotion, private bool $isDebug = false)
     {
         $fp = fopen($filename, 'rb');
         if ($fp === false)
@@ -98,13 +100,20 @@ class DatDataPrinter
         }
 
         $this->object->printData();
-        if ($this->object instanceof ImageTableOwner)
+        if ($this->isDebug && $this->object instanceof ImageTableOwner)
         {
             $imageTable = $this->object->getImageTable();
             foreach ($imageTable->entries as $entry)
             {
                 var_dump($entry);
             }
+        }
+
+        if ($this->object instanceof ObjectWithOpenRCT2Counterpart)
+        {
+            $converted = $this->object->toOpenRCT2Object();
+            $serialized = (new ObjectSerializer($converted))->serializeToJson();
+            file_put_contents('converted.json', $serialized);
         }
     }
 }

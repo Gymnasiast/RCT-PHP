@@ -7,12 +7,12 @@ use RCTPHP\Binary;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
-use RCTPHP\RCT2String;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
+use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use function fclose;
-use function file_put_contents;
 use function fopen;
 use function fread;
 use function fseek;
@@ -26,7 +26,7 @@ class TrackObject implements DATObject, StringTableOwner, ImageTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var RCT2String[][] */
+    /** @var StringTable[] */
     public array $stringTable = [];
 
     /** @var DATHeader[] */
@@ -92,7 +92,7 @@ class TrackObject implements DATObject, StringTableOwner, ImageTableOwner
         {
             throw new \Exception('Error in table implementation!');
         }
-        $this->readStringTable($fp);
+        $this->readStringTable($fp, 'name');
 
         for ($i = 0; $i < $numCompatible; $i++)
         {
