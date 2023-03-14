@@ -20,7 +20,7 @@ final class ObjectSerializer
 
     public function serializeToArray(): array
     {
-        $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+        $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $vars = json_decode($firstPass, true, 512, JSON_THROW_ON_ERROR);
 
         if (array_key_exists('originalId', $vars) && empty($vars['originalId']))
@@ -46,6 +46,6 @@ final class ObjectSerializer
     public function serializeToJson(): string
     {
         $contents = $this->serializeToArray();
-        return json_encode($contents, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        return json_encode($contents, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }
