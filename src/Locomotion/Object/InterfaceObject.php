@@ -7,6 +7,7 @@ use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
@@ -14,6 +15,7 @@ use TXweb\BinaryHandler\BinaryReader;
 
 class InterfaceObject implements DATObject, StringTableOwner, ImageTableOwner
 {
+    use DATFromFile;
     use StringTableDecoder;
 
     public DATHeader $header;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\SawyerPrice;
@@ -13,6 +14,7 @@ use TXweb\BinaryHandler\BinaryReader;
 
 class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 {
+    use DATFromFile;
     use StringTableDecoder;
 
     public DATHeader $header;

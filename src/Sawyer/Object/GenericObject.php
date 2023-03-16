@@ -9,6 +9,7 @@ use RCTPHP\Util;
 
 final class GenericObject implements DATObject
 {
+    use DATFromFile;
     private GenericDATHeader $header;
 
     /**

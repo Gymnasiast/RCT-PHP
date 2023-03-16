@@ -6,6 +6,7 @@ namespace RCTPHP\RCT2\Object;
 use RCTPHP\OpenRCT2\Object\SceneryGroupObject as OpenRCT2SceneryGroupObject;
 use RCTPHP\OpenRCT2\Object\SceneryGroupProperties;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
+use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
@@ -14,6 +15,7 @@ use const STR_PAD_LEFT;
 
 class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
+    use DATFromFile;
     use StringTableDecoder;
 
     public DATHeader $header;

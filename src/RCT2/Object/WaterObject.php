@@ -9,6 +9,7 @@ use RCTPHP\OpenRCT2\Object\WaterProperties;
 use RCTPHP\OpenRCT2\Object\WaterPropertiesPalettes;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\ImageTable\ImageTableDecoder;
+use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
@@ -22,6 +23,7 @@ use const JSON_THROW_ON_ERROR;
 
 class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
+    use DATFromFile;
     use ImageTableDecoder;
     use StringTableDecoder;
 

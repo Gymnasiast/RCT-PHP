@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use TXweb\BinaryHandler\BinaryReader;
 
 class ScenarioTextObject implements DATObject, StringTableOwner
 {
+    use DATFromFile;
     use StringTableDecoder;
 
     public DATHeader $header;
