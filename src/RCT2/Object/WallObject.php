@@ -3,21 +3,13 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\Binary;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
-use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
-use function rewind;
-use const SEEK_CUR;
+use TXweb\BinaryHandler\BinaryReader;
 
 class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 {
@@ -41,30 +33,25 @@ class WallObject implements DATObject, StringTableOwner, ImageTableOwner
     public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $decoded);
+        $reader = BinaryReader::fromString($decoded);
 
-        rewind($fp);
+        $reader->seek(0x6);
 
-        fseek($fp, 0x6, SEEK_CUR);
+        $this->toolId = $reader->readUint8();
+        $this->flags = $reader->readUint8();
+        $this->height = new SawyerTileHeight($reader->readUint8());
+        $this->flags2 = $reader->readUint8();
+        $this->price = new SawyerPrice($reader->readUint16());
+        $reader->seek(0x1);
+        $this->scrollingMode = $reader->readUint8();
 
-        $this->toolId = Binary::readUint8($fp);
-        $this->flags = Binary::readUint8($fp);
-        $this->height = new SawyerTileHeight(Binary::readUint8($fp));
-        $this->flags2 = Binary::readUint8($fp);
-        $this->price = new SawyerPrice(Binary::readUint16($fp));
-        fseek($fp, 0x1, SEEK_CUR);
-        $this->scrollingMode = Binary::readUint8($fp);
+        $this->readStringTable($reader, 'name');
 
-        $this->readStringTable($fp, 'name');
+        $this->attachTo = DATHeader::try($reader);
 
-        $this->attachTo = DATHeader::try($fp);
-
-        $imageTableSize = strlen($decoded) - ftell($fp);
-        $imageTable = fread($fp, $imageTableSize);
+        $imageTableSize = strlen($decoded) - $reader->getPosition();
+        $imageTable = $reader->readBytes($imageTableSize);
         $this->imageTable = new ImageTable($imageTable);
-
-        fclose($fp);
     }
 
     public function printData(): void

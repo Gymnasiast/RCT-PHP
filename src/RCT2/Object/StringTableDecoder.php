@@ -6,18 +6,13 @@ namespace RCTPHP\RCT2\Object;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
+use TXweb\BinaryHandler\BinaryReader;
 use function array_key_exists;
-use function fread;
 use function ord;
 
 trait StringTableDecoder
 {
-    /**
-     * @param resource $fp
-     * @param int $index
-     * @return void
-     */
-    public function readStringTable(&$fp, string $name): void
+    public function readStringTable(BinaryReader $reader, string $name): void
     {
         if (!array_key_exists($name, $this->stringTable))
         {
@@ -26,7 +21,7 @@ trait StringTableDecoder
 
         while (true)
         {
-            $languageCode = ord(fread($fp, 1));
+            $languageCode = $reader->readUint8();
             if ($languageCode === 0xFF)
             {
                 break;
@@ -35,7 +30,7 @@ trait StringTableDecoder
             $string = '';
             while (true)
             {
-                $character = fread($fp, 1);
+                $character = $reader->readBytes(1);
                 if (ord($character) === 0)
                 {
                     break;

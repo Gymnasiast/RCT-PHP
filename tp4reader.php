@@ -13,11 +13,6 @@ if ($argc < 3)
 $inputFilename = $argv[1];
 $outputFilename = $argv[2];
 
-$fp = fopen($inputFilename, 'rb');
-if ($fp === false)
-{
-    throw new RuntimeException('Cannot open input file!');
-}
-
-$tp4File = TP4File::createFromFile($fp);
+$reader = \TXweb\BinaryHandler\BinaryReader::fromFile($inputFilename);
+$tp4File = TP4File::createFromFile($reader);
 $tp4File->writeImage($outputFilename);

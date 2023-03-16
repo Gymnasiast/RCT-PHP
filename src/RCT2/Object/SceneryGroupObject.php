@@ -9,14 +9,7 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
-use function ord;
-use function rewind;
-use const SEEK_CUR;
+use TXweb\BinaryHandler\BinaryReader;
 use const STR_PAD_LEFT;
 
 class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
@@ -51,29 +44,22 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
     public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $decoded);
-
-        rewind($fp);
-        fseek($fp, 0x10B, SEEK_CUR);
+        $reader = BinaryReader::fromString($decoded);
+        $reader->seek(0x10B);
         //        fseek($fp, 6 + (0x80 * 2), SEEK_CUR); // ?
 //        fseek($fp, 8, SEEK_CUR);
 //        $this->numEntries = ord(fread($fp, 1));
 //        fseek($fp, 1, SEEK_CUR);
-        $this->priority = ord(fread($fp, 1));
+        $this->priority = $reader->readUint8();
 
-        fseek($fp, 1, SEEK_CUR);
-        $this->entertainerCostumes = unpack('V', (fread($fp, 4)))[1] >> 4; // 32-bit little endian
+        $reader->seek(1);
+        $this->entertainerCostumes = $reader->readUint32() >> 4;
 
-        $this->readStringTable($fp, 'name');
+        $this->readStringTable($reader, 'name');
 
-        $this->readObjects($fp);
+        $this->readObjects($reader);
 
-        $this->imageTable = new ImageTable(fread($fp, strlen($decoded) - ftell($fp)));
-        //$this->readImageTable($fp);
-
-
-        fclose($fp);
+        $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
     }
 
     public function printData(): void
@@ -114,22 +100,18 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         Util::printLn('');
     }
 
-    /**
-     * @param resource $fp
-     * @return void
-     */
-    private function readObjects(&$fp): void
+    private function readObjects(BinaryReader $reader): void
     {
         while (true)
         {
-            $byte = ord(fread($fp, 1));
+            $byte = $reader->readUint8();
             if ($byte === 0xFF)
             {
                 break;
             }
 
-            fseek($fp, -1, SEEK_CUR);
-            $this->objects[] = DATHeader::try($fp);
+            $reader->seek(-1);
+            $this->objects[] = DATHeader::try($reader);
         }
     }
 

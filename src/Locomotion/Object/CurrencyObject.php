@@ -9,15 +9,8 @@ use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
-use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
-use function rewind;
-use const SEEK_CUR;
+use TXweb\BinaryHandler\BinaryReader;
 
 class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
 {
@@ -31,20 +24,16 @@ class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
     public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $decoded);
 
-        rewind($fp);
-        fseek($fp, 0x0C, SEEK_CUR);
+        $reader = BinaryReader::fromString($decoded);
+        $reader->seek(0x0C);
 
-        $this->readStringTable($fp, 'name');
-        $this->readStringTable($fp, 'prefix');
-        $this->readStringTable($fp, 'suffix');
+        $this->readStringTable($reader, 'name');
+        $this->readStringTable($reader, 'prefix');
+        $this->readStringTable($reader, 'suffix');
 
-        $this->imageTable = new ImageTable(fread($fp, strlen($decoded) - ftell($fp)));
+        $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
         $this->imageTable->exportToFile('imagetable-g0.dat');
-
-        fclose($fp);
     }
 
     public function printData(): void

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use RCTPHP\Util;
 use RCTPHP\Wave\WavFile;
+use TXweb\BinaryHandler\BinaryReader;
 use TXweb\BinaryHandler\BinaryWriter;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -32,9 +33,8 @@ $readFiles = [];
 foreach ($files as $file)
 {
     $fullFilename = "$inputFolder/$file";
-    $fp = fopen($fullFilename, 'rb');
-    $readFiles[$file] = WavFile::createFromFile($fp);
-    fclose($fp);
+    $reader = BinaryReader::fromFile($fullFilename);
+    $readFiles[$file] = WavFile::createFromFile($reader);
 }
 
 $startOffset = 4 + ($numSamples * 4);

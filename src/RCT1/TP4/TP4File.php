@@ -5,10 +5,10 @@ namespace RCTPHP\RCT1\TP4;
 
 use Exception;
 use GdImage;
-use RCTPHP\Binary;
 use RuntimeException;
+use TXweb\BinaryHandler\BinaryReader;
+use TXweb\BinaryHandler\BinaryWriter;
 use function chr;
-use function fwrite;
 use function imagecolorat;
 use function imagepalettetotruecolor;
 
@@ -35,28 +35,28 @@ final class TP4File
 
     public function writeTP4(string $filename): void
     {
-        $fp = fopen($filename, 'wb');
-        fwrite($fp, $this->generateHeader());
+        $writer = BinaryWriter::fromFile($filename);
+        $writer->writeBytes($this->generateHeader());
         for ($lineNum = 0; $lineNum < self::HEIGHT; $lineNum++)
         {
-            fwrite($fp, chr(0x7F));
-            fwrite($fp, chr(0x00));
+            $writer->writeBytes(chr(0x7F));
+            $writer->writeBytes(chr(0x00));
 
             for ($i = 0; $i < 127; $i++)
             {
                 $color = imagecolorat($this->image, $i, $lineNum);
                 $index = $this->getPaletteIndex($color);
-                fwrite($fp, chr($index));
+                $writer->writeBytes(chr($index));
             }
 
-            fwrite($fp, chr(0xFF));
-            fwrite($fp, chr(0x7F));
+            $writer->writeBytes(chr(0xFF));
+            $writer->writeBytes(chr(0x7F));
 
             for ($i = 127; $i < 254; $i++)
             {
                 $color = imagecolorat($this->image, $i, $lineNum);
                 $index = $this->getPaletteIndex($color);
-                fwrite($fp, chr($index));
+                $writer->writeBytes(chr($index));
             }
         }
     }
@@ -99,13 +99,13 @@ final class TP4File
     }
 
     /**
-     * @param resource $fp
+     * @param BinaryReader $reader
      * @return self
      * @throws Exception
      */
-    public static function createFromFile($fp): self
+    public static function createFromFile(BinaryReader $reader): self
     {
-        fseek($fp, 400);
+        $reader->seek(400);
 
         $image = imagecreate(self::WIDTH, self::HEIGHT);
         foreach (\RCTPHP\RCT1\TP4\PALETTE as $index => $color)
@@ -120,16 +120,16 @@ final class TP4File
 
         for ($lineNum = 0; $lineNum < self::HEIGHT; $lineNum++)
         {
-            $startFlag = Binary::readUint16($fp);
+            $startFlag = $reader->readUint16();
             for ($i = 0; $i < 127; $i++)
             {
-                $index = Binary::readUint8($fp);
+                $index = $reader->readUint8();
                 imagesetpixel($image, $i, $lineNum, $index);
             }
-            $midFlag = Binary::readUint16($fp);
+            $midFlag = $reader->readUint16();
             for ($i = 0; $i < 127; $i++)
             {
-                $index = Binary::readUint8($fp);
+                $index = $reader->readUint8();
                 imagesetpixel($image, $i + 127, $lineNum, $index);
             }
         }

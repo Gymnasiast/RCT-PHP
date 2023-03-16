@@ -3,19 +3,14 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer\ImageTable;
 
-use RCTPHP\Binary;
 use RCTPHP\Util\RGB;
+use TXweb\BinaryHandler\BinaryReader;
 use function array_fill;
 use function file_put_contents;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
 use function imagecolorallocate;
 use function imagecreate;
 use function imagepng;
 use function imagesetpixel;
-use function rewind;
 use function substr;
 
 require_once __DIR__ . '/../../RCT1/TP4/Palette.php';
@@ -31,16 +26,14 @@ final class ImageTable
 
     public function __construct(public readonly string $binaryData)
     {
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $binaryData);
-        rewind($fp);
-        $this->readImageTable($fp);
+        $reader = BinaryReader::fromString($this->binaryData);
+        $this->readImageTable($reader);
     }
 
-    public function readImageTable($fp)
+    public function readImageTable(BinaryReader $reader)
     {
-        $numImages = Binary::readUint32($fp);
-        $imageDataSize = Binary::readUint32($fp);
+        $numImages = $reader->readUint32();
+        $imageDataSize = $reader->readUint32();
         $paletteParts = [];
 
         /** @var ImageHeader[] $entries */
@@ -48,12 +41,12 @@ final class ImageTable
 
         for ($i = 0; $i < $numImages; $i++)
         {
-            $entries[] = self::readImageHeader($fp);
+            $entries[] = self::readImageHeader($reader);
         }
 
         $this->entries = $entries;
 
-        $imageData = fread($fp, $imageDataSize);
+        $imageData = $reader->readBytes($imageDataSize);
 
         $binaryImageData = [];
         for ($i = 0; $i < $numImages; $i++)
@@ -125,16 +118,13 @@ final class ImageTable
 
     private function readImage(ImageHeader $entry, $dataForThisImage): PalettizedImage
     {
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $dataForThisImage);
-        rewind($fp);
-
+        $reader = BinaryReader::fromString($dataForThisImage);
         $paletteImage = new PalettizedImage($entry->width, $entry->height);
         for ($y = 0; $y < $entry->height; $y++)
         {
             for ($x = 0; $x < $entry->width; $x++)
             {
-                $paletteImage->setPixel($x, $y, Binary::readUint8($fp));
+                $paletteImage->setPixel($x, $y, $reader->readUint8());
             }
         }
 
@@ -143,32 +133,30 @@ final class ImageTable
 
     private function decodeImageRLE(ImageHeader $entry, $dataForThisImage): PalettizedImage
     {
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $dataForThisImage);
-        rewind($fp);
+        $reader = BinaryReader::fromString($dataForThisImage);
         $paletteImage = new PalettizedImage($entry->width, $entry->height);
         $rowOffsets = array_fill(0, $entry->height, 0);
 
         // Read the row offsets
         for ($j = 0; $j < $entry->height; $j++) {
-            $rowOffsets[$j] = Binary::readUint16($fp);
+            $rowOffsets[$j] = $reader->readUint16();
         }
 
         // Read the scan lines in each row
         for ($j = 0; $j < $entry->height; $j++) {
-            fseek($fp, $rowOffsets[$j]);
+            $reader->moveTo($rowOffsets[$j]);
             $b1 = 0;
             $b2 = 0;
 
             // An MSB of 1 means the last scan line in a row
             while (($b1 & 0x80) === 0) {
                 // Read the number of bytes of data
-                $b1 = Binary::readUint8($fp);
+                $b1 = $reader->readUint8();
                 // Read the offset from the left edge of the image
-                $b2 = Binary::readUint8($fp);
+                $b2 = $reader->readUint8();
                 for ($k = 0; $k < ($b1 & 0x7F); $k++)
                 {
-                    $b3 = Binary::readUint8($fp);
+                    $b3 = $reader->readUint8();
                     $x = $b2 + $k;
                     $y = $j;
                     $paletteImage->setPixel($x, $y, $b3);
@@ -180,19 +168,19 @@ final class ImageTable
     }
 
     /**
-     * @param resource $fp
+     * @param BinaryReader $reader
      * @return ImageHeader
      */
-    public static function readImageHeader(&$fp): ImageHeader
+    public static function readImageHeader(BinaryReader $reader): ImageHeader
     {
         $header = new ImageHeader();
-        $header->startAddress = Binary::readUint32($fp);
-        $header->width = Binary::readUint16($fp);
-        $header->height = Binary::readUint16($fp);
-        $header->xOffset = Binary::readSint16($fp);
-        $header->yOffset = Binary::readSint16($fp);
-        $header->flags = Binary::readUint16($fp);
-        $header->zoomedOffset = Binary::readSint16($fp);
+        $header->startAddress = $reader->readUint32();
+        $header->width = $reader->readUint16();
+        $header->height = $reader->readUint16();
+        $header->xOffset = $reader->readSint16();
+        $header->yOffset = $reader->readSint16();
+        $header->flags = $reader->readUint16();
+        $header->zoomedOffset = $reader->readSint16();
         return $header;
     }
 

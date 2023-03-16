@@ -6,6 +6,7 @@ namespace RCTPHP;
 use Exception;
 use RCTPHP\Sawyer\ChunkEncoding;
 use RuntimeException;
+use TXweb\BinaryHandler\BinaryReader;
 use ValueError;
 use function chr;
 use function fclose;
@@ -140,18 +141,11 @@ final class Util
         return $repeatDecoded;
     }
 
-    /**
-     * @param resource $stream
-     * @return string
-     *
-     * @throws ValueError
-     * @throws Exception
-     */
-    public static function readChunk($stream): string
+    public static function readChunk(BinaryReader $reader): string
     {
-        $encoding = ChunkEncoding::from(Binary::readUint8($stream));
-        $restLength = Binary::readUint32($stream);
-        $rest = fread($stream, $restLength);
+        $encoding = ChunkEncoding::from($reader->readUint8());
+        $restLength = $reader->readUint32();
+        $rest = $reader->readBytes($restLength);
 
         return match ($encoding)
         {

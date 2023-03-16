@@ -3,25 +3,17 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\Binary;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
-use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
+use TXweb\BinaryHandler\BinaryReader;
 use function is_dir;
 use function mkdir;
-use function rewind;
 use function trim;
-use const SEEK_CUR;
 
 class SoundObject implements DATObject, StringTableOwner
 {
@@ -38,36 +30,31 @@ class SoundObject implements DATObject, StringTableOwner
     public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $decoded);
+        $reader = BinaryReader::fromString($decoded);
+        $reader->seek(0x06);
+        $var06 = $reader->readUint8();
+        $pad07 = $reader->readUint8();
+        $this->volume = $reader->readSint32();
 
-        rewind($fp);
-        fseek($fp, 0x06, SEEK_CUR);
-        $var06 = Binary::readUint8($fp);
-        $pad07 = Binary::readUint8($fp);
-        $this->volume = Binary::readSint32($fp);
+        $this->readStringTable($reader, 'name');
 
-        $this->readStringTable($fp, 'name');
+        $numSamples = $reader->readUint32();
+        $lengthOfSoundData = $reader->readUint32();
 
-        $numSamples = Binary::readUint32($fp);
-        $lengthOfSoundData = Binary::readUint32($fp);
-
-        fseek($fp, $numSamples * 16, SEEK_CUR);
+        $reader->seek($numSamples * 16);
 
         $soundData = [];
         for ($i = 0; $i < $numSamples; $i++)
         {
-            $var00 = Binary::readSint32($fp);
-            $offset = Binary::readSint32($fp);
-            $length = Binary::readUint32($fp);
-            $header = fread($fp, Header::SIZE);
-            $pcmData = fread($fp, $length);
+            $var00 = $reader->readSint32();
+            $offset = $reader->readSint32();
+            $length = $reader->readUint32();
+            $header = $reader->readBytes(Header::SIZE);
+            $pcmData = $reader->readBytes($length);
 
             $soundData[] = new WavFile($header, $pcmData);
         }
         $this->soundData = $soundData;
-
-        fclose($fp);
     }
 
     public function printData(): void

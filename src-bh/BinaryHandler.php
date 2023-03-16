@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace TXweb\BinaryHandler;
 
+use RuntimeException;
+use function fseek;
 use function ftell;
+use function is_resource;
+use const SEEK_SET;
 
 abstract class BinaryHandler
 {
@@ -16,6 +20,10 @@ abstract class BinaryHandler
      */
     public function __construct($fp, bool $closeOnDestruction = false)
     {
+        if (!is_resource($fp))
+        {
+            throw new RuntimeException('$fp must be a resource!');
+        }
         $this->fp = $fp;
         $this->closeOnDescruction = $closeOnDestruction;
     }
@@ -31,6 +39,21 @@ abstract class BinaryHandler
     public function rewind(): void
     {
         rewind($this->fp);
+    }
+
+    public function seek(int $bytes): void
+    {
+        fseek($this->fp, $bytes, SEEK_CUR);
+    }
+
+    public function moveTo(int $position): void
+    {
+        fseek($this->fp, $position, SEEK_SET);
+    }
+
+    public function getSize(): int
+    {
+        return (int)(fstat($this->fp)['size']);
     }
 
     public function getPosition(): int

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\Wave;
 
-use RCTPHP\Binary;
+use TXweb\BinaryHandler\BinaryReader;
 
 final class Header
 {
@@ -16,16 +16,13 @@ final class Header
     public readonly int $blockAlign;
     public readonly int $bitsPerSample;
 
-    /**
-     * @param resource $fp
-     */
-    public function __construct($fp)
+    public function __construct(BinaryReader $reader)
     {
-        $this->formatTag = Binary::readUint16($fp);
-        $this->channels = Binary::readUint16($fp);
-        $this->samplesPerSec = Binary::readUint32($fp);
-        $this->avgBytesPerSec = Binary::readUint32($fp);
-        $this->blockAlign = Binary::readUint16($fp);
-        $this->bitsPerSample = Binary::readUint16($fp);
+        $this->formatTag = $reader->readUint16();
+        $this->channels = $reader->readUint16();
+        $this->samplesPerSec = $reader->readUint32();
+        $this->avgBytesPerSec = $reader->readUint32();
+        $this->blockAlign = $reader->readUint16();
+        $this->bitsPerSample = $reader->readUint16();
     }
 }

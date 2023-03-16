@@ -1,9 +1,9 @@
 <?php
 
-use RCTPHP\Binary;
 use RCTPHP\Util;
 use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
+use TXweb\BinaryHandler\BinaryReader;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -16,18 +16,18 @@ if ($argc < 3)
 $filename = $argv[1];
 $outputFolder = rtrim($argv[2], '/');
 
-$fp = fopen($filename, 'rb');
-$numSamples = Binary::readUint32($fp);
+$reader = BinaryReader::fromFile($filename);
+$numSamples = $reader->readUint32();
 $offsetList = [];
 for ($i = 0; $i < $numSamples; $i++)
 {
-    $offsetList[$i] = Binary::readUint32($fp);
+    $offsetList[$i] = $reader->readUint32();
 }
 // To allow +1
-$offsetList[$numSamples] = fstat($fp)['size'];
+$offsetList[$numSamples] = $reader->getSize();
 
-$soundDataSize = Binary::readUint32($fp);
-$realSoundDataSize = fstat($fp)['size'] - ftell($fp);
+$soundDataSize = $reader->readUint32();
+$realSoundDataSize = $reader->getSize() - $reader->getPosition();
 
 Util::printLn("Num samples: {$numSamples}");
 for ($i = 0; $i < $numSamples; $i++)
@@ -36,17 +36,15 @@ for ($i = 0; $i < $numSamples; $i++)
 }
 Util::printLn("Sound data size: {$soundDataSize} / {$realSoundDataSize}");
 
-//var_dump(ftell($fp));
-
 
 
 for ($i = 0; $i < $numSamples; $i++)
 {
     $startOffset = $offsetList[$i];
     $size = $offsetList[$i + 1] - $startOffset;
-    fseek($fp, $startOffset + 4, SEEK_SET);
-    $header = fread($fp, Header::SIZE);
-    $pcm = fread($fp, $size - Header::SIZE);
+    $reader->moveTo($startOffset + 4);
+    $header = $reader->readBytes(Header::SIZE);
+    $pcm = $reader->readBytes($size - Header::SIZE);
 
     //shell_exec("sox -r {$struct->samplesPerSec} -e signed -b {$struct->bitsPerSample} -c {$struct->channels} {$pcmFilename} {$wavFilename}");
 

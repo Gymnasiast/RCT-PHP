@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
-use RCTPHP\Binary;
 use RCTPHP\OpenRCT2\Object\WaterObject as OpenRCT2WaterObject;
 use RCTPHP\OpenRCT2\Object\WaterPaletteGroup;
 use RCTPHP\OpenRCT2\Object\WaterProperties;
@@ -12,22 +11,14 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\ImageTable\ImageTableDecoder;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
-use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use RuntimeException;
+use TXweb\BinaryHandler\BinaryReader;
 use function count;
-use function fclose;
-use function fopen;
-use function fread;
-use function fseek;
-use function ftell;
-use function fwrite;
 use function json_encode;
-use function rewind;
 use function strlen;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
-use const SEEK_CUR;
 
 class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
@@ -44,17 +35,13 @@ class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, Objec
     public function __construct($header, string $decoded)
     {
         $this->header = $header;
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $decoded);
+        $reader = BinaryReader::fromString($decoded);
 
-        rewind($fp);
-        fseek($fp, 14, SEEK_CUR);
-        $this->allowDucks = (bool)Binary::readUint16($fp);
+        $reader->seek(14);
+        $this->allowDucks = (bool)$reader->readUint16();
 
-        $this->readStringTable($fp, 'name');
-        $this->imageTable = new ImageTable(fread($fp, strlen($decoded) - ftell($fp)));
-
-        fclose($fp);
+        $this->readStringTable($reader, 'name');
+        $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
     }
 
     public function printData(): void

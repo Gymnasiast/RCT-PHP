@@ -3,14 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\Wave;
 
-use RCTPHP\Binary;
-use function fopen;
-use function fread;
-use function fseek;
-use function fwrite;
-use function rewind;
+use TXweb\BinaryHandler\BinaryReader;
 use function var_dump;
-use const SEEK_CUR;
 
 final class WavFile
 {
@@ -22,10 +16,8 @@ final class WavFile
 
     public function getHeader(): Header
     {
-        $fp = fopen('php://memory', 'rwb+');
-        fwrite($fp, $this->header);
-        rewind($fp);
-        return new Header($fp);
+        $reader = BinaryReader::fromString($this->header);
+        return new Header($reader);
     }
 
     public function write(string $filename): void
@@ -44,23 +36,22 @@ final class WavFile
     }
 
     /**
-     * @param resource $fp
+     * @param BinaryReader $reader
      * @return static
      */
-    public static function createFromFile($fp): self
+    public static function createFromFile(BinaryReader $reader): self
     {
-        fseek($fp, 4, SEEK_CUR); // RIFF
-        fseek($fp, 4, SEEK_CUR); // size
-        fseek($fp, 4, SEEK_CUR); // WAVE
-        fseek($fp, 4, SEEK_CUR); // fmt
-        fseek($fp, 4, SEEK_CUR); // \x10\x00\x00\x00
+        $reader->seek(4); // RIFF
+        $reader->seek(4); // size
+        $reader->seek(4); // WAVE
+        $reader->seek(4); // fmt
+        $reader->seek(4); // \x10\x00\x00\x00
 
-        $header = fread($fp, Header::SIZE);
+        $header = $reader->readBytes(Header::SIZE);
 
-        fseek($fp, 4, SEEK_CUR); // data
-        $pcmDataSize = Binary::readUint32($fp);
-        var_dump($pcmDataSize);
-        $pcmData = fread($fp, $pcmDataSize);
+        $reader->seek(4); // data
+        $pcmDataSize = $reader->readUint32();
+        $pcmData = $reader->readBytes($pcmDataSize);
         return new self($header, $pcmData);
     }
 }

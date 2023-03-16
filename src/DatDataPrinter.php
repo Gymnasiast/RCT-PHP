@@ -19,10 +19,9 @@ use RCTPHP\RCT2\Object\WaterObject;
 use RCTPHP\Sawyer\Object\DATHeader;
 use RCTPHP\Sawyer\Object\GenericObject;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
-use RuntimeException;
+use TXweb\BinaryHandler\BinaryReader;
 use function array_key_exists;
 use function file_put_contents;
-use function fopen;
 use function var_dump;
 
 class DatDataPrinter
@@ -49,21 +48,16 @@ class DatDataPrinter
 
     public function __construct(string $filename, bool $isLocomotion, private bool $isDebug = false)
     {
-        $fp = fopen($filename, 'rb');
-        if ($fp === false)
-        {
-            throw new RuntimeException('Could not open file!');
-        }
+        $reader = BinaryReader::fromFile($filename);
 
         if ($isLocomotion)
-            $this->header = new LocoDATHeader($fp);
+            $this->header = new LocoDATHeader($reader);
         else
-            $this->header = new RCT2DATHeader($fp);
+            $this->header = new RCT2DATHeader($reader);
 
-        $this->rest =  Util::readChunk($fp);
+        $this->rest =  Util::readChunk($reader);
         file_put_contents('rest', $this->rest);
 
-        fclose($fp);
         $this->filename = $filename;
         $this->read();
     }

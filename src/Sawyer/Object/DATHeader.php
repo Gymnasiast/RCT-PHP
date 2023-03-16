@@ -1,13 +1,10 @@
 <?php
 namespace RCTPHP\Sawyer\Object;
 
-use RCTPHP\Binary;
+use TXweb\BinaryHandler\BinaryReader;
 use function dechex;
-use function fread;
-use function fseek;
 use function str_pad;
 use function strtoupper;
-use const SEEK_CUR;
 use const STR_PAD_LEFT;
 
 /**
@@ -23,32 +20,25 @@ abstract class DATHeader
     public readonly string $name;
     public readonly int $checksum;
 
-    /**
-     * @param resource $stream
-     */
-    final public function __construct($stream)
+    final public function __construct(BinaryReader $reader)
     {
-        $this->flags = Binary::readUint32($stream);
-        $this->name = fread($stream, 8); // ASCII string
-        $this->checksum = Binary::readUint32($stream);
+        $this->flags = $reader->readUint32();
+        $this->name = $reader->readBytes(8); // ASCII string
+        $this->checksum = $reader->readUint32();
     }
 
-    /**
-     * @param resource $stream
-     * @return static|null
-     */
-    final public static function try(&$stream): self|null
+    final public static function try(BinaryReader $reader): self|null
     {
         // A "null entry" or end of list is marked by setting the first byte to 0xFF.
-        $peek = Binary::readUint8($stream);
+        $peek = $reader->readUint8();
         if ($peek === 0xFF)
         {
-            fseek($stream, self::DAT_HEADER_SIZE - 1, SEEK_CUR);
+            $reader->seek(self::DAT_HEADER_SIZE - 1);
             return null;
         }
 
-        fseek($stream, -1, SEEK_CUR);
-        return new static($stream);
+        $reader->seek(-1);
+        return new static($reader);
     }
 
     abstract public function getType(): int;

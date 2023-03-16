@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer\ImageTable;
 
-use RCTPHP\Binary;
+use TXweb\BinaryHandler\BinaryReader;
 use function file_put_contents;
 use function fread;
 use function printf;
@@ -16,13 +16,13 @@ trait ImageTableDecoder
     }
 
     /**
-     * @param resource $fp
+     * @param BinaryReader $reader
      * @return void
      */
-    public function readImageTable($fp): void
+    public function readImageTable(BinaryReader $reader): void
     {
-        $numImages = Binary::readUint32($fp);
-        $imageDataSize = Binary::readUint32($fp);
+        $numImages = $reader->readUint32();
+        $imageDataSize = $reader->readUint32();
 
         $headerTableSize = $numImages * 16;
 
@@ -30,10 +30,10 @@ trait ImageTableDecoder
         $entries = [];
 
         for ($i = 0; $i < $numImages; $i++) {
-            $entries[] = self::readImageHeader($fp);
+            $entries[] = self::readImageHeader($reader);
         }
 
-        $imageData = fread($fp, $imageDataSize);
+        $imageData = $reader->readBytes($imageDataSize);
 
         for ($i = 0; $i < $numImages; $i++)
         {
@@ -158,19 +158,19 @@ trait ImageTableDecoder
     }
 
     /**
-     * @param resource $fp
+     * @param BinaryReader $reader
      * @return ImageHeader
      */
-    public static function readImageHeader(&$fp): ImageHeader
+    public static function readImageHeader(BinaryReader $reader): ImageHeader
     {
         $header = new ImageHeader();
-        $header->startAddress = Binary::readUint32($fp);
-        $header->width = Binary::readUint16($fp);
-        $header->height = Binary::readUint16($fp);
-        $header->xOffset = Binary::readSint16($fp);
-        $header->yOffset = Binary::readSint16($fp);
-        $header->flags = Binary::readUint16($fp);
-        $header->zoomedOffset = Binary::readSint16($fp);
+        $header->startAddress = $reader->readUint32();
+        $header->width = $reader->readUint16();
+        $header->height = $reader->readUint16();
+        $header->xOffset = $reader->readSint16();
+        $header->yOffset = $reader->readSint16();
+        $header->flags = $reader->readUint16();
+        $header->zoomedOffset = $reader->readSint16();
         return $header;
     }
 }
