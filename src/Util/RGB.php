@@ -27,6 +27,15 @@ final class RGB implements JsonSerializable
         return "#{$rHex}{$gHex}{$bHex}";
     }
 
+    public function fromHex(string $hex): self
+    {
+        $r = hexdec(substr($hex, 1, 2));
+        $g = hexdec(substr($hex, 3, 2));
+        $b = hexdec(substr($hex, 5, 2));
+
+        return new self($r, $g, $b);
+    }
+
     public function jsonSerialize(): string
     {
         return $this->toHex();
