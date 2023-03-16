@@ -93,7 +93,6 @@ final class ImageTable
             }
             else
             {
-                file_put_contents("palette-{$i}.bin", $dataForThisImage);
                 $numColors = $currentEntry->width;
                 $index = $currentEntry->xOffset;
                 $colors = [];
