@@ -10,7 +10,8 @@
     },
     "autoload": {
         "psr-4": {
-            "RCTPHP\\": "src/"
+            "RCTPHP\\": "src/",
+            "TXweb\\BinaryHandler\\": "src-bh/"
         }
     }
 }

@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
-use RCTPHP\Binary;
 use RCTPHP\Util;
-use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
+use TXweb\BinaryHandler\BinaryWriter;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -51,16 +51,13 @@ foreach ($readFiles as $name => $readFile)
 
 //$offsetList[] = strlen($binarySoundData);
 
-$fp = fopen($outputFilename, 'wb');
-Binary::writeUint32($fp, $numSamples);
+$writer = BinaryWriter::fromFile($outputFilename);
+$writer->writeUint32($numSamples);
 foreach ($offsetList as $i => $offset)
 {
     Util::printLn("File $i, offset {$offset}");
-    Binary::writeUint32($fp, $offset);
+    $writer->writeUint32($offset);
 }
-Binary::writeUint32($fp, strlen($binarySoundData));
 
-
-fwrite($fp, $binarySoundData);
-
-fclose($fp);
+$writer->writeUint32(strlen($binarySoundData));
+$writer->writeBytes($binarySoundData);

@@ -66,8 +66,5 @@ final class Binary
         return unpack('l', (fread($stream, 4)))[1];
     }
 
-    public static function writeUint32(&$stream, int $value): void
-    {
-        fwrite($stream, pack('V', $value));
-    }
+
 }
