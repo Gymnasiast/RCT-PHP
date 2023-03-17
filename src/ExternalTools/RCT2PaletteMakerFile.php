@@ -22,7 +22,7 @@ final class RCT2PaletteMakerFile implements ObjectWithOpenRCT2Counterpart
 
     public function __construct(string $filename, bool $allowDucks = false)
     {
-        $image = imagecreatefrombmp($filename);
+        $image = @imagecreatefrombmp($filename);
         if ($image === false)
         {
             throw new RuntimeException('Could not read input file, is it a BMP file?');
@@ -36,7 +36,7 @@ final class RCT2PaletteMakerFile implements ObjectWithOpenRCT2Counterpart
     {
         $palettes = new WaterPropertiesPalettes();
         // Normally, this is 16, but the RCT2 Palette Editor can apparently handle any width.
-        $width = imagesx($this->image);
+        $width = @imagesx($this->image);
         if ($width === false)
         {
             throw new RuntimeException('Could not read width of image!');
