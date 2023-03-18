@@ -8,7 +8,6 @@ use RCTPHP\OpenRCT2\Object\WaterPaletteGroup;
 use RCTPHP\OpenRCT2\Object\WaterProperties;
 use RCTPHP\OpenRCT2\Object\WaterPropertiesPalettes;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
-use RCTPHP\Sawyer\ImageTable\ImageTableDecoder;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
@@ -24,7 +23,6 @@ use const JSON_THROW_ON_ERROR;
 class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
     use DATFromFile;
-    use ImageTableDecoder;
     use StringTableDecoder;
 
     public bool $allowDucks = true;
@@ -90,5 +88,10 @@ class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, Objec
         $openrct2Object->strings = [ 'name' => $this->stringTable['name']->toArray() ];
         $openrct2Object->originalId = $this->header->getAsOriginalId();
         return $openrct2Object;
+    }
+
+    public function getImageTable(): ImageTable
+    {
+        return $this->imageTable;
     }
 }
