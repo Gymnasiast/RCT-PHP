@@ -88,8 +88,6 @@ final class ImageTable
                         imagesetpixel($image, $x, $y, $index);
                     }
                 }
-
-                imagepng($image, "rledecoded-{$i}.png");
             }
             else
             {

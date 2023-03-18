@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\ImageTable;
 
 use TXweb\BinaryHandler\BinaryReader;
-use function file_put_contents;
 use function fread;
 use function printf;
 
@@ -48,8 +47,6 @@ trait ImageTableDecoder
             {
                 $dataForThisImage = $this->decodeImageRLE($currentEntry, $dataForThisImage);
             }
-
-            file_put_contents($i . '.bmp', $dataForThisImage);
         }
     }
 

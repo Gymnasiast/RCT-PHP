@@ -133,10 +133,7 @@ final class Util
     public static function decodeRLERepeat(string $input): string
     {
         $rleDecoded = self::decodeRLE($input);
-        file_put_contents('decoded1', $rleDecoded);
-
         $repeatDecoded = self::decodeRepeat($rleDecoded);
-        file_put_contents('decoded2', $repeatDecoded);
 
         return $repeatDecoded;
     }
