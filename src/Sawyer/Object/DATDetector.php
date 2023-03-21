@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\Object;
 
 use RCTPHP\RCT2\Object\DATObject;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function array_key_exists;
 
 abstract class DATDetector

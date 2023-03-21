@@ -6,7 +6,7 @@ namespace RCTPHP\RCT2\Object;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function array_key_exists;
 use function ord;
 

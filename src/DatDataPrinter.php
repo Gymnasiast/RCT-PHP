@@ -7,7 +7,7 @@ use RCTPHP\RCT2\Object\DATDetector as RCT2DATDetector;
 use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\ObjectWithOpenRCT2Counterpart;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function file_put_contents;
 use function var_dump;
 

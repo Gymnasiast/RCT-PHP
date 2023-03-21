@@ -11,7 +11,7 @@ use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 class InterfaceObject implements DATObject, StringTableOwner, ImageTableOwner
 {

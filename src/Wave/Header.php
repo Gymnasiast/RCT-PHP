@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\Wave;
 
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 final class Header
 {

@@ -10,7 +10,7 @@ use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use const STR_PAD_LEFT;
 
 class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart

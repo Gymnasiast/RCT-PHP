@@ -1,7 +1,7 @@
 <?php
 namespace RCTPHP\Sawyer\Object;
 
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function dechex;
 use function str_pad;
 use function strtoupper;

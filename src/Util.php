@@ -6,7 +6,7 @@ namespace RCTPHP;
 use Exception;
 use RCTPHP\Sawyer\ChunkEncoding;
 use RuntimeException;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use ValueError;
 use function chr;
 use function fclose;

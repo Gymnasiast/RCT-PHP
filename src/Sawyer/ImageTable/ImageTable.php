@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\ImageTable;
 
 use RCTPHP\Util\RGB;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function array_fill;
 use function file_put_contents;
 use function imagecolorallocate;

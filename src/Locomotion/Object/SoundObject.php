@@ -11,7 +11,7 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function is_dir;
 use function mkdir;
 use function trim;

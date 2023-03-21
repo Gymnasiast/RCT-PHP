@@ -6,7 +6,7 @@ namespace RCTPHP\RCT2\Object;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 class ScenarioTextObject implements DATObject, StringTableOwner
 {

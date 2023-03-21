@@ -7,7 +7,7 @@ use RCTPHP\Locomotion\Object\DATHeader as LocoDATHeader;
 use RCTPHP\Locomotion\Object\LocomotionObject;
 use RCTPHP\RCT2\Object\DATHeader as RCT2DATHeader;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 trait DATFromFile
 {

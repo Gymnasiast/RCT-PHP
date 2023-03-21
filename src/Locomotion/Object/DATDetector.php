@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Locomotion\Object;
 
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
 {

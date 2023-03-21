@@ -13,7 +13,7 @@ use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use RuntimeException;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 use function count;
 use function json_encode;
 use function strlen;

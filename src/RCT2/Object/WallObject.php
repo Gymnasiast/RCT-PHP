@@ -10,7 +10,7 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 {

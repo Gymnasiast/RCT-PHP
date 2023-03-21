@@ -6,12 +6,18 @@
     "require": {
         "ext-mbstring": "*",
         "ext-json": "*",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "cyndaron/binary-handler": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "RCTPHP\\": "src/",
-            "TXweb\\BinaryHandler\\": "src-bh/"
+            "RCTPHP\\": "src/"
+        }
+    },
+    "repositories": {
+        "binary-handler": {
+            "type": "git",
+            "url": "https://github.com/Cyndaron/binary-handler.git"
         }
     }
 }
