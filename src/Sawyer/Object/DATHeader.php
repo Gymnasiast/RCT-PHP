@@ -27,7 +27,7 @@ abstract class DATHeader
         $this->checksum = $reader->readUint32();
     }
 
-    final public static function try(BinaryReader $reader): self|null
+    final public static function try(BinaryReader $reader): static|null
     {
         // A "null entry" or end of list is marked by setting the first byte to 0xFF.
         $peek = $reader->readUint8();

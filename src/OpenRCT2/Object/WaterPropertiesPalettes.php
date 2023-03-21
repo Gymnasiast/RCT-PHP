@@ -13,8 +13,12 @@ final class WaterPropertiesPalettes implements JsonSerializable
 {
     public const NUM_PARTS = 7;
 
+    /** @var array<string, Palette> */
     private array $parts;
 
+    /**
+     * @param array<string, Palette> $parts
+     */
     public function __construct(array $parts = [])
     {
         if (empty($parts))
@@ -35,6 +39,9 @@ final class WaterPropertiesPalettes implements JsonSerializable
         }
     }
 
+    /**
+     * @return array<string, Palette>
+     */
     public function getParts(): array
     {
         return $this->parts;
@@ -62,6 +69,9 @@ final class WaterPropertiesPalettes implements JsonSerializable
         throw new RuntimeException('Index too high!');
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     public function toArray(): array
     {
         $ret = [];
@@ -84,6 +94,9 @@ final class WaterPropertiesPalettes implements JsonSerializable
         return $ret;
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     public function jsonSerialize(): array
     {
         return $this->toArray();

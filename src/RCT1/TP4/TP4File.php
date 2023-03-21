@@ -16,6 +16,8 @@ use function imagecreate;
 use function imagecolorallocate;
 use function imagesetpixel;
 use function imagepng;
+use function is_int;
+use function assert;
 
 require_once __DIR__ . '/Palette.php';
 
@@ -50,6 +52,7 @@ final class TP4File
             for ($i = 0; $i < 127; $i++)
             {
                 $color = imagecolorat($this->image, $i, $lineNum);
+                assert(is_int($color));
                 $index = $this->getPaletteIndex($color);
                 $writer->writeBytes(chr($index));
             }
@@ -60,6 +63,7 @@ final class TP4File
             for ($i = 127; $i < 254; $i++)
             {
                 $color = imagecolorat($this->image, $i, $lineNum);
+                assert(is_int($color));
                 $index = $this->getPaletteIndex($color);
                 $writer->writeBytes(chr($index));
             }
@@ -116,6 +120,7 @@ final class TP4File
         $reader->seek(400);
 
         $image = imagecreate(self::WIDTH, self::HEIGHT);
+        assert($image !== false);
         foreach (\RCTPHP\RCT1\TP4\PALETTE as $index => $color)
         {
             $id = imagecolorallocate($image, $color->r, $color->g, $color->b);

@@ -31,9 +31,9 @@ final class RGB implements JsonSerializable
 
     public static function fromHex(string $hex): self
     {
-        $r = hexdec(substr($hex, 1, 2));
-        $g = hexdec(substr($hex, 3, 2));
-        $b = hexdec(substr($hex, 5, 2));
+        $r = (int)hexdec(substr($hex, 1, 2));
+        $g = (int)hexdec(substr($hex, 3, 2));
+        $b = (int)hexdec(substr($hex, 5, 2));
 
         return new self($r, $g, $b);
     }

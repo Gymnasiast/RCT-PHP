@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\DATFromFile;
@@ -16,7 +15,7 @@ use function is_dir;
 use function mkdir;
 use function trim;
 
-class SoundObject implements DATObject, StringTableOwner
+class SoundObject implements LocomotionObject, StringTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -29,7 +28,7 @@ class SoundObject implements DATObject, StringTableOwner
     /** @var WavFile[] */
     public readonly array $soundData;
 
-    public function __construct($header, string $decoded)
+    public function __construct(DATHeader $header, string $decoded)
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);

@@ -1,7 +1,8 @@
 <?php
 namespace RCTPHP;
 
-use RCTPHP\Object\DATHeader;
+use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\RCT2\Object\DATHeader;
 use RuntimeException;
 use function substr;
 use function strtolower;
@@ -57,7 +58,8 @@ class DatToJSONConverter
                 continue;
             }
 
-            $DATHeader = new DATHeader(self::INPUT_DIR . '/' . $inputFile);
+            $reader = BinaryReader::fromFile(self::INPUT_DIR . '/' . $inputFile);
+            $DATHeader = new DATHeader($reader);
 
             // We use the name embedded in the DAT file, because the filename might differ from it.
             $datName = strtolower(trim($DATHeader->name));
@@ -74,20 +76,28 @@ class DatToJSONConverter
 
             $images = $this->extractImages($newDir, $DATHeader);
 
-            $json = file_get_contents($newFile);
-            $json = preg_replace('/"images": \[.*],/', $images, $json);
-            $json = str_replace('    "objectType"', '    "sourceGame": "official",' . PHP_EOL . '    "objectType"', $json);
-            file_put_contents($newFile, $json);
+            $origJson = file_get_contents($newFile);
+            if ($origJson === false)
+            {
+                throw new RuntimeException("Could not read {$newFile}");
+            }
+            /** @var string $newJson */
+            $newJson = preg_replace('/"images": \[.*],/', $images, $origJson);
+            $newJson = str_replace('    "objectType"', '    "sourceGame": "official",' . PHP_EOL . '    "objectType"', $newJson);
+            file_put_contents($newFile, $newJson);
         }
 
         exec('rm -R ' . self::OUTPUT_DIR . '/other');
     }
 
+    /**
+     * @return string[]
+     */
     private function datToJson(): array
     {
         exec(sprintf("%s %s %s --language %s", self::OBJEXPORT_PATH, self::INPUT_DIR, self::OUTPUT_DIR, self::LANGUAGE_DIR));
 
-        return scandir(self::INPUT_DIR);
+        return scandir(self::INPUT_DIR) ?: [];
     }
 
     private function extractImages(string $newDir, DATHeader $DATHeader): string

@@ -19,9 +19,14 @@ final class ObjectSerializer
         $this->object = $object;
     }
 
+    /**
+     * @throws \JsonException
+     * @return array<string, mixed>
+     */
     public function serializeToArray(): array
     {
         $firstPass = json_encode($this->object, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        /** @var array<string, mixed> $vars */
         $vars = json_decode($firstPass, true, 512, JSON_THROW_ON_ERROR);
 
         if (array_key_exists('originalId', $vars) && empty($vars['originalId']))

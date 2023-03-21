@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
@@ -14,7 +13,7 @@ use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
+class CurrencyObject implements LocomotionObject, StringTableOwner, ImageTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;

@@ -20,7 +20,7 @@ use function strlen;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
 
-class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
+class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -32,7 +32,7 @@ class WaterObject implements DATObject, StringTableOwner, ImageTableOwner, Objec
     public array $stringTable = [];
     public ImageTable $imageTable;
 
-    public function __construct($header, string $decoded)
+    public function __construct(DATHeader $header, string $decoded)
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);

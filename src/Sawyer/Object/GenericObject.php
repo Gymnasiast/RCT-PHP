@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
+use RCTPHP\RCT2\Object\RCT2Object;
 use RCTPHP\Sawyer\Object\DATHeader as GenericDATHeader;
 use RCTPHP\Util;
 
-final class GenericObject implements DATObject
+final class GenericObject implements RCT2Object
 {
     use DATFromFile;
     private GenericDATHeader $header;
@@ -15,6 +15,7 @@ final class GenericObject implements DATObject
     /**
      * @param GenericDATHeader $header
      * @param string $decoded
+     * @phpstan-ignore-next-line
      */
     public function __construct($header, string $decoded)
     {

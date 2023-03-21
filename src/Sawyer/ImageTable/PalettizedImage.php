@@ -7,6 +7,7 @@ use function array_fill;
 
 final class PalettizedImage
 {
+    /** @var array<int, array<int, int>> */
     private array $lines;
 
     public function __construct(public readonly int $width, public readonly int $height)

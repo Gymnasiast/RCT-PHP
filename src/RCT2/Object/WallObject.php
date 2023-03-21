@@ -13,7 +13,7 @@ use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class WallObject implements DATObject, StringTableOwner, ImageTableOwner
+class WallObject implements RCT2Object, StringTableOwner, ImageTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -33,7 +33,7 @@ class WallObject implements DATObject, StringTableOwner, ImageTableOwner
     public readonly SawyerPrice $price;
     public readonly int $scrollingMode;
 
-    public function __construct($header, string $decoded)
+    public function __construct(DATHeader $header, string $decoded)
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);

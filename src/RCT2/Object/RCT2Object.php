@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\Locomotion\Object;
+namespace RCTPHP\RCT2\Object;
 
-interface LocomotionObject extends \RCTPHP\Sawyer\Object\DATObject
+interface RCT2Object extends \RCTPHP\Sawyer\Object\DATObject
 {
     public const HEADER_CLASS = DATHeader::class;
 

@@ -12,5 +12,6 @@ abstract class BaseObject
     public string|null $originalId = null;
     public string $sourceGame = 'custom';
     public ObjectType $objectType;
+    /** @var array<string, mixed> */
     public array $strings = [];
 }

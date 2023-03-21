@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
@@ -14,7 +13,7 @@ use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class InterfaceObject implements DATObject, StringTableOwner, ImageTableOwner
+class InterfaceObject implements LocomotionObject, StringTableOwner, ImageTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -24,7 +23,7 @@ class InterfaceObject implements DATObject, StringTableOwner, ImageTableOwner
     public array $stringTable = [];
     public readonly ImageTable $imageTable;
 
-    public function __construct($header, string $decoded)
+    public function __construct(DATHeader $header, string $decoded)
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);

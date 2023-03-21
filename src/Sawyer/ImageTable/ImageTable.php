@@ -13,6 +13,7 @@ use function imagepng;
 use function imagesetpixel;
 use function substr;
 use function ord;
+use function assert;
 
 require_once __DIR__ . '/../../RCT1/TP4/Palette.php';
 
@@ -23,16 +24,13 @@ final class ImageTable
     /** @var string[] */
     public readonly array $binaryImageData;
 
+    /** @var Palette[] */
     public readonly array $paletteParts;
 
     public function __construct(public readonly string $binaryData)
     {
         $reader = BinaryReader::fromString($this->binaryData);
-        $this->readImageTable($reader);
-    }
 
-    public function readImageTable(BinaryReader $reader)
-    {
         $numImages = $reader->readUint32();
         $imageDataSize = $reader->readUint32();
         $paletteParts = [];
@@ -71,6 +69,7 @@ final class ImageTable
                 }
 
                 $image = imagecreate($currentEntry->width, $currentEntry->height);
+                assert($image !== false);
                 // FIXME: Use a proper palette!
                 foreach (\RCTPHP\RCT1\TP4\PALETTE as $index => $color)
                 {
@@ -114,7 +113,7 @@ final class ImageTable
         $this->paletteParts = $paletteParts;
     }
 
-    private function readImage(ImageHeader $entry, $dataForThisImage): PalettizedImage
+    private function readImage(ImageHeader $entry, string $dataForThisImage): PalettizedImage
     {
         $reader = BinaryReader::fromString($dataForThisImage);
         $paletteImage = new PalettizedImage($entry->width, $entry->height);
@@ -129,7 +128,7 @@ final class ImageTable
         return $paletteImage;
     }
 
-    private function decodeImageRLE(ImageHeader $entry, $dataForThisImage): PalettizedImage
+    private function decodeImageRLE(ImageHeader $entry, string $dataForThisImage): PalettizedImage
     {
         $reader = BinaryReader::fromString($dataForThisImage);
         $paletteImage = new PalettizedImage($entry->width, $entry->height);

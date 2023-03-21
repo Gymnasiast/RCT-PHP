@@ -40,10 +40,6 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
         "scenario_text", // Scenario text objects are not supposed to be converted
     ];
 
-    public readonly int $flags;
-    public readonly string $name;
-    public readonly int $checksum;
-
     public function getType(): int
     {
         return $this->flags & 0x0F;

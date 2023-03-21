@@ -17,7 +17,7 @@ use function dechex;
 use function str_pad;
 use function array_map;
 
-class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
+class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -73,7 +73,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
         Util::printLn("DAT name: {$this->header->name}");
         Util::printLn("Priority: {$this->priority}");
 
-        foreach ($this->stringTable['name'] as $stringTableItem)
+        foreach ($this->stringTable['name']->strings as $stringTableItem)
         {
             //if ($stringTableItem->languageCode === 0)
             {
@@ -117,10 +117,17 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
             }
 
             $reader->seek(-1);
-            $this->objects[] = DATHeader::try($reader);
+            $object = DATHeader::try($reader);
+            if ($object !== null)
+            {
+                $this->objects[] = $object;
+            }
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getEntertainerCostumes(): array
     {
         $ret = [];

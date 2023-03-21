@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function array_key_exists;
 
@@ -29,6 +28,7 @@ abstract class DATDetector
             return null;
         }
 
+        /** @var DATObject $objectType */
         $objectType = static::OBJECT_MAPPING[$type];
         return new $objectType($this->header, $this->rest);
     }

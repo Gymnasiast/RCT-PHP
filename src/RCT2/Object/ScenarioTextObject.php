@@ -8,7 +8,7 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 
-class ScenarioTextObject implements DATObject, StringTableOwner
+class ScenarioTextObject implements RCT2Object, StringTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;

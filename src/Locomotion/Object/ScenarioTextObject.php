@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\DATObject;
 use RCTPHP\RCT2\Object\StringTableDecoder;
 use RCTPHP\RCT2\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\DATFromFile;
@@ -11,7 +10,7 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 
-class ScenarioTextObject implements DATObject, StringTableOwner
+class ScenarioTextObject implements LocomotionObject, StringTableOwner
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -20,7 +19,7 @@ class ScenarioTextObject implements DATObject, StringTableOwner
     /** @var StringTable[] */
     public array $stringTable = [];
 
-    public function __construct($header, string $decoded)
+    public function __construct(DATHeader $header, string $decoded)
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);

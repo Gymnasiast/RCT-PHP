@@ -11,6 +11,9 @@ final class StringTable implements JsonSerializable
     /** @var SawyerString[] */
     public array $strings = [];
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         $ret = [];
@@ -23,6 +26,9 @@ final class StringTable implements JsonSerializable
         return $ret;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function jsonSerialize(): array
     {
         return $this->toArray();

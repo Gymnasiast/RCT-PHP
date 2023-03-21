@@ -38,11 +38,7 @@ final class RCT2PaletteMakerFile implements ObjectWithOpenRCT2Counterpart
     {
         $palettes = new WaterPropertiesPalettes();
         // Normally, this is 16, but the RCT2 Palette Editor can apparently handle any width.
-        $width = @imagesx($this->image);
-        if ($width === false)
-        {
-            throw new RuntimeException('Could not read width of image!');
-        }
+        $width = imagesx($this->image);
 
         for ($i = 0; $i < self::NUM_COLORS; $i++)
         {
