@@ -12,6 +12,7 @@ use function imagecreate;
 use function imagepng;
 use function imagesetpixel;
 use function substr;
+use function ord;
 
 require_once __DIR__ . '/../../RCT1/TP4/Palette.php';
 
@@ -135,18 +136,21 @@ final class ImageTable
         $rowOffsets = array_fill(0, $entry->height, 0);
 
         // Read the row offsets
-        for ($j = 0; $j < $entry->height; $j++) {
+        for ($j = 0; $j < $entry->height; $j++)
+        {
             $rowOffsets[$j] = $reader->readUint16();
         }
 
         // Read the scan lines in each row
-        for ($j = 0; $j < $entry->height; $j++) {
+        for ($j = 0; $j < $entry->height; $j++)
+        {
             $reader->moveTo($rowOffsets[$j]);
             $b1 = 0;
             $b2 = 0;
 
             // An MSB of 1 means the last scan line in a row
-            while (($b1 & 0x80) === 0) {
+            while (($b1 & 0x80) === 0)
+            {
                 // Read the number of bytes of data
                 $b1 = $reader->readUint8();
                 // Read the offset from the left edge of the image

@@ -3,6 +3,22 @@ namespace RCTPHP;
 
 use RCTPHP\Object\DATHeader;
 use RuntimeException;
+use function substr;
+use function strtolower;
+use function trim;
+use function mkdir;
+use function is_dir;
+use function rename;
+use function file_get_contents;
+use function preg_replace;
+use function str_replace;
+use function file_put_contents;
+use function sprintf;
+use function scandir;
+use function chdir;
+use function exec;
+use function strpos;
+use function rtrim;
 
 /**
  * Class DatToJSONConverter
@@ -23,7 +39,6 @@ class DatToJSONConverter
 
     public function __construct()
     {
-
     }
 
     public function doEverything(): void

@@ -10,8 +10,7 @@ final class WaterProperties implements JsonSerializable
     public function __construct(
         public bool $allowDucks,
         public WaterPropertiesPalettes $palettes = new WaterPropertiesPalettes(),
-    )
-    {
+    ) {
     }
 
     public function jsonSerialize(): mixed

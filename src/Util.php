@@ -15,6 +15,7 @@ use function fread;
 use function ord;
 use function str_pad;
 use function strlen;
+use function substr;
 
 final class Util
 {
@@ -77,8 +78,8 @@ final class Util
 
     public static function ror8(int $input, int $shift): int
     {
-         $rotated = ($input >> $shift) | $input << (8 - $shift);
-         return $rotated & 0b11111111;
+        $rotated = ($input >> $shift) | $input << (8 - $shift);
+        return $rotated & 0b11111111;
     }
 
     public static function decodeRotate(string $input): string

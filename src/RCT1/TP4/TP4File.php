@@ -11,6 +11,11 @@ use Cyndaron\BinaryHandler\BinaryWriter;
 use function chr;
 use function imagecolorat;
 use function imagepalettetotruecolor;
+use function imagecolorsforindex;
+use function imagecreate;
+use function imagecolorallocate;
+use function imagesetpixel;
+use function imagepng;
 
 require_once __DIR__ . '/Palette.php';
 
@@ -78,21 +83,24 @@ final class TP4File
         }
 
         return $colorNumber;
-
     }
 
     public function generateHeader(): string
     {
         $output = '';
-        for($i = 0, $countby2 = 0x90, $countby1 = 1; $i < 200; $i++)
+        for ($i = 0, $countby2 = 0x90, $countby1 = 1; $i < 200; $i++)
         {
             $output .= chr($countby2);
             $output .= chr($countby1);
             $countby2 = ($countby2 + 2) % 256;
             if ($countby2 === 0)
+            {
                 $countby1 = ($countby1 + 2) % 256;
+            }
             else
+            {
                 $countby1 = ($countby1 + 1) % 256;
+            }
         }
 
         return $output;
@@ -100,8 +108,8 @@ final class TP4File
 
     /**
      * @param BinaryReader $reader
-     * @return self
      * @throws Exception
+     * @return self
      */
     public static function createFromFile(BinaryReader $reader): self
     {
@@ -139,13 +147,15 @@ final class TP4File
 
     /**
      * @param string $filename
-     * @return void
      * @throws RuntimeException If the file cannot be written.
+     * @return void
      */
     public function writeImage(string $filename): void
     {
         $result = imagepng($this->image, $filename);
         if (!$result)
+        {
             throw new RuntimeException("Could not write output image to {$filename}!");
+        }
     }
 }

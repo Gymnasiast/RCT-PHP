@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace RCTPHP\Wave;
 
 use Cyndaron\BinaryHandler\BinaryReader;
-use function var_dump;
+use function strlen;
+use function pack;
+use function file_put_contents;
 
 final class WavFile
 {

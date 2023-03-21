@@ -20,9 +20,13 @@ class DatDataPrinter
         $reader = BinaryReader::fromFile($filename);
 
         if ($isLocomotion)
+        {
             $detector = new LocoDATDetector($reader);
+        }
         else
+        {
             $detector = new RCT2DATDetector($reader);
+        }
 
         $this->object = $detector->getObject();
     }

@@ -12,6 +12,7 @@ use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
+use function strlen;
 
 class CurrencyObject implements DATObject, StringTableOwner, ImageTableOwner
 {

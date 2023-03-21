@@ -12,6 +12,8 @@ use RCTPHP\Util\RGB;
 use RuntimeException;
 use function imagecolorat;
 use function imagecreatefrombmp;
+use function imagesx;
+use function floor;
 
 final class RCT2PaletteMakerFile implements ObjectWithOpenRCT2Counterpart
 {

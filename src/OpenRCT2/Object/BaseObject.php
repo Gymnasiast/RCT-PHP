@@ -13,6 +13,4 @@ abstract class BaseObject
     public string $sourceGame = 'custom';
     public ObjectType $objectType;
     public array $strings = [];
-
-
 }

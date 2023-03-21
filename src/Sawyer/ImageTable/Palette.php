@@ -17,8 +17,7 @@ final class Palette
         public readonly int $index,
         public readonly int $numColors,
         public array $colors = [],
-    )
-    {
+    ) {
         for ($i = 0; $i < $this->numColors; $i++)
         {
             if (!array_key_exists($i, $this->colors))

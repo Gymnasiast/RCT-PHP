@@ -16,9 +16,13 @@ trait DATFromFile
         $reader = BinaryReader::fromFile($filename);
 
         if (self::class instanceof LocomotionObject)
+        {
             $header = new LocoDATHeader($reader);
+        }
         else
+        {
             $header = new RCT2DATHeader($reader);
+        }
 
         $rest = Util::readChunk($reader);
 

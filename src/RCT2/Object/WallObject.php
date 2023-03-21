@@ -11,6 +11,7 @@ use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
+use function strlen;
 
 class WallObject implements DATObject, StringTableOwner, ImageTableOwner
 {

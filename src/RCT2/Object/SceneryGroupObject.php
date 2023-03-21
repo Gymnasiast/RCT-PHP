@@ -12,6 +12,10 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 use const STR_PAD_LEFT;
+use function strlen;
+use function dechex;
+use function str_pad;
+use function array_map;
 
 class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
@@ -133,7 +137,7 @@ class SceneryGroupObject implements DATObject, StringTableOwner, ImageTableOwner
 
     public function toOpenRCT2Object(): OpenRCT2SceneryGroupObject
     {
-        $entries = array_map(static function (DATHeader $header)
+        $entries = array_map(static function(DATHeader $header)
         {
             return $header->getAsSceneryGroupListEntry();
         }, $this->objects);

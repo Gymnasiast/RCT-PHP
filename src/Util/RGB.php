@@ -8,6 +8,8 @@ use function dechex;
 use function str_pad;
 use function strtoupper;
 use const STR_PAD_LEFT;
+use function hexdec;
+use function substr;
 
 final class RGB implements JsonSerializable
 {
@@ -15,8 +17,8 @@ final class RGB implements JsonSerializable
         public readonly int $r,
         public readonly int $g,
         public readonly int $b,
-    )
-    {}
+    ) {
+    }
 
     public function toHex(): string
     {

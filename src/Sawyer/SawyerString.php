@@ -3,6 +3,8 @@ namespace RCTPHP\Sawyer;
 
 use JsonSerializable;
 use function mb_convert_encoding;
+use function strlen;
+use function ord;
 
 final class SawyerString implements JsonSerializable
 {

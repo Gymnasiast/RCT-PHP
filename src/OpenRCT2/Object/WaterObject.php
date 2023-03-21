@@ -12,5 +12,4 @@ final class WaterObject extends BaseObject
         $this->objectType = ObjectType::WATER;
         $this->properties = $properties;
     }
-
 }

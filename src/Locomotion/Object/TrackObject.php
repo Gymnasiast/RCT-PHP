@@ -12,6 +12,9 @@ use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
+use function strlen;
+use function implode;
+use function array_map;
 
 class TrackObject implements DATObject, StringTableOwner, ImageTableOwner
 {
@@ -131,7 +134,8 @@ class TrackObject implements DATObject, StringTableOwner, ImageTableOwner
         ];
         foreach ($lists as $key => $list)
         {
-            $imploded = implode(', ', array_map(static function(DATHeader $header) { return $header->name; }, $list));
+            $imploded = implode(', ', array_map(static function(DATHeader $header)
+            { return $header->name; }, $list));
             Util::printLn("$key: {$imploded}");
         }
 

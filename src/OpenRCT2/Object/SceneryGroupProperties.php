@@ -14,7 +14,6 @@ final class SceneryGroupProperties
         public array $entries = [],
         public int $priority = 40,
         public array $entertainerCostumes = [],
-    )
-    {
+    ) {
     }
 }
