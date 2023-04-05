@@ -13,6 +13,6 @@ if ($argc < 3)
 $inputFilename = $argv[1];
 $outputFilename = $argv[2];
 
-$reader = \TXweb\BinaryHandler\BinaryReader::fromFile($inputFilename);
+$reader = \Cyndaron\BinaryHandler\BinaryReader::fromFile($inputFilename);
 $tp4File = TP4File::createFromFile($reader);
 $tp4File->writeImage($outputFilename);

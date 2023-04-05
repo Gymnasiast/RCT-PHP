@@ -3,7 +3,7 @@
 use RCTPHP\Util;
 use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
-use TXweb\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryReader;
 
 require __DIR__ . '/vendor/autoload.php';
 

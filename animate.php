@@ -1,4 +1,8 @@
 <?php
+
+use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\RCT2\Object\DATDetector;
+
 require __DIR__ . '/vendor/autoload.php';
 
 $filename = $argv[1];
@@ -6,11 +10,22 @@ $paletteFilename = $argv[2];
 
 $image = imagecreatefrompng($filename);
 
-$obj = new \RCTPHP\ExternalTools\RCT2PaletteMakerFile($paletteFilename);
-$table = $obj->toOpenRCT2Palette();
-$parts = $table->getParts();
-$colorsWaves = $parts[\RCTPHP\OpenRCT2\Object\WaterPaletteGroup::WAVES_0->value]->colours;
-$colorsSparkles = $parts[\RCTPHP\OpenRCT2\Object\WaterPaletteGroup::SPARKLES_0->value]->colours;
+$extension = strtolower(pathinfo($paletteFilename, PATHINFO_EXTENSION));
+if ($extension === 'bmp')
+{
+    $obj = new \RCTPHP\ExternalTools\RCT2PaletteMakerFile($paletteFilename);
+}
+elseif ($extension === 'dat')
+{
+    $reader = BinaryReader::fromFile($paletteFilename);
+    $detector = new DATDetector($reader);
+    $obj = $detector->getObject();
+}
+
+$converted = $obj->toOpenRCT2Object();
+$parts = $converted->properties->palettes->getParts();
+$colorsWaves = $parts[\RCTPHP\OpenRCT2\Object\WaterPaletteGroup::WAVES_0->value]->colors;
+$colorsSparkles = $parts[\RCTPHP\OpenRCT2\Object\WaterPaletteGroup::SPARKLES_0->value]->colors;
 
 const WAVE_START = 230;
 const SPARKLE_START = 235;
@@ -18,6 +33,19 @@ const SPARKLE_START = 235;
 $numAnimationFrames = 15;
 $stitchcommand = "/usr/bin/apngasm animated.png";
 $images = [];
+
+$group = $parts[\RCTPHP\OpenRCT2\Object\WaterPaletteGroup::GENERAL->value];
+
+$offset = $group->index;
+for ($index = 0; $index < $group->numColors; $index++)
+{
+    $rgb = $group->colors[$index];
+    imagecolorset($image, $index + $offset, $rgb->r, $rgb->g, $rgb->b);
+}
+
+//imagepng($image, 'paletted.png');
+//exit(0);
+
 for ($currentFrame = 0; $currentFrame < $numAnimationFrames; $currentFrame++)
 {
     for ($j = 0; $j < 5; $j++)

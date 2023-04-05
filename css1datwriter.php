@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 use RCTPHP\Util;
 use RCTPHP\Wave\WavFile;
-use TXweb\BinaryHandler\BinaryReader;
-use TXweb\BinaryHandler\BinaryWriter;
+use Cyndaron\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\BinaryWriter;
 
 require __DIR__ . '/vendor/autoload.php';
 
