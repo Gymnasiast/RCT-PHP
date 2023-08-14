@@ -8,7 +8,8 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 final class SceneryGroupObject extends BaseObject
 {
     public SceneryGroupProperties $properties;
-    public ImageTable $images;
+    /** @var ImageTable|list<array{path: string}> */
+    public ImageTable|array $images;
 
     public function __construct()
     {
