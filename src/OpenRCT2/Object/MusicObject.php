@@ -9,7 +9,8 @@ final class MusicObject extends BaseObject
 {
     /** @var array<string, mixed> */
     public array $properties = [];
-    public ImageTable $images;
+    /** @var ImageTable|list<array{path: string}> */
+    public ImageTable|array $images;
 
     public function __construct()
     {
