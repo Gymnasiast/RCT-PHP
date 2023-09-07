@@ -10,14 +10,13 @@ abstract class DATDetector
 {
     public const OBJECT_MAPPING = [];
 
-    protected DATHeader $header;
     protected string $rest;
 
     abstract public function __construct(BinaryReader $reader);
 
     public function getObjectType(): int
     {
-        return $this->header->getType();
+        return $this->getHeader()->getType();
     }
 
     public function getObject(): DATObject|null
@@ -30,6 +29,8 @@ abstract class DATDetector
 
         /** @var DATObject $objectType */
         $objectType = static::OBJECT_MAPPING[$type];
-        return new $objectType($this->header, $this->rest);
+        return new $objectType($this->getHeader(), $this->rest);
     }
+
+    abstract public function getHeader(): DATHeader;
 }

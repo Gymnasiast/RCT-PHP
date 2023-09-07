@@ -16,9 +16,16 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
         DATHeader::OBJECT_TYPE_SCENARIO_TEXT => ScenarioTextObject::class,
     ];
 
+    private DATHeader $header;
+
     public function __construct(BinaryReader $reader)
     {
         $this->header = new DATHeader($reader);
         $this->rest = Util::readChunk($reader);
+    }
+
+    public function getHeader(): DATHeader
+    {
+        return $this->header;
     }
 }
