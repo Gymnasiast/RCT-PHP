@@ -3,7 +3,7 @@
 
 use RCTPHP\Util;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 const SRC = [0x00, 0x47, 0xFF, 0x6F, 0x05, 0x64, 0x20, 0x6A, 0x6F, 0x62,0x21 ];
 const OUTPUT = 'Good job!';

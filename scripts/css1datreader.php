@@ -5,7 +5,7 @@ use RCTPHP\Wave\Header;
 use RCTPHP\Wave\WavFile;
 use Cyndaron\BinaryHandler\BinaryReader;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 if ($argc < 3)
 {

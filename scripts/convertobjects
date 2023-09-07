@@ -1,7 +1,6 @@
 #!/usr/bin/php
 <?php
-require __DIR__ . '/src/DatHeader.php';
-require __DIR__ . '/src/DatToJSONConverter.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $converter = new RCTPHP\DatToJSONConverter();
 $converter->doEverything();

@@ -3,7 +3,7 @@
 use Cyndaron\BinaryHandler\BinaryReader;
 use RCTPHP\RCT2\Object\DATDetector;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $filename = $argv[1];
 $paletteFilename = $argv[2];
@@ -48,22 +48,25 @@ for ($index = 0; $index < $group->numColors; $index++)
 
 for ($currentFrame = 0; $currentFrame < $numAnimationFrames; $currentFrame++)
 {
+    $actualFrame = $numAnimationFrames - $currentFrame;
+
     for ($j = 0; $j < 5; $j++)
     {
-        $actualFrame = $numAnimationFrames - $currentFrame;
         $subIndex = ($actualFrame + (3 * $j)) % 15;
         $rgb = $colorsWaves[$subIndex];
         imagecolorset($image, WAVE_START + $j, $rgb->r, $rgb->g, $rgb->b);
         $rgb = $colorsSparkles[$subIndex];
         imagecolorset($image, SPARKLE_START + $j, $rgb->r, $rgb->g, $rgb->b);
-        $imageName = "animate/$currentFrame.png";
-        imagepng($image, $imageName);
-        $images[] = $imageName;
-        $stitchcommand .= " $imageName 1 10";
     }
+
+    $imageName = "animate/$currentFrame.png";
+    imagepng($image, $imageName);
+    $images[] = $imageName;
+    $stitchcommand .= " $imageName 1 10";
 }
 
-exec($stitchcommand);
+//exec($stitchcommand);
+echo ' /usr/bin/php8.1 ../png.php ' . implode(' ', $images);
 
 
 //

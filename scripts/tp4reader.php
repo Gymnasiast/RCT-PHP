@@ -2,7 +2,7 @@
 
 use RCTPHP\RCT1\TP4\TP4File;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 if ($argc < 3)
 {
