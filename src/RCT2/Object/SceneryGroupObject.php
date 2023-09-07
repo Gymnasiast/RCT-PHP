@@ -9,6 +9,8 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 use const STR_PAD_LEFT;
@@ -66,44 +68,6 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
         $this->readObjects($reader);
 
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
-    }
-
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Priority: {$this->priority}");
-
-        foreach ($this->stringTable['name']->strings as $stringTableItem)
-        {
-            //if ($stringTableItem->languageCode === 0)
-            {
-                Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
-            }
-        }
-
-        Util::printLn('');
-        Util::printLn("Entertainer custumes:");
-        foreach ($this->getEntertainerCostumes() as $costume)
-        {
-            Util::printLn("  {$costume}");
-        }
-
-        Util::printLn('');
-
-        Util::printLn('Objects:');
-        Util::printLn('');
-
-        foreach ($this->objects as $objectHeader)
-        {
-            $flags = str_pad(dechex($objectHeader->flags), 8, "0", STR_PAD_LEFT);
-            $paddedName = str_pad($objectHeader->name, 8);
-            $string = "{$flags}|{$paddedName}";
-            Util::printLn($string);
-        }
-
-        $this->imageTable->exportToFile('scengroupg0.dat');
-
-        Util::printLn('');
     }
 
     private function readObjects(BinaryReader $reader): void

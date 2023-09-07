@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT2\Object;
+namespace RCTPHP\Sawyer\Object;
 
-use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\SawyerString;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
@@ -48,15 +47,8 @@ trait StringTableDecoder
         return $this->stringTable[$name];
     }
 
-    public function printStringTables(): void
+    public function getStringTables(): array
     {
-        foreach ($this->stringTable as $name => $stringTable)
-        {
-            Util::printLn("String table “{$name}”:");
-            foreach ($stringTable->strings as $stringTableItem)
-            {
-                Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
-            }
-        }
+        return $this->stringTable;
     }
 }

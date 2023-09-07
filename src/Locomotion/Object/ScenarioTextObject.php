@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\StringTableDecoder;
-use RCTPHP\RCT2\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
@@ -27,12 +27,5 @@ class ScenarioTextObject implements LocomotionObject, StringTableOwner
 
         $this->readStringTable($reader, 'name');
         $this->readStringTable($reader, 'description');
-    }
-
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-
-        $this->printStringTables();
     }
 }

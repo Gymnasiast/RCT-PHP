@@ -2,7 +2,9 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use RCTPHP\DatDataPrinter;
+use RCTPHP\Locomotion\Object\LocomotionDataPrinter;
+use RCTPHP\RCT2\Object\RCT2DataPrinter;
+use RCTPHP\Sawyer\Object\DatDataPrinter;
 
 if ($argc < 2)
 {
@@ -11,8 +13,9 @@ if ($argc < 2)
 }
 
 $isLocomotion = !empty($argv[2]) ? (bool)(int)$argv[2] : false;
+$class = $isLocomotion ? LocomotionDataPrinter::class : RCT2DataPrinter::class;
 
 $filename = $argv[1] ?? '';
 
-$printer = new DatDataPrinter($filename, $isLocomotion);
+$printer = new $class($filename);
 $printer->printData();

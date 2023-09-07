@@ -5,6 +5,8 @@ namespace RCTPHP\RCT2\Object;
 
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
 
@@ -31,14 +33,5 @@ class ScenarioTextObject implements RCT2Object, StringTableOwner
         $this->readStringTable($reader, 'scenario_name');
         $this->readStringTable($reader, 'park_name');
         $this->readStringTable($reader, 'description');
-    }
-
-    public function printData(): void
-    {
-        $isSixFlags = $this->isSixFlags ? 'yes' : 'no';
-        Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Six Flags park: {$isSixFlags}");
-
-        $this->printStringTables();
     }
 }

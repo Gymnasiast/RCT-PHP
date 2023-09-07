@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\StringTableDecoder;
-use RCTPHP\RCT2\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Util;
@@ -58,22 +58,18 @@ class SoundObject implements LocomotionObject, StringTableOwner
         $this->soundData = $soundData;
     }
 
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Volume: {$this->volume}");
-
-        $this->printStringTables();
-
-        $foldername = 'export/' . trim($this->header->name);
-        if (!is_dir($foldername))
-        {
-            mkdir($foldername, recursive: true);
-        }
-
-        foreach ($this->soundData as $index => $soundFile)
-        {
-            $soundFile->write("$foldername/{$index}.wav");
-        }
-    }
+//    public function printData(): void
+//    {
+//
+//        $foldername = 'export/' . trim($this->header->name);
+//        if (!is_dir($foldername))
+//        {
+//            mkdir($foldername, recursive: true);
+//        }
+//
+//        foreach ($this->soundData as $index => $soundFile)
+//        {
+//            $soundFile->write("$foldername/{$index}.wav");
+//        }
+//    }
 }

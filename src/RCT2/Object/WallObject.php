@@ -7,6 +7,8 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use RCTPHP\Util;
@@ -55,15 +57,6 @@ class WallObject implements RCT2Object, StringTableOwner, ImageTableOwner
         $imageTableSize = strlen($decoded) - $reader->getPosition();
         $imageTable = $reader->readBytes($imageTableSize);
         $this->imageTable = new ImageTable($imageTable);
-    }
-
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Height: {$this->height} units ({$this->height->asMetres()})");
-        Util::printLn("Price: {$this->price->asGBP()}");
-
-        $this->printStringTables();
     }
 
     public function getImageTable(): ImageTable

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\StringTableDecoder;
-use RCTPHP\RCT2\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
@@ -36,13 +36,6 @@ class CurrencyObject implements LocomotionObject, StringTableOwner, ImageTableOw
 
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
         $this->imageTable->exportToFile('imagetable-g0.dat');
-    }
-
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-
-        $this->printStringTables();
     }
 
     public function getImageTable(): ImageTable

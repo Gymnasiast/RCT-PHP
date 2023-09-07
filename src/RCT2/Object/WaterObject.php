@@ -11,6 +11,8 @@ use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Util;
 use RuntimeException;
 use Cyndaron\BinaryHandler\BinaryReader;
@@ -44,26 +46,7 @@ class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, Obje
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
     }
 
-    public function printData(): void
-    {
-        $allowDucks = $this->allowDucks ? 'true' : 'false';
-        Util::printLn("DAT name: {$this->header->name}");
-        Util::printLn("Allow ducks: {$allowDucks}");
-
-        $this->printStringTables();
-        Util::printLn("");
-        try
-        {
-            $palettes = $this->getPalettes();
-            Util::printLn(json_encode($palettes->toArray(), JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT));
-        }
-        catch (RuntimeException)
-        {
-            Util::printLn("Could not read palette!");
-        }
-    }
-
-    private function getPalettes(): WaterPropertiesPalettes
+    public function getPalettes(): WaterPropertiesPalettes
     {
         $parts = $this->imageTable->paletteParts;
         if (count($parts) !== WaterPropertiesPalettes::NUM_PARTS)

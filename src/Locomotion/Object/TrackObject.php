@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\Locomotion\Object;
 
-use RCTPHP\RCT2\Object\StringTableDecoder;
-use RCTPHP\RCT2\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\StringTableDecoder;
+use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
@@ -116,29 +116,6 @@ class TrackObject implements LocomotionObject, StringTableOwner, ImageTableOwner
 
         $imageTable = $reader->readBytes(strlen($decoded) - $reader->getPosition());
         $this->imageTable = new ImageTable($imageTable);
-    }
-
-    public function printData(): void
-    {
-        Util::printLn("DAT name: {$this->header->name}");
-
-        $this->printStringTables();
-
-        $lists = [
-            'Compatible tracks/roads' => &$this->compatibleTracksRoads,
-            'Mods' => &$this->mods,
-            'Signals' => &$this->signals,
-            'Bridges' => &$this->bridges,
-            'Stations' => &$this->stations,
-        ];
-        foreach ($lists as $key => $list)
-        {
-            $imploded = implode(', ', array_map(static function(DATHeader $header)
-            { return $header->name; }, $list));
-            Util::printLn("$key: {$imploded}");
-        }
-
-        Util::printLn('Tunnel: ' . ($this->tunnel ? $this->tunnel->name : 'N/A'));
     }
 
     public function getImageTable(): ImageTable

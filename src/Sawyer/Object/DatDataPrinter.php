@@ -1,0 +1,84 @@
+<?php
+namespace RCTPHP\Sawyer\Object;
+
+use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\OpenRCT2\Object\ObjectSerializer;
+use RCTPHP\RCT2\Object\ObjectWithOpenRCT2Counterpart;
+use RCTPHP\Util;
+use function file_put_contents;
+use function var_dump;
+
+abstract class DatDataPrinter
+{
+    protected readonly DATHeader $header;
+    protected readonly DATObject|null $object;
+
+    public function __construct(string $filename, protected readonly bool $isDebug = false)
+    {
+        $reader = BinaryReader::fromFile($filename);
+        $detector = $this->getDetector($reader);
+
+        $this->header = $detector->getHeader();
+        $this->object = $detector->getObject();
+    }
+
+    public function printData(): void
+    {
+        Util::printLn("DAT name: {$this->header->name}");
+        Util::printLn("Flags: {$this->header->flags}");
+        Util::printLn("Checksum: {$this->header->checksum}");
+        Util::printLn("Type: {$this->header->getType()}");
+        if ($this->object === null)
+        {
+            Util::printLn('Onbekend type!');
+            return;
+        }
+
+        $this->printObjectSpecificData();
+        $this->printStringTables();
+        $this->printImageTable();
+
+        if ($this->object instanceof ObjectWithOpenRCT2Counterpart)
+        {
+            $converted = $this->object->toOpenRCT2Object();
+            $serialized = (new ObjectSerializer($converted))->serializeToJson();
+            file_put_contents('converted.json', $serialized);
+        }
+    }
+
+    abstract protected function getDetector(BinaryReader $reader): DATDetector;
+
+    abstract public function printObjectSpecificData(): void;
+
+    public function printStringTables(): void
+    {
+        if (!$this->object instanceof StringTableOwner)
+        {
+            return;
+        }
+
+        $tables = $this->object->getStringTables();
+        foreach ($tables as $name => $stringTable)
+        {
+            Util::printLn("String table “{$name}”:");
+            foreach ($stringTable->strings as $stringTableItem)
+            {
+                Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
+            }
+        }
+    }
+
+    public function printImageTable(): void
+    {
+        if (!$this->isDebug || !$this->object instanceof ImageTableOwner)
+        {
+            return;
+        }
+
+        $imageTable = $this->object->getImageTable();
+        foreach ($imageTable->entries as $entry)
+        {
+            var_dump($entry);
+        }
+    }
+}
