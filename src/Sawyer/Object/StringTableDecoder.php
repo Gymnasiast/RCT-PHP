@@ -38,7 +38,7 @@ trait StringTableDecoder
                 $string .= $character;
             }
 
-            $this->stringTable[$name]->strings[] = new SawyerString($languageCode, $string);
+            $this->stringTable[$name]->strings[$languageCode] = new SawyerString($languageCode, $string);
         }
     }
 

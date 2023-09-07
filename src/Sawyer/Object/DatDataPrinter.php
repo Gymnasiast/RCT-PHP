@@ -5,8 +5,9 @@ use Cyndaron\BinaryHandler\BinaryReader;
 use RCTPHP\OpenRCT2\Object\ObjectSerializer;
 use RCTPHP\RCT2\Object\ObjectWithOpenRCT2Counterpart;
 use RCTPHP\Util;
+use function file_exists;
 use function file_put_contents;
-use function var_dump;
+use function mkdir;
 
 abstract class DatDataPrinter
 {
@@ -76,9 +77,23 @@ abstract class DatDataPrinter
         }
 
         $imageTable = $this->object->getImageTable();
-        foreach ($imageTable->entries as $entry)
+//        foreach ($imageTable->entries as $entry)
+//        {
+//            var_dump($entry);
+//        }
+
+        $name = trim($this->header->name);
+        $exportDir = __DIR__ . "/../../../export/{$name}";
+        $imageTable->exportToFile("{$exportDir}/imagetable.dat");
+        $exportDir2 = "{$exportDir}/images";
+        if (!file_exists($exportDir2))
         {
-            var_dump($entry);
+            mkdir($exportDir2);
+        }
+        foreach ($imageTable->gdImageData as $index => $image)
+        {
+            $filename = "{$exportDir2}/{$index}.png";
+            imagepng($image, $filename);
         }
     }
 }

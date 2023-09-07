@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer\ImageTable;
 
+use GdImage;
 use RCTPHP\Util\RGB;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function array_fill;
+use function dirname;
+use function file_exists;
 use function file_put_contents;
 use function imagecolorallocate;
 use function imagecreate;
@@ -23,6 +26,8 @@ final class ImageTable
     public readonly array $entries;
     /** @var string[] */
     public readonly array $binaryImageData;
+    /** @var array<int, GdImage> */
+    public readonly array $gdImageData;
 
     /** @var Palette[] */
     public readonly array $paletteParts;
@@ -48,6 +53,7 @@ final class ImageTable
         $imageData = $reader->readBytes($imageDataSize);
 
         $binaryImageData = [];
+        $gdImageData = [];
         for ($i = 0; $i < $numImages; $i++)
         {
             $currentEntry = $entries[$i];
@@ -88,6 +94,8 @@ final class ImageTable
                         imagesetpixel($image, $x, $y, $index);
                     }
                 }
+
+                $gdImageData[$i] = $image;
             }
             else
             {
@@ -110,6 +118,7 @@ final class ImageTable
         }
 
         $this->binaryImageData = $binaryImageData;
+        $this->gdImageData = $gdImageData;
         $this->paletteParts = $paletteParts;
     }
 
@@ -186,6 +195,11 @@ final class ImageTable
 
     public function exportToFile(string $filename): void
     {
+        $dir = dirname($filename);
+        if (!file_exists($dir)) {
+            mkdir($dir, recursive: true);
+        }
+
         file_put_contents($filename, $this->binaryData);
     }
 }
