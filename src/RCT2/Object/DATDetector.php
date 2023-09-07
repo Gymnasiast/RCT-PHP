@@ -9,6 +9,8 @@ use Cyndaron\BinaryHandler\BinaryReader;
 final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
 {
     public const OBJECT_MAPPING = [
+        DATHeader::OBJECT_TYPE_SMALL_SCENERY => SmallSceneryObject::class,
+        DATHeader::OBJECT_TYPE_LARGE_SCENERY => LargeSceneryObject::class,
         DATHeader::OBJECT_TYPE_WALLS => WallObject::class,
         DATHeader::OBJECT_TYPE_SCENERY_GROUP => SceneryGroupObject::class,
         DATHeader::OBJECT_TYPE_WATER => WaterObject::class,

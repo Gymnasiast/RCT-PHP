@@ -57,4 +57,9 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
         $flags = $this->getFlagsFormatted();
         return "\$DAT:{$flags}|{$this->name}";
     }
+
+    public function isBlank(): bool
+    {
+        return $this->flags === 0 && $this->name === '        ' && $this->checksum === 0;
+    }
 }

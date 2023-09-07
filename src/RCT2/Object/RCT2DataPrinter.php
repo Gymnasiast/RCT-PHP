@@ -32,6 +32,12 @@ class RCT2DataPrinter extends DatDataPrinter
 
         switch (get_class($object))
         {
+            case LargeSceneryObject::class:
+                $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
+                Util::printLn("Price: {$object->price->asGBP()}");
+                Util::printLn("Removal price: {$object->removalPrice->asGBP()}");
+                Util::printLn("Attaches to: {$attachTo}");
+                break;
             case ScenarioTextObject::class:
                 $isSixFlags = $object->isSixFlags ? 'yes' : 'no';
                 Util::printLn("Six Flags park: {$isSixFlags}");
@@ -57,6 +63,13 @@ class RCT2DataPrinter extends DatDataPrinter
                 }
 
                 Util::printLn('');
+                break;
+            case SmallSceneryObject::class:
+                $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
+                Util::printLn("Height: {$object->height} units ({$object->height->asMetres()})");
+                Util::printLn("Price: {$object->price->asGBP()}");
+                Util::printLn("Removal price: {$object->removalPrice->asGBP()}");
+                Util::printLn("Attaches to: {$attachTo}");
                 break;
             case WallObject::class:
                 Util::printLn("Height: {$object->height} units ({$object->height->asMetres()})");
