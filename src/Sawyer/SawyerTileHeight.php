@@ -3,20 +3,32 @@ declare(strict_types=1);
 
 namespace RCTPHP\Sawyer;
 
+use function floor;
+
 final class SawyerTileHeight
 {
     public function __construct(public readonly int $internal)
     {
     }
 
-    public function asMetres(): string
+    public function asMetres(): int
     {
-        return ($this->internal * 3 / 4) . ' m';
+        return (int)($this->internal * 3 / 4);
     }
 
-    public function asFeet(): string
+    public function asMetresFormatted(): string
     {
-        return ($this->internal * 10 / 4) . ' ft';
+        return $this->asMetres() . ' m';
+    }
+
+    public function asFeet(): int
+    {
+        return (int)floor(($this->asMetres() * 840) / 256);
+    }
+
+    public function asFeetFormatted(): string
+    {
+        return $this->asFeet() . ' ft';
     }
 
     public function __toString()

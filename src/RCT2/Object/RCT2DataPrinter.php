@@ -66,13 +66,13 @@ class RCT2DataPrinter extends DatDataPrinter
                 break;
             case SmallSceneryObject::class:
                 $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
-                Util::printLn("Height: {$object->height} units ({$object->height->asMetres()})");
+                Util::printLn("Height: {$object->height} units ({$object->height->asMetresFormatted()})");
                 Util::printLn("Price: {$object->price->asGBP()}");
                 Util::printLn("Removal price: {$object->removalPrice->asGBP()}");
                 Util::printLn("Attaches to: {$attachTo}");
                 break;
             case WallObject::class:
-                Util::printLn("Height: {$object->height} units ({$object->height->asMetres()})");
+                Util::printLn("Height: {$object->height} units ({$object->height->asMetresFormatted()})");
                 Util::printLn("Price: {$object->price->asGBP()}");
                 break;
             case WaterObject::class:
