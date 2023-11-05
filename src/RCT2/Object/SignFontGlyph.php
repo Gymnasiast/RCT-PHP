@@ -9,7 +9,6 @@ class SignFontGlyph
         public readonly int $imageOffset,
         public readonly int $width,
         public readonly int $height,
-    )
-    {
+    ) {
     }
 }

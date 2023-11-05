@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace RCTPHP\Util\PNG;
 
+use function count;
+use function unpack;
+use function substr;
+use function pack;
+
 final class Animated
 {
     /** @var Chunk[] */

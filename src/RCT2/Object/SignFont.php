@@ -13,7 +13,6 @@ class SignFont
         public readonly int $numImages,
         /** @var SignFontGlyph[] */
         public readonly array $glyphs,
-    )
-    {
+    ) {
     }
 }

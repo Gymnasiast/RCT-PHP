@@ -17,8 +17,7 @@ final class File
      */
     public function __construct(
         public array $chunks,
-    )
-    {
+    ) {
     }
 
     public static function create(BinaryReader $reader): self

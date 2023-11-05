@@ -11,7 +11,6 @@ class LargeSceneryTile
         public readonly int $zOffset,
         public readonly int $zClearance,
         public readonly int $flags,
-    )
-    {
+    ) {
     }
 }

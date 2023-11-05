@@ -196,7 +196,8 @@ final class ImageTable
     public function exportToFile(string $filename): void
     {
         $dir = dirname($filename);
-        if (!file_exists($dir)) {
+        if (!file_exists($dir))
+        {
             mkdir($dir, recursive: true);
         }
 

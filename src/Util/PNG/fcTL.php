@@ -6,6 +6,7 @@ namespace RCTPHP\Util\PNG;
 use Cyndaron\BinaryHandler\BinaryWriter;
 use function fopen;
 use function fread;
+use function rewind;
 
 final class fcTL extends Chunk
 {
@@ -21,8 +22,7 @@ final class fcTL extends Chunk
         public int $delayDenominator,
         public int $disposeOp,
         public int $blendOp,
-    )
-    {
+    ) {
         $dataFp = fopen('php://memory', 'rwb+');
         $dataWriter = new BinaryWriter($dataFp);
         $dataWriter->writeUint32BE($this->sequenceNumber);
