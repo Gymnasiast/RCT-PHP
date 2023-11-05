@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT1\TP4;
+namespace RCTPHP\RCT1\TrackDesign;
 
 use RCTPHP\Util\RGB;
 

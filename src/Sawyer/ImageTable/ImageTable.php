@@ -17,8 +17,9 @@ use function imagesetpixel;
 use function substr;
 use function ord;
 use function assert;
+use function mkdir;
 
-require_once __DIR__ . '/../../RCT1/TP4/Palette.php';
+require_once __DIR__ . '/../../RCT1/TrackDesign/Palette.php';
 
 final class ImageTable
 {
@@ -77,7 +78,7 @@ final class ImageTable
                 $image = imagecreate($currentEntry->width, $currentEntry->height);
                 assert($image !== false);
                 // FIXME: Use a proper palette!
-                foreach (\RCTPHP\RCT1\TP4\PALETTE as $index => $color)
+                foreach (\RCTPHP\RCT1\TrackDesign\PALETTE as $index => $color)
                 {
                     $id = imagecolorallocate($image, $color->r, $color->g, $color->b);
                     if ($id !== $index)

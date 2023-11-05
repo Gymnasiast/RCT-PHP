@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use RCTPHP\RCT1\TP4\TP4File;
+use RCTPHP\RCT1\TrackDesign\TP4File;
 
 if ($argc < 3)
 {
