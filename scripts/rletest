@@ -5,13 +5,13 @@ use RCTPHP\Util;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-const SRC = [0x00, 0x47, 0xFF, 0x6F, 0x05, 0x64, 0x20, 0x6A, 0x6F, 0x62,0x21 ];
-const OUTPUT = 'Good job!';
+const ENCODED_ARRAY = [0x00, 0x47, 0xFF, 0x6F, 0x05, 0x64, 0x20, 0x6A, 0x6F, 0x62,0x21];
+const DECODED_STRING = 'Good job!';
 
-$srcString = '';
-foreach (SRC as $char)
+$encodedString = '';
+foreach (ENCODED_ARRAY as $char)
 {
-    $srcString .= chr($char);
+    $encodedString .= chr($char);
 }
 
 //for ($i = 0; $i < strlen($srcString); $i++)
@@ -19,10 +19,20 @@ foreach (SRC as $char)
 //    Util::printLn(ord($srcString[$i]));
 //}
 
-$decodedRle = Util::decodeRLE($srcString);
+$decodedRle = (new \RCTPHP\Sawyer\RLE\RLEString($encodedString))->decode();
 
-Util::printLn('Expected:' . OUTPUT);
-Util::printLn('Actual: ' . $decodedRle);
-Util::printLn((OUTPUT === $decodedRle) ? 'Success!' : 'Fail!');
+Util::printLn('Decoding test:');
+Util::printLn('--------------');
+Util::printLn('Expected: ' . DECODED_STRING);
+Util::printLn('Actual:   ' . $decodedRle);
+Util::printLn((DECODED_STRING === $decodedRle) ? 'Success!' : 'Fail!');
+Util::printLn('');
 
-var_dump($decodedRle);
+
+$encodedRLEObj = (new \RCTPHP\Sawyer\RLE\NonRLEString(DECODED_STRING))->encode();
+$encodedRLE = $encodedRLEObj->getRaw();
+Util::printLn('Encoding test:');
+Util::printLn('--------------');
+Util::printLn('Expected: ' . bin2hex($encodedString));
+Util::printLn('Actual:   ' . bin2hex($encodedRLE));
+Util::printLn(($encodedString === $encodedRLE) ? 'Success!' : 'Fail!');
