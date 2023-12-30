@@ -15,7 +15,7 @@ class LocomotionDataPrinter extends DatDataPrinter
 {
     protected function getDetector(BinaryReader $reader): DATDetector
     {
-        return new \RCTPHP\Locomotion\Object\DATDetector($reader);
+        return \RCTPHP\Locomotion\Object\DATDetector::fromReader($reader);
     }
 
     public function printObjectSpecificData(): void

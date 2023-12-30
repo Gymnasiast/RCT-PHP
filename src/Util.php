@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP;
 
+use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
+use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
 use Exception;
 use RCTPHP\Sawyer\ChunkEncoding;
 use RCTPHP\Sawyer\RLE\RLEString;
@@ -84,7 +86,7 @@ final class Util
         return $repeatDecoded;
     }
 
-    public static function readChunk(BinaryReader $reader): string
+    public static function readChunk(ReaderInterface&IntegerReaderInterface $reader): string
     {
         $encoding = ChunkEncoding::from($reader->readUint8());
         $restLength = $reader->readUint32();

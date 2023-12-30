@@ -17,7 +17,7 @@ class RCT2DataPrinter extends DatDataPrinter
 {
     protected function getDetector(BinaryReader $reader): DATDetector
     {
-        return new \RCTPHP\RCT2\Object\DATDetector($reader);
+        return \RCTPHP\RCT2\Object\DATDetector::fromReader($reader);
     }
 
     public function printObjectSpecificData(): void

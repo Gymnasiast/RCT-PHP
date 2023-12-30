@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
+use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
 use RCTPHP\Util;
-use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\Util\Reader\TryFromReaderTrait;
 
 final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
 {
+    use TryFromReaderTrait;
+
     public const OBJECT_MAPPING = [
         DATHeader::OBJECT_TYPE_SMALL_SCENERY => SmallSceneryObject::class,
         DATHeader::OBJECT_TYPE_LARGE_SCENERY => LargeSceneryObject::class,
@@ -19,10 +23,18 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
 
     private DATHeader $header;
 
-    public function __construct(BinaryReader $reader)
+    public function __construct(DATHeader $header, string $rest)
     {
-        $this->header = DATHeader::fromReader($reader);
-        $this->rest = Util::readChunk($reader);
+        $this->header = $header;
+        $this->rest = $rest;
+    }
+
+    public static function fromReader(ReaderInterface&IntegerReaderInterface $reader): self
+    {
+        $header = DATHeader::fromReader($reader);
+        $rest = Util::readChunk($reader);
+
+        return new self($header, $rest);
     }
 
     public function getHeader(): DATHeader

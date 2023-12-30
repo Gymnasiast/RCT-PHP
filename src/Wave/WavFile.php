@@ -19,7 +19,7 @@ final class WavFile
     public function getHeader(): Header
     {
         $reader = BinaryReader::fromString($this->header);
-        return new Header($reader);
+        return Header::fromReader($reader);
     }
 
     public function write(string $filename): void

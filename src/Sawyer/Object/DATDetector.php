@@ -4,15 +4,14 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\Object;
 
 use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\Util\Reader\ReadableInterface;
 use function array_key_exists;
 
-abstract class DATDetector
+abstract class DATDetector implements ReadableInterface
 {
     public const OBJECT_MAPPING = [];
 
     protected string $rest;
-
-    abstract public function __construct(BinaryReader $reader);
 
     public function getObjectType(): int
     {
