@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT1;
 
+use RCTPHP\OpenRCT2\RideType as OpenRCT2RideType;
+
 enum RideType : int
 {
     case WOODEN_ROLLER_COASTER = 0;
@@ -90,4 +92,96 @@ enum RideType : int
     case COFFEE_SHOP = 82;
     case FRIED_CHICKEN_STALL = 83;
     case LEMONADE_STALL = 84;
+    
+    public function toOpenRCT2(): OpenRCT2RideType
+    {
+        return match ($this)
+        {
+            self::WOODEN_ROLLER_COASTER => OpenRCT2RideType::CLASSIC_WOODEN_ROLLER_COASTER,
+            self::STAND_UP_STEEL_ROLLER_COASTER => OpenRCT2RideType::STAND_UP_ROLLER_COASTER,
+            self::SUSPENDED_ROLLER_COASTER => OpenRCT2RideType::SUSPENDED_SWINGING_COASTER,
+            self::INVERTED_ROLLER_COASTER => OpenRCT2RideType::INVERTED_ROLLER_COASTER,
+            self::STEEL_MINI_ROLLER_COASTER => OpenRCT2RideType::CLASSIC_MINI_ROLLER_COASTER,
+            self::MINIATURE_RAILWAY => OpenRCT2RideType::MINIATURE_RAILWAY,
+            self::MONORAIL => OpenRCT2RideType::MONORAIL,
+            self::SUSPENDED_SINGLE_RAIL_ROLLER_COASTER => OpenRCT2RideType::MINI_SUSPENDED_COASTER,
+            self::BOAT_HIRE => OpenRCT2RideType::BOAT_HIRE,
+            self::WOODEN_WILD_MOUSE_ROLLER_COASTER => OpenRCT2RideType::WOODEN_WILD_MOUSE,
+            self::SINGLE_RAIL_ROLLER_COASTER => OpenRCT2RideType::SINGLE_RAIL_ROLLER_COASTER,
+            self::CAR_RIDE => OpenRCT2RideType::CAR_RIDE,
+            self::LAUNCHED_FREEFALL => OpenRCT2RideType::LAUNCHED_FREEFALL,
+            self::BOBSLED_ROLLER_COASTER => OpenRCT2RideType::BOBSLEIGH_COASTER,
+            self::OBSERVATION_TOWER => OpenRCT2RideType::OBSERVATION_TOWER,
+            self::STEEL_ROLLER_COASTER => OpenRCT2RideType::LOOPING_ROLLER_COASTER,
+            self::WATER_SLIDE => OpenRCT2RideType::DINGHY_SLIDE,
+            self::MINE_TRAIN_ROLLER_COASTER => OpenRCT2RideType::MINE_TRAIN_COASTER,
+            self::CHAIRLIFT => OpenRCT2RideType::CHAIRLIFT,
+            self::STEEL_CORKSCREW_ROLLER_COASTER => OpenRCT2RideType::CORKSCREW_ROLLER_COASTER,
+            self::HEDGE_MAZE => OpenRCT2RideType::MAZE,
+            self::SPIRAL_SLIDE => OpenRCT2RideType::SPIRAL_SLIDE,
+            self::GO_KARTS => OpenRCT2RideType::GO_KARTS,
+            self::LOG_FLUME => OpenRCT2RideType::LOG_FLUME,
+            self::RIVER_RAPIDS => OpenRCT2RideType::RIVER_RAPIDS,
+            self::DODGEMS => OpenRCT2RideType::DODGEMS,
+            self::SWINGING_SHIP => OpenRCT2RideType::SWINGING_SHIP,
+            self::SWINGING_INVERTER_SHIP => OpenRCT2RideType::SWINGING_INVERTER_SHIP,
+            self::ICE_CREAM_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::CHIPS_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::DRINK_STALL => OpenRCT2RideType::DRINK_STALL,
+            self::CANDYFLOSS_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::BURGER_BAR => OpenRCT2RideType::FOOD_STALL,
+            self::MERRY_GO_ROUND => OpenRCT2RideType::MERRY_GO_ROUND,
+            self::BALLOON_STALL => OpenRCT2RideType::SHOP,
+            self::INFORMATION_KIOSK => OpenRCT2RideType::INFORMATION_KIOSK,
+            self::TOILETS => OpenRCT2RideType::TOILETS,
+            self::FERRIS_WHEEL => OpenRCT2RideType::FERRIS_WHEEL,
+            self::MOTION_SIMULATOR => OpenRCT2RideType::MOTION_SIMULATOR,
+            self::_3D_CINEMA => OpenRCT2RideType::_3D_CINEMA,
+            self::TOP_SPIN => OpenRCT2RideType::TOP_SPIN,
+            self::SPACE_RINGS => OpenRCT2RideType::SPACE_RINGS,
+            self::REVERSE_FREEFALL_ROLLER_COASTER => OpenRCT2RideType::REVERSE_FREEFALL_COASTER,
+            self::SOUVENIR_STALL => OpenRCT2RideType::SHOP,
+            self::VERTICAL_ROLLER_COASTER => OpenRCT2RideType::VERTICAL_DROP_ROLLER_COASTER,
+            self::PIZZA_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::TWIST => OpenRCT2RideType::TWIST,
+            self::HAUNTED_HOUSE => OpenRCT2RideType::HAUNTED_HOUSE,
+            self::POPCORN_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::CIRCUS => OpenRCT2RideType::CIRCUS,
+            self::GHOST_TRAIN => OpenRCT2RideType::GHOST_TRAIN,
+            self::STEEL_TWISTER_ROLLER_COASTER => OpenRCT2RideType::TWISTER_ROLLER_COASTER,
+            self::WOODEN_TWISTER_ROLLER_COASTER => OpenRCT2RideType::WOODEN_ROLLER_COASTER,
+            self::WOODEN_SIDE_FRICTION_ROLLER_COASTER => OpenRCT2RideType::SIDE_FRICTION_ROLLER_COASTER,
+            self::STEEL_WILD_MOUSE_ROLLER_COASTER => OpenRCT2RideType::STEEL_WILD_MOUSE,
+            self::HOT_DOG_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::EXOTIC_SEA_FOOD_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::HAT_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::TOFFEE_APPLE_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::VIRGINIA_REEL => OpenRCT2RideType::VIRGINIA_REEL,
+            self::RIVER_RIDE => OpenRCT2RideType::SPLASH_BOATS,
+            self::CYCLE_MONORAIL => OpenRCT2RideType::MINI_HELICOPTERS,
+            self::FLYING_ROLLER_COASTER => OpenRCT2RideType::FLYING_ROLLER_COASTER,
+            self::SUSPENDED_MONORAIL => OpenRCT2RideType::SUSPENDED_MONORAIL,
+            self::TYPE_40 => OpenRCT2RideType::_50,
+            self::WOODEN_REVERSER_ROLLER_COASTER => OpenRCT2RideType::REVERSER_ROLLER_COASTER,
+            self::HEARTLINE_TWISTER_ROLLER_COASTER => OpenRCT2RideType::HEARTLINE_TWISTER_COASTER,
+            self::MINIATURE_GOLF => OpenRCT2RideType::MINI_GOLF,
+            self::TYPE_44 => OpenRCT2RideType::_50,
+            self::ROTO_DROP => OpenRCT2RideType::ROTO_DROP,
+            self::FLYING_SAUCERS => OpenRCT2RideType::FLYING_SAUCERS,
+            self::CROOKED_HOUSE => OpenRCT2RideType::CROOKED_HOUSE,
+            self::CYCLE_RAILWAY => OpenRCT2RideType::MONORAIL_CYCLES,
+            self::SUSPENDED_LOOPING_ROLLER_COASTER => OpenRCT2RideType::COMPACT_INVERTED_COASTER,
+            self::WATER_COASTER => OpenRCT2RideType::WATER_COASTER,
+            self::AIR_POWERED_VERTICAL_COASTER => OpenRCT2RideType::AIR_POWERED_VERTICAL_COASTER,
+            self::INVERTED_WILD_MOUSE_COASTER => OpenRCT2RideType::INVERTED_HAIRPIN_COASTER,
+            self::JET_SKIS => OpenRCT2RideType::BOAT_HIRE,
+            self::T_SHIRT_STALL => OpenRCT2RideType::SHOP,
+            self::RAFT_RIDE => OpenRCT2RideType::RIVER_RAFTS,
+            self::DOUGHNUT_SHOP => OpenRCT2RideType::FOOD_STALL,
+            self::ENTERPRISE => OpenRCT2RideType::ENTERPRISE,
+            self::COFFEE_SHOP => OpenRCT2RideType::DRINK_STALL,
+            self::FRIED_CHICKEN_STALL => OpenRCT2RideType::FOOD_STALL,
+            self::LEMONADE_STALL => OpenRCT2RideType::DRINK_STALL,
+        };
+    }
 }

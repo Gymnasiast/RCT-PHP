@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT12;
+namespace RCTPHP\OpenRCT2\Track;
 
 final class TrackPieceNames
 {
@@ -109,7 +109,7 @@ final class TrackPieceNames
         98 => "Steep downward twist right [R1]",
         99 => "Brakes",
         100 => "Booster",
-        101 => "Quarter loop up",
+        101 => "Maze",
         102 => "Helix up left [R3]",
         103 => "Helix up right [R3]",
         104 => "Helix down left [R3]",
@@ -263,5 +263,24 @@ final class TrackPieceNames
         252 => "Vertical twist down right",
         253 => "Quarter loop up",
         254 => "Quarter loop down",
+        
+        255 => "Quarter loop up",
+        256 => "Rotation control toggle",
+        
+        257 => "Flat ride base (1×4, A)",
+        258 => "Flat ride base (2×2)",
+        259 => "Flat ride base (4×4)",
+        260 => "Flat ride base (2×4)",
+        261 => "Flat ride base (1×5)",
+        262 => "Flat ride base (1×1, A)",
+        263 => "Flat ride base (1×4, B)",
+        264 => "Flat ride base (1×1, B)",
+        265 => "Flat ride base (1×4, C)",
+        266 => "Flat ride base (3×3)",
     ];
+    
+    public static function get(TrackElementType $type): string
+    {
+        return self::NAMES[$type->value] ?? '???';
+    }
 }

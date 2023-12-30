@@ -4,25 +4,32 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\TrackDesign;
 
 use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\OpenRCT2\RideType;
+use RCTPHP\RCT12\Coordinates\BigHorizontal;
+use RCTPHP\RCT12\Coordinates\SmallHorizontal;
+use RCTPHP\RCT12\Coordinates\SmallVertical;
 use RCTPHP\RCT12\EntranceStyle;
+use RCTPHP\RCT12\TrackDesign\MazeElement;
 use RCTPHP\RCT12\TrackDesignSpeed;
 use RCTPHP\RCT12\TrackDesignVersion;
 use RCTPHP\RCT12\VehicleColorScheme;
 use RCTPHP\RCT2\Color;
 use RCTPHP\RCT2\Limits;
 use RCTPHP\RCT2\Object\DATHeader;
+use RCTPHP\RCT2\Object\ObjectType;
 use RCTPHP\RCT2\OperatingMode;
 use RCTPHP\RCT2\RideStatictics;
-use RCTPHP\RCT2\RideType;
 use RCTPHP\RCT2\TrackColor;
 use RCTPHP\RCT2\VehicleColor;
 use RCTPHP\Sawyer\RLE\RLEString;
 use RCTPHP\Sawyer\SawyerTileHeight;
-use RCTPHP\Util;
 
 final class TD6
 {
     private const MAX_TRAINS_PER_RIDE = 32;
+
+    private const MAZE_ENTRANCE = 0x8;
+    private const MAZE_EXIT = 0x80;
 
     public RideType $rideType;
     public int $specialFeatures;
@@ -56,12 +63,21 @@ final class TD6
     public int $liftHillSpeed;
     public int $numCircuits;
 
+    /** @var TrackElement[] */
+    public array $trackElements = [];
+    /** @var EntranceElement[] */
+    public array $entranceElements = [];
+    /** @var MazeElement[] */
+    public array $mazeElements = [];
+    /** @var SceneryElement[] */
+    public array $sceneryElements = [];
+
     public function __construct(BinaryReader $reader)
     {
         $this->readHeader($reader);
     }
 
-    private function readHeader(BinaryReader $reader)
+    private function readHeader(BinaryReader $reader): void
     {
         $this->rideType = RideType::from($reader->readUint8());
         // Room for the vehicle type index
@@ -115,6 +131,17 @@ final class TD6
         $liftHillSpeedAndNumCircuits = $reader->readUint8();
         $this->liftHillSpeed = $liftHillSpeedAndNumCircuits & 0b00011111;
         $this->numCircuits = $liftHillSpeedAndNumCircuits >> 5;
+
+        if ($this->rideType !== RideType::MAZE)
+        {
+            $this->readTrackElements($reader);
+            $this->readEntranceElements($reader);
+        }
+        else
+        {
+            $this->readMazeElements($reader);
+        }
+        $this->readSceneryItems($reader);
     }
 
     /**
@@ -183,5 +210,117 @@ final class TD6
 
         $reader = BinaryReader::fromString($decoded);
         return new self($reader);
+    }
+
+    private function readTrackElements(BinaryReader $reader): void
+    {
+        while (true)
+        {
+            $firstByte = $reader->readUint8();
+            if ($firstByte === 0xFF)
+            {
+                return;
+            }
+
+            $secondByte = $reader->readUint8();
+            $this->trackElements[] = TrackElement::fromTD6Bytes($this->rideType, $firstByte, $secondByte);
+        }
+    }
+
+    private function readEntranceElements(BinaryReader $reader): void
+    {
+        while (true)
+        {
+            $peek = $reader->readUint8();
+            if ($peek === 0xFF)
+            {
+                return;
+            }
+            $reader->seek(-1);
+
+            $firstByte = $reader->readSint8();
+            $secondByte = $reader->readUint8();
+            $direction = $secondByte & 0x7F;
+            $isExit = (bool)($secondByte & 0b1000_0000);
+            $x = (new BigHorizontal($reader->readSint16()))->toSmallHorizontal();
+            $y = (new BigHorizontal($reader->readSint16()))->toSmallHorizontal();
+            $z = new SmallVertical($firstByte === -128 ? -1 : $firstByte);
+            $this->entranceElements[] = new EntranceElement($x, $y, $z, $direction, $isExit);
+        }
+    }
+
+    private function readMazeElements(BinaryReader $reader): void
+    {
+        while (true)
+        {
+            $peek = $reader->readUint32();
+            if ($peek === 0)
+            {
+                return;
+            }
+            $reader->seek(-4);
+
+            $x = new SmallHorizontal($reader->readSint8());
+            $y = new SmallHorizontal($reader->readSint8());
+            $z = new SmallVertical(0);
+            $mazeEntry = $reader->readUint16();
+            $direction = $mazeEntry & 0xFF;
+            $type = ($mazeEntry & 0xFF00) >> 8;
+
+            if ($type === self::MAZE_ENTRANCE)
+            {
+                $this->entranceElements[] = new EntranceElement($x, $y, $z, $direction, false);
+            }
+            elseif ($type === self::MAZE_EXIT)
+            {
+                $this->entranceElements[] = new EntranceElement($x, $y, $z, $direction, true);
+            }
+            else
+            {
+                $this->mazeElements[] = new MazeElement($x, $y, $mazeEntry);
+            }
+        }
+    }
+
+    public function readSceneryItems(BinaryReader $reader): void
+    {
+        while (true)
+        {
+            $peek = $reader->readUint8();
+            if ($peek === 0xFF)
+            {
+                return;
+            }
+            $reader->seek(-1);
+
+            $datHeader = DATHeader::fromReader($reader);
+            $x = new SmallHorizontal($reader->readSint8());
+            $y = new SmallHorizontal($reader->readSint8());
+            $z = new SmallVertical($reader->readSint8());
+            $dataByte0 = $reader->readUint8();
+            $dataByte1 = $reader->readUint8();
+            $dataByte2 = $reader->readUint8();
+
+            $datType = ObjectType::tryFrom($datHeader->getType());
+
+            // Footpath
+            if ($datType === ObjectType::Footpath)
+            {
+                $edges = $dataByte0 & 0b0000_1111;
+                $isSloped = (bool)($dataByte0 & 0b0001_0000);
+                $slopeDirection = ($dataByte0 & 0b0110_0000) >> 5;
+                $isQueue = (bool)($dataByte0 & 0b1000_0000);
+                $this->sceneryElements[] = new PathElement($datHeader, $x, $y, $z, $edges, $isQueue, $isSloped, $slopeDirection);
+            }
+            elseif ($datType === ObjectType::SmallScenery)
+            {
+                $direction = $dataByte0 & 0b0000_0011;
+                $quadrant = ($dataByte0 & 0b0000_1100) >> 2;
+                $firstColour = Color::from($dataByte1);
+                $secondColour = Color::from($dataByte2);
+
+                $this->sceneryElements[] = new SmallSceneryElement($datHeader, $x, $y, $z, $direction, $quadrant, $firstColour, $secondColour);
+            }
+        }
     }
 }

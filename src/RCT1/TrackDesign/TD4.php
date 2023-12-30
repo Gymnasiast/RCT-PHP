@@ -82,7 +82,7 @@ final class TD4
 
         $this->upkeepCost = $reader->readUint16();
 
-        if ($this->version = TrackDesignVersion::RCT1_BASE)
+        if ($this->version === TrackDesignVersion::RCT1_BASE)
         {
             return;
         }

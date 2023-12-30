@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RCTPHP\RCT2;
+namespace RCTPHP\OpenRCT2;
 
 enum RideType : int
 {
@@ -96,4 +96,13 @@ enum RideType : int
     case MINE_RIDE = 88;
     case _59 = 89;
     case LIM_LAUNCHED_ROLLER_COASTER = 90;
+    case HYPERCOASTER = 91;
+    case HYPER_TWISTER = 92;
+    case MONSTER_TRUCKS = 93;
+    case SPINNING_WILD_MOUSE = 94;
+    case CLASSIC_MINI_ROLLER_COASTER = 95;
+    case HYBRID_COASTER = 96;
+    case SINGLE_RAIL_ROLLER_COASTER = 97;
+    case ALPINE_COASTER = 98;
+    case CLASSIC_WOODEN_ROLLER_COASTER = 99;
 }
