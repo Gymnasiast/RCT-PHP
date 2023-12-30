@@ -1,18 +1,18 @@
 <?php
 namespace RCTPHP\Sawyer\Object;
 
-use Cyndaron\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
+use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
+use RCTPHP\Util\Reader\ReadableInterface;
 use function dechex;
 use function str_pad;
 use function strtoupper;
 use const STR_PAD_LEFT;
 
 /**
- * Class DATHeader
- *
  * Reads the header of an RCT2 or Locomotion .DAT object file and saves its metadata.
  */
-abstract class DATHeader
+abstract class DATHeader implements ReadableInterface
 {
     final public const DAT_HEADER_SIZE = 16;
 
@@ -28,7 +28,7 @@ abstract class DATHeader
         return $this->flags === 0xFFFFFFFF;
     }
 
-    final public static function fromReader(BinaryReader $reader): static
+    final public static function fromReader(ReaderInterface&IntegerReaderInterface $reader): static
     {
         $candidate = self::tryFromReader($reader);
         if ($candidate === null)
@@ -39,7 +39,7 @@ abstract class DATHeader
         return $candidate;
     }
 
-    final public static function tryFromReader(BinaryReader $reader): static|null
+    final public static function tryFromReader(ReaderInterface&IntegerReaderInterface $reader): static|null
     {
         $flags = $reader->readUint32();
         $name = $reader->readBytes(8); // ASCII string

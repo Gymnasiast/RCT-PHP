@@ -7,6 +7,6 @@ $filename = $argv[1];
 
 $reader = \Cyndaron\BinaryHandler\BinaryReader::fromFile($filename);
 
-$image = \RCTPHP\Util\PCX\PCXImage::read($reader);
+$image = \RCTPHP\Util\PCX\PCXImage::fromReader($reader);
 $gd = $image->exportAsGdImage();
 imagepng($gd, 'converted2.png');

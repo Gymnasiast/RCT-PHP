@@ -3,10 +3,15 @@ declare(strict_types=1);
 
 namespace RCTPHP\Util\PCX;
 
-use Cyndaron\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
+use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
+use RCTPHP\Util\Reader\ReadableInterface;
+use RCTPHP\Util\Reader\TryFromReaderTrait;
 
-final class PCXHeader
+final class PCXHeader implements ReadableInterface
 {
+    use TryFromReaderTrait;
+
     public function __construct(
         public readonly int $manufacturer,
         public readonly int $version,
@@ -39,7 +44,7 @@ final class PCXHeader
         return $this->imgYMax - $this->imgYMin + 1;
     }
 
-    public static function read(BinaryReader $reader): self
+    public static function fromReader(ReaderInterface&IntegerReaderInterface $reader): self
     {
         return new self(
             manufacturer: $reader->readUint8(), // 0x00

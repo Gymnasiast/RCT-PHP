@@ -4,7 +4,11 @@ declare(strict_types=1);
 namespace RCTPHP\Util\PCX;
 
 use Cyndaron\BinaryHandler\BinaryReader;
+use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
+use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
 use GdImage;
+use RCTPHP\Util\Reader\ReadableInterface;
+use RCTPHP\Util\Reader\TryFromReaderTrait;
 use RuntimeException;
 use function assert;
 use function chr;
@@ -16,8 +20,10 @@ use function strlen;
 /**
  * Some inspiration taken from https://formats.kaitai.io/pcx/php.html
  */
-final class PCXImage
+final class PCXImage implements ReadableInterface
 {
+    use TryFromReaderTrait;
+
     private const NUM_PALETTE_ENTRIES = 256;
     private const PALETTE_DATA_SIZE = self::NUM_PALETTE_ENTRIES * 3;
 
@@ -133,9 +139,9 @@ final class PCXImage
         return $gd;
     }
 
-    public static function read(BinaryReader $reader): self
+    public static function fromReader(ReaderInterface&IntegerReaderInterface $reader): self
     {
-        $header = PCXHeader::read($reader);
+        $header = PCXHeader::fromReader($reader);
         $restSize = $reader->getSize() - $reader->getPosition();
         $rest = $reader->readBytes($restSize);
 

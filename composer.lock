@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Cyndaron/binary-handler.git",
-                "reference": "474d5f040a2df56fa35b3fb838551d59b13e321e"
+                "reference": "5e01ad2810bc5a552c79e6327630598dddf554cf"
             },
             "require": {
                 "php": ">=8.1"
@@ -22,7 +22,7 @@
                 "phpstan/phpstan": "*"
             },
             "default-branch": true,
-            "type": "project",
+            "type": "library",
             "autoload": {
                 "psr-4": {
                     "Cyndaron\\BinaryHandler\\": "src/"
@@ -43,7 +43,7 @@
                 "MIT"
             ],
             "description": "Read and write binary files easily",
-            "time": "2023-04-09T19:17:26+00:00"
+            "time": "2023-12-14T13:25:56+00:00"
         }
     ],
     "packages-dev": [
@@ -2190,5 +2190,5 @@
         "ext-gd": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
