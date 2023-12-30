@@ -29,6 +29,12 @@ final class Util
         return $rotated & 0b11111111;
     }
 
+    public static function rol32(int $input, int $shift): int
+    {
+        $rotated = ($input << $shift) | ($input >> (32 - $shift));
+        return $rotated & 0xFFFFFFFF;
+    }
+
     public static function decodeRotate(string $input): string
     {
         $srcLength = strlen($input);
