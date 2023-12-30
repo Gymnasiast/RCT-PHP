@@ -102,7 +102,7 @@ final class TD6
 
         $this->specialFeatures2 = new SpecialFeatures2($reader->readUint32());
 
-        $this->vehicle = new DATHeader($reader);
+        $this->vehicle = DATHeader::fromReader($reader);
 
         $this->spaceRequiredX = $reader->readUint8();
         $this->spaceRequiredY = $reader->readUint8();

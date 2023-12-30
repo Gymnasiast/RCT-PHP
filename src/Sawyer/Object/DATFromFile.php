@@ -13,7 +13,7 @@ trait DATFromFile
         $reader = BinaryReader::fromFile($filename);
 
         $headerClass = self::HEADER_CLASS;
-        $header = new $headerClass($reader);
+        $header = $headerClass::fromReader($reader);
         $rest = Util::readChunk($reader);
 
         return new self($header, $rest);

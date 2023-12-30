@@ -20,7 +20,7 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
 
     public function __construct(BinaryReader $reader)
     {
-        $this->header = new DATHeader($reader);
+        $this->header = DATHeader::fromReader($reader);
         $this->rest = Util::readChunk($reader);
     }
 

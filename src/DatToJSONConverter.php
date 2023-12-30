@@ -59,7 +59,7 @@ class DatToJSONConverter
             }
 
             $reader = BinaryReader::fromFile(self::INPUT_DIR . '/' . $inputFile);
-            $DATHeader = new DATHeader($reader);
+            $DATHeader = DATHeader::fromReader($reader);
 
             // We use the name embedded in the DAT file, because the filename might differ from it.
             $datName = strtolower(trim($DATHeader->name));

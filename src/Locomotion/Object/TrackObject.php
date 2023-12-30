@@ -89,29 +89,29 @@ class TrackObject implements LocomotionObject, StringTableOwner, ImageTableOwner
 
         for ($i = 0; $i < $numCompatible; $i++)
         {
-            $this->compatibleTracksRoads[] = new DATHeader($reader);
+            $this->compatibleTracksRoads[] = DATHeader::fromReader($reader);
         }
 
         for ($i = 0; $i < $numMods; $i++)
         {
-            $this->mods[] = new DATHeader($reader);
+            $this->mods[] = DATHeader::fromReader($reader);
         }
 
         for ($i = 0; $i < $numSignals; $i++)
         {
-            $this->signals[] = new DATHeader($reader);
+            $this->signals[] = DATHeader::fromReader($reader);
         }
 
-        $this->tunnel = new DATHeader($reader);
+        $this->tunnel = DATHeader::fromReader($reader);
 
         for ($i = 0; $i < $numBridges; $i++)
         {
-            $this->bridges[] = new DATHeader($reader);
+            $this->bridges[] = DATHeader::fromReader($reader);
         }
 
         for ($i = 0; $i < $numStations; $i++)
         {
-            $this->stations[] = new DATHeader($reader);
+            $this->stations[] = DATHeader::fromReader($reader);
         }
 
         $imageTable = $reader->readBytes(strlen($decoded) - $reader->getPosition());

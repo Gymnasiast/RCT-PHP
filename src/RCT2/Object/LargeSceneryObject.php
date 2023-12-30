@@ -53,7 +53,7 @@ class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
 
         $this->readStringTable($reader, 'name');
 
-        $attachTo = DATHeader::try($reader);
+        $attachTo = DATHeader::tryFromReader($reader);
         $this->attachTo = ($attachTo !== null && !$attachTo->isBlank()) ? $attachTo : null;
 
         if ($this->flags & (1 << 2))

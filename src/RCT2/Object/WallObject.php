@@ -52,7 +52,7 @@ class WallObject implements RCT2Object, StringTableOwner, ImageTableOwner
 
         $this->readStringTable($reader, 'name');
 
-        $this->attachTo = DATHeader::try($reader);
+        $this->attachTo = DATHeader::tryFromReader($reader);
 
         $imageTableSize = strlen($decoded) - $reader->getPosition();
         $imageTable = $reader->readBytes($imageTableSize);

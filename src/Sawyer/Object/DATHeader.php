@@ -16,29 +16,41 @@ abstract class DATHeader
 {
     final public const DAT_HEADER_SIZE = 16;
 
-    public readonly int $flags;
-    public readonly string $name;
-    public readonly int $checksum;
-
-    final public function __construct(BinaryReader $reader)
-    {
-        $this->flags = $reader->readUint32();
-        $this->name = $reader->readBytes(8); // ASCII string
-        $this->checksum = $reader->readUint32();
+    final public function __construct(
+        public readonly int $flags,
+        public readonly string $name,
+        public readonly int $checksum,
+    ) {
     }
 
-    final public static function try(BinaryReader $reader): static|null
+    private function isNull(): bool
     {
-        // A "null entry" or end of list is marked by setting the first byte to 0xFF.
-        $peek = $reader->readUint8();
-        if ($peek === 0xFF)
+        return $this->flags === 0xFFFFFFFF;
+    }
+
+    final public static function fromReader(BinaryReader $reader): static
+    {
+        $candidate = self::tryFromReader($reader);
+        if ($candidate === null)
         {
-            $reader->seek(self::DAT_HEADER_SIZE - 1);
+            throw new \RuntimeException('Entry is null!');
+        }
+
+        return $candidate;
+    }
+
+    final public static function tryFromReader(BinaryReader $reader): static|null
+    {
+        $flags = $reader->readUint32();
+        $name = $reader->readBytes(8); // ASCII string
+        $checksum = $reader->readUint32();
+        $candidate = new static($flags, $name, $checksum);
+        if ($candidate->isNull())
+        {
             return null;
         }
 
-        $reader->seek(-1);
-        return new static($reader);
+        return $candidate;
     }
 
     abstract public function getType(): int;

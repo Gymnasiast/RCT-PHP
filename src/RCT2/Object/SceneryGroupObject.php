@@ -81,7 +81,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
             }
 
             $reader->seek(-1);
-            $object = DATHeader::try($reader);
+            $object = DATHeader::tryFromReader($reader);
             if ($object !== null)
             {
                 $this->objects[] = $object;
