@@ -14,7 +14,7 @@ final class NonRLEString
     public function encode(): RLEString
     {
         $inputLength = strlen($this->input);
-        /** @var RLERun $runs */
+        /** @var RLERun[] $runs */
         $runs = [];
         $buffer = '';
 
