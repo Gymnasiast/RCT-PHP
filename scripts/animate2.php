@@ -18,7 +18,7 @@ if ($extension === 'bmp')
 elseif ($extension === 'dat')
 {
     $reader = BinaryReader::fromFile($paletteFilename);
-    $detector = new DATDetector($reader);
+    $detector = DATDetector::fromReader($reader);
     $obj = $detector->getObject();
 }
 
