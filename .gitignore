@@ -2,3 +2,4 @@
 /export
 /vendor/
 .php-cs-fixer.cache
+/scripts-custom/
