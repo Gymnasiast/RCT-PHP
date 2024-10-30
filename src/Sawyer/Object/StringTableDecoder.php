@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\Object;
 
 use RCTPHP\Sawyer\SawyerString;
-use RCTPHP\Util;
+use RCTPHP\Sawyer\SawyerStringLanguage;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function array_key_exists;
 use function ord;
@@ -38,7 +38,8 @@ trait StringTableDecoder
                 $string .= $character;
             }
 
-            $this->stringTable[$name]->strings[$languageCode] = new SawyerString($languageCode, $string);
+            $language = SawyerStringLanguage::from($languageCode);
+            $this->stringTable[$name]->strings[$languageCode] = new SawyerString($language, $string);
         }
     }
 

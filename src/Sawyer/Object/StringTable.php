@@ -19,7 +19,7 @@ final class StringTable implements JsonSerializable
         $ret = [];
         foreach ($this->strings as $string)
         {
-            $languageCode = SawyerString::ISO_MAPPING[$string->languageCode];
+            $languageCode = $string->language->getIsoCode();
             $ret[$languageCode] = $string->toUtf8();
         }
 

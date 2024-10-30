@@ -66,7 +66,7 @@ abstract class DatDataPrinter
             Util::printLn("String table “{$name}”:");
             foreach ($stringTable->strings as $stringTableItem)
             {
-                Util::printLn("In-game name {$stringTableItem->languageCode}: {$stringTableItem->toUtf8()}");
+                Util::printLn("In-game name {$stringTableItem->language->value}: {$stringTableItem->toUtf8()}");
             }
         }
     }
