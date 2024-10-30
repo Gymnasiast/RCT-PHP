@@ -24,6 +24,7 @@ final class fcTL extends Chunk
         public int $blendOp,
     ) {
         $dataFp = fopen('php://memory', 'rwb+');
+        assert($dataFp !== false);
         $dataWriter = new BinaryWriter($dataFp);
         $dataWriter->writeUint32BE($this->sequenceNumber);
         $dataWriter->writeUint32BE($this->width);
@@ -37,6 +38,7 @@ final class fcTL extends Chunk
 
         rewind($dataFp);
         $data = fread($dataFp, self::CHUNK_LENGTH);
+        assert($data !== false);
 
         parent::__construct(self::CHUNK_LENGTH, 'fcTL', $data);
     }

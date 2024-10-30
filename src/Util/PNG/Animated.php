@@ -51,8 +51,8 @@ final class Animated
             $this->chunks[] = $plte;
         }
 
-        $width = (int)(unpack('N', substr($ihdr->data, 0, 4))[1]);
-        $height = (int)(unpack('N', substr($ihdr->data, 4, 4))[1]);
+        $width = $this->getUint32BE(substr($ihdr->data, 0, 4));;
+        $height = $this->getUint32BE(substr($ihdr->data, 4, 4));;
 
         $sequenceNum = 0;
         foreach ($files as $fileNum => $file)
@@ -96,5 +96,12 @@ final class Animated
     public function getFile(): File
     {
         return new File($this->chunks);
+    }
+
+    private function getUint32BE(string $input): int
+    {
+        $unpacked = unpack('N', $input);
+        assert(is_array($unpacked) && count($unpacked) >= 2);
+        return (int)$unpacked[1];
     }
 }

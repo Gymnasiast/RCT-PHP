@@ -33,12 +33,10 @@ final class File
 
         while ($reader->getPosition() < $reader->getSize())
         {
-            $lengthRaw = $reader->readBytes(4);
-            $length = unpack('N', $lengthRaw)[1];
+            $length = $reader->readUint32BE();
             $code = $reader->readBytes(4);
             $data = $reader->readBytes($length);
-            $crcRaw = $reader->readBytes(4);
-            $crc = unpack('N', $crcRaw)[1];
+            $crc = $reader->readUint32BE();
 
             $chunks[] = new Chunk($length, $code, $data, $crc);
         }
