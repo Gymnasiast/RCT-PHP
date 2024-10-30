@@ -35,6 +35,7 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     public readonly int $animationDelay;
     public readonly int $animationMask;
     public readonly int $numFrames;
+    /** @var int[] */
     public readonly array $frameOffsets;
 
     public function getImageTable(): ImageTable
@@ -63,14 +64,13 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
         $attachTo = DATHeader::tryFromReader($reader);
         $this->attachTo = ($attachTo !== null && !$attachTo->isBlank()) ? $attachTo : null;
 
+        $frameOffsets = [];
         if ($this->flags & (1 << 15))
         {
-            $this->frameOffsets = $this->readFrameOffsets($reader);
+            $frameOffsets = $this->readFrameOffsets($reader);
         }
-        else
-        {
-            $this->frameOffsets = [];
-        }
+
+        $this->frameOffsets = $frameOffsets;
 
         $imageTableSize = strlen($decoded) - $reader->getPosition();
         $imageTable = $reader->readBytes($imageTableSize);
