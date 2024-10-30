@@ -43,8 +43,8 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
     public const OBJECT_TYPE_COMPETITOR = 32;
     public const OBJECT_TYPE_SCENARIO_TEXT = 33;
 
-    public function getType(): int
+    public function getType(): ObjectType
     {
-        return $this->flags & 0b00111111;
+        return ObjectType::from($this->flags & 0b00111111);
     }
 }

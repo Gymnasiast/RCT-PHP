@@ -1,11 +1,6 @@
 <?php
 namespace RCTPHP\RCT2\Object;
 
-use function dechex;
-use function str_pad;
-use function strtoupper;
-use const STR_PAD_LEFT;
-
 /**
  * Class DATHeader
  *
@@ -40,9 +35,9 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
         "scenario_text", // Scenario text objects are not supposed to be converted
     ];
 
-    public function getType(): int
+    public function getType(): ObjectType
     {
-        return $this->flags & 0x0F;
+        return ObjectType::from($this->flags & 0x0F);
     }
 
     public function getAsOriginalId(): string

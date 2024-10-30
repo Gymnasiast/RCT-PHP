@@ -63,7 +63,7 @@ class DatToJSONConverter
 
             // We use the name embedded in the DAT file, because the filename might differ from it.
             $datName = strtolower(trim($DATHeader->name));
-            $typeFolder = DATHeader::TYPE_TO_FOLDER[$DATHeader->getType()];
+            $typeFolder = DATHeader::TYPE_TO_FOLDER[$DATHeader->getType()->value];
             $oldFile = self::OUTPUT_DIR . "/other/{$typeFolder}/other.{$datName}.json";
             $newDir = self::OUTPUT_DIR . "/official/{$typeFolder}/official.{$datName}";
             if (!mkdir($newDir, 0777, true) && !is_dir($newDir))

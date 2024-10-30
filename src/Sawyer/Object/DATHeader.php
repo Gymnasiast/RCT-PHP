@@ -1,6 +1,7 @@
 <?php
 namespace RCTPHP\Sawyer\Object;
 
+use BackedEnum;
 use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
 use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
 use RCTPHP\Util\Reader\ReadableInterface;
@@ -53,7 +54,7 @@ abstract class DATHeader implements ReadableInterface
         return $candidate;
     }
 
-    abstract public function getType(): int;
+    abstract public function getType(): BackedEnum;
 
     final public function getFlagsFormatted(): string
     {

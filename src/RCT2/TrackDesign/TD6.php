@@ -301,7 +301,7 @@ final class TD6
             $dataByte1 = $reader->readUint8();
             $dataByte2 = $reader->readUint8();
 
-            $datType = ObjectType::tryFrom($datHeader->getType());
+            $datType = $datHeader->getType();
 
             // Footpath
             if ($datType === ObjectType::Footpath)
