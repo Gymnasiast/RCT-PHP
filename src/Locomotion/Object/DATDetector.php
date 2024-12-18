@@ -16,6 +16,7 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
         DATHeader::OBJECT_TYPE_INTERFACE => InterfaceObject::class,
         DATHeader::OBJECT_TYPE_SOUNDS => SoundObject::class,
         DATHeader::OBJECT_TYPE_CURRENCY => CurrencyObject::class,
+        DATHeader::OBJECT_TYPE_WATER => WaterObject::class,
         DATHeader::OBJECT_TYPE_TRACK => TrackObject::class,
         DATHeader::OBJECT_TYPE_SCENARIO_TEXT => ScenarioTextObject::class,
     ];
