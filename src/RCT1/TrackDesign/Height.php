@@ -13,6 +13,6 @@ final class Height
 
     public function toRCT2Internal(): SawyerTileHeight
     {
-        return new SawyerTileHeight($this->rawValue / 2);
+        return new SawyerTileHeight($this->rawValue >> 1);
     }
 }

@@ -50,7 +50,7 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
 
         $reader->seek(6);
         $this->flags = $reader->readUint32();
-        $this->height = new SawyerTileHeight($reader->readUint8() / 8);
+        $this->height = new SawyerTileHeight($reader->readUint8() >> 3);
         $this->toolId = $reader->readUint8();
         $this->price = new SawyerPrice($reader->readSint16() * 10);
         $this->removalPrice = new SawyerPrice($reader->readSint16() * 10);
