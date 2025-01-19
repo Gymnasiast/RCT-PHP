@@ -32,5 +32,7 @@ abstract class BaseObject
         };
         $sourceGame = SourceGame::fromRCT2($rct2SourceGame);
         $this->sourceGame = [$sourceGame];
+        $name = strtolower($header->name);
+        $this->id = "{$sourceGame->value}.{$this->objectType->value}.{$name}";
     }
 }

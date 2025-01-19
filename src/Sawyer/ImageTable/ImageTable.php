@@ -208,4 +208,10 @@ final class ImageTable
 
         file_put_contents($filename, $this->binaryData);
     }
+
+    public function serialize(): array
+    {
+        $lastImage = count($this->entries) - 1;
+        return ["\$LGX:images.dat[0..{$lastImage}]"];
+    }
 }

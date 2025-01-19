@@ -11,12 +11,8 @@ use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
-use RCTPHP\Util;
 use Cyndaron\BinaryHandler\BinaryReader;
-use const STR_PAD_LEFT;
 use function strlen;
-use function dechex;
-use function str_pad;
 use function array_map;
 
 class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
