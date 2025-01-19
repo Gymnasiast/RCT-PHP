@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use RCTPHP\OpenRCT2\Object\BaseObject;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
@@ -14,14 +15,14 @@ use RCTPHP\Sawyer\SawyerTileHeight;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner
+class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
 {
     use DATFromFile;
     use StringTableDecoder;
 
     public readonly DATHeader $header;
 
-    /** @var StringTable[] */
+    /** @var array<string, StringTable> */
     public array $stringTable = [];
 
     public readonly DATHeader|null $attachTo;
@@ -89,5 +90,13 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
         }
 
         return $frameOffsets;
+    }
+
+    public function toOpenRCT2Object(): \RCTPHP\OpenRCT2\Object\SmallSceneryObject
+    {
+        $ret = new \RCTPHP\OpenRCT2\Object\SmallSceneryObject();
+        $ret->images = $this->imageTable;
+        $ret->strings = ['name' => $this->stringTable['name']->toArray()];
+        return $ret;
     }
 }

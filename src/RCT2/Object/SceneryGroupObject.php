@@ -25,7 +25,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var StringTable[] */
+    /** @var array<string, StringTable> */
     public array $stringTable = [];
     /** @var DATHeader[] */
     public array $objects = [];
@@ -111,6 +111,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
 
         $ret = new OpenRCT2SceneryGroupObject();
         $ret->copyDataFromDATHeader($this->header);
+        $ret->strings = ['name' => $this->stringTable['name']->toArray()];
         $ret->properties = new SceneryGroupProperties(
             $entries,
             $this->priority,

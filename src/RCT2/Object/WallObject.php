@@ -22,7 +22,7 @@ class WallObject implements RCT2Object, StringTableOwner, ImageTableOwner
 
     public DATHeader $header;
 
-    /** @var StringTable[] */
+    /** @var array<string, StringTable> */
     public array $stringTable = [];
 
     public DATHeader|null $attachTo;

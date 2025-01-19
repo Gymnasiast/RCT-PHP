@@ -21,7 +21,7 @@ class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
 
     public readonly DATHeader $header;
 
-    /** @var StringTable[] */
+    /** @var array<string, StringTable> */
     public array $stringTable = [];
 
     public readonly DATHeader|null $attachTo;

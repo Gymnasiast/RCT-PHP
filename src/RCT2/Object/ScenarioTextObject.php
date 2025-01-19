@@ -16,7 +16,7 @@ class ScenarioTextObject implements RCT2Object, StringTableOwner
     use StringTableDecoder;
 
     public DATHeader $header;
-    /** @var StringTable[] */
+    /** @var array<string, StringTable> */
     public array $stringTable = [];
 
     public readonly bool $isSixFlags;
