@@ -53,11 +53,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
     {
         $this->header = $header;
         $reader = BinaryReader::fromString($decoded);
-        $reader->seek(0x10B);
-        //        fseek($fp, 6 + (0x80 * 2), SEEK_CUR); // ?
-//        fseek($fp, 8, SEEK_CUR);
-//        $this->numEntries = ord(fread($fp, 1));
-//        fseek($fp, 1, SEEK_CUR);
+        $reader->seek(6 + (0x80 * 2) + 1 + 1);
         $this->priority = $reader->readUint8();
 
         $reader->seek(1);
