@@ -57,4 +57,10 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
     {
         return $this->flags === 0 && $this->name === '        ' && $this->checksum === 0;
     }
+
+    public function getSourceGame(): SourceGame
+    {
+        $number = ($this->flags & 0xF0) >> 4;
+        return SourceGame::tryFrom($number) ?: SourceGame::CUSTOM;
+    }
 }

@@ -30,7 +30,7 @@ final class ImageTable
     /** @var array<int, GdImage> */
     public readonly array $gdImageData;
 
-    /** @var Palette[] */
+    /** @var array<int, Palette> */
     public readonly array $paletteParts;
 
     public function __construct(public readonly string $binaryData)
@@ -80,6 +80,10 @@ final class ImageTable
                 // FIXME: Use a proper palette!
                 foreach (\RCTPHP\RCT1\TrackDesign\PALETTE as $index => $color)
                 {
+                    if ($index == 226)
+                    {
+                        $color = new RGB(0x37, 0x4b, 0x4b);
+                    }
                     $id = imagecolorallocate($image, $color->r, $color->g, $color->b);
                     if ($id !== $index)
                     {
@@ -112,7 +116,7 @@ final class ImageTable
                     $colors[] = new RGB($r, $g, $b);
                 }
 
-                $paletteParts[] = new Palette($index, $numColors, $colors);
+                $paletteParts[$i] = new Palette($index, $numColors, $colors);
             }
 
             $binaryImageData[] = $dataForThisImage;

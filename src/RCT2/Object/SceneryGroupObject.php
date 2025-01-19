@@ -110,6 +110,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
         }, $this->objects);
 
         $ret = new OpenRCT2SceneryGroupObject();
+        $ret->copyDataFromDATHeader($this->header);
         $ret->properties = new SceneryGroupProperties(
             $entries,
             $this->priority,
