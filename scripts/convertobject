@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use RCTPHP\RCT2\Object\ObjectWithOpenRCT2Counterpart;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$filename = $argv[1] ?? '';
+if (!file_exists($filename))
+{
+    echo "Usage: convertobject <filename>\n";
+    exit(1);
+}
+
+$reader = \Cyndaron\BinaryHandler\BinaryReader::fromFile($filename);
+$datDetector = \RCTPHP\RCT2\Object\DATDetector::fromReader($reader);
+$asObject = $datDetector->getObject();
+if (!($asObject instanceof ObjectWithOpenRCT2Counterpart))
+{
+    throw new \RuntimeException('Could not convert!');
+}
+
+$converted = $asObject->toOpenRCT2Object();
+$asArray = (array)$converted;
+if (array_key_exists('images', $asArray))
+{
+    unset($asArray['images']);
+}
+echo json_encode($asArray, flags: JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+echo PHP_EOL;
