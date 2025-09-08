@@ -38,7 +38,12 @@ trait StringTableDecoder
                 $string .= $character;
             }
 
-            $language = SawyerStringLanguage::from($languageCode);
+            $language = SawyerStringLanguage::tryFrom($languageCode);
+            if ($language === null)
+            {
+                // TODO: work out if and how to notify the user.
+                continue;
+            }
             $this->stringTable[$name]->strings[$languageCode] = new SawyerString($language, $string);
         }
     }
