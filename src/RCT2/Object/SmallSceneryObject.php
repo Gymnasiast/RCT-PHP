@@ -110,7 +110,7 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
 
-        $y = 56 + ($this->height->internal / 2);
+        $y = 56 + (int)($this->height->internal / 2);
 //        $y = min($y, $this->height->internal - 16);
         if (($this->flags & self::SMALL_SCENERY_FLAG_FULL_TILE) && ($this->flags & self::SMALL_SCENERY_FLAG_VOFFSET_CENTER))
         {
