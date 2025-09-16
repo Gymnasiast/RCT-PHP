@@ -3,16 +3,19 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use GdImage;
 use RCTPHP\OpenRCT2\Object\WaterObject as OpenRCT2WaterObject;
 use RCTPHP\OpenRCT2\Object\WaterPaletteGroup;
 use RCTPHP\OpenRCT2\Object\WaterProperties;
 use RCTPHP\OpenRCT2\Object\WaterPropertiesPalettes;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Util;
 use RuntimeException;
 use Cyndaron\BinaryHandler\BinaryReader;
@@ -22,7 +25,7 @@ use function strlen;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
 
-class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
+class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart, WithPreview
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -76,5 +79,14 @@ class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, Obje
     public function getImageTable(): ImageTable
     {
         return $this->imageTable;
+    }
+
+    public function getPreview(): GdImage
+    {
+        $preview = imagecreatefrompng(__DIR__ . '/../../../assets/water-preview.png');
+        $converted = $this->toOpenRCT2Object();
+        ImageHelper::applyPalette($preview, $converted);
+
+        return $preview;
     }
 }

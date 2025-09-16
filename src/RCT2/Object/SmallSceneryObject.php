@@ -110,15 +110,14 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
 
-        $image = $this->imageTable->gdImageData[0];
         $y = 56 + ($this->height->internal / 2);
-        $y = min($y, $this->height->internal - 16);
+//        $y = min($y, $this->height->internal - 16);
         if (($this->flags & self::SMALL_SCENERY_FLAG_FULL_TILE) && ($this->flags & self::SMALL_SCENERY_FLAG_VOFFSET_CENTER))
         {
             $y -= 12;
         }
 
-        ImageHelper::copyImage($image, $preview, 56, $y);
+        ImageHelper::copyImageTableEntry($this->imageTable, 0, $preview, 56, $y);
 
         return $preview;
     }

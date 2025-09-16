@@ -62,11 +62,8 @@ class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner, Wit
         $preview = ImageHelper::allocatePalettedImage(112, 112);
 
         // TODO: implement remap support
-        $image0 = $this->imageTable->gdImageData[0];
-        $image1 = $this->imageTable->gdImageData[1];
-
-        ImageHelper::copyImage($image0, $preview, 56 - 12, 56 + 8);
-        ImageHelper::copyImage($image1, $preview, 56 - 12, 56 + 8);
+        ImageHelper::copyImageTableEntry($this->imageTable, 0, $preview, 56 - 12, 56 + 8);
+        ImageHelper::copyImageTableEntry($this->imageTable, 1, $preview, 56 - 12, 56 + 8);
 
         return $preview;
     }

@@ -134,9 +134,7 @@ class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
 
-        $image = $this->imageTable->gdImageData[0];
-
-        ImageHelper::copyImage($image, $preview, 56, 56 - 39);
+        ImageHelper::copyImageTableEntry($this->imageTable, 0, $preview, 56, 56 - 39);
 
         return $preview;
     }

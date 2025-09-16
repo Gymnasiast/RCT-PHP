@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use GdImage;
 use RCTPHP\OpenRCT2\Object\SceneryGroupObject as OpenRCT2SceneryGroupObject;
 use RCTPHP\OpenRCT2\Object\SceneryGroupProperties;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
@@ -12,10 +14,11 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
 use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\Sawyer\Object\WithPreview;
 use function strlen;
 use function array_map;
 
-class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
+class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart, WithPreview
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -121,5 +124,14 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
     public function getImageTable(): ImageTable
     {
         return $this->imageTable;
+    }
+
+    public function getPreview(): GdImage
+    {
+        $preview = ImageHelper::allocatePalettedImage(112, 112);
+
+        ImageHelper::copyImageTableEntry($this->imageTable, 1, $preview, 56 - 15, 56 - 14);
+
+        return $preview;
     }
 }

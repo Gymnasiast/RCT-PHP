@@ -55,11 +55,8 @@ class PathObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithP
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
 
-        $regularPathPreview = $this->imageTable->gdImageData[71];
-        $queuePathPreview = $this->imageTable->gdImageData[72];
-
-        ImageHelper::copyImage($regularPathPreview, $preview, 56 - 49, 56 - 17);
-        ImageHelper::copyImage($queuePathPreview, $preview, 56 + 4, 56 - 17);
+        ImageHelper::copyImageTableEntry($this->imageTable, 71, $preview, 56 - 49, 56 - 17);
+        ImageHelper::copyImageTableEntry($this->imageTable, 72, $preview, 56 + 4, 56 - 17);
 
         return $preview;
     }
