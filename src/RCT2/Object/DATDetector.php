@@ -21,7 +21,7 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
         DATHeader::OBJECT_TYPE_PATHS => PathObject::class,
         DATHeader::OBJECT_TYPE_PATH_ADDITIONS => PathAdditionObject::class,
         DATHeader::OBJECT_TYPE_SCENERY_GROUP => SceneryGroupObject::class,
-        DATHeader::OBJECT_TYPE_PARK_ENTRANCE => null,
+        DATHeader::OBJECT_TYPE_PARK_ENTRANCE => ParkEntranceObject::class,
         DATHeader::OBJECT_TYPE_WATER => WaterObject::class,
         DATHeader::OBJECT_TYPE_SCENARIO_TEXT => ScenarioTextObject::class,
     ];

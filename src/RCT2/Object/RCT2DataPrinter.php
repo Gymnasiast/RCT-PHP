@@ -34,6 +34,7 @@ class RCT2DataPrinter extends DatDataPrinter
         {
             case BannerObject::class:
                 $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
+                Util::printLn("Scrolling mode: {$object->scrollingMode}");
                 Util::printLn("Price: {$object->price->asGBP()}");
                 Util::printLn("Attaches to: {$attachTo}");
                 break;
@@ -42,6 +43,10 @@ class RCT2DataPrinter extends DatDataPrinter
                 Util::printLn("Price: {$object->price->asGBP()}");
                 Util::printLn("Removal price: {$object->removalPrice->asGBP()}");
                 Util::printLn("Attaches to: {$attachTo}");
+                break;
+            case ParkEntranceObject::class:
+                Util::printLn("Scrolling mode: {$object->scrollingMode}");
+                Util::printLn("Text height: {$object->textHeight}");
                 break;
             case PathAdditionObject::class:
                 $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
