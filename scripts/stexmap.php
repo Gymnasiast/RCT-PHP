@@ -19,6 +19,9 @@ foreach ($files as $file)
     if (!str_ends_with(strtolower($file), '.dat'))
         continue;
 
+    if (!str_contains(strtolower($file), 'stex'))
+        continue;
+
     $fullPath = "$dir/$file";
     $reader = BinaryReader::fromFile($fullPath);
     $detector = DATDetector::fromReader($reader);
@@ -27,9 +30,9 @@ foreach ($files as $file)
     if (!($object instanceof ScenarioTextObject))
         continue;
 
-    $isCustom = ($object->header->flags & 0xF0) === 0;
-    if ($isCustom)
-        continue;
+//    $isCustom = ($object->header->flags & 0xF0) === 0;
+//    if ($isCustom)
+//        continue;
 
     $englishDesc = trim($object->getStringTable('scenario_name')->strings[0]->toUtf8());
     if ($englishDesc === '')
