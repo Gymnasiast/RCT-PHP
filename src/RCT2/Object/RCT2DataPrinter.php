@@ -32,6 +32,9 @@ class RCT2DataPrinter extends DatDataPrinter
 
         switch (get_class($object))
         {
+            case BannerObject::class:
+                Util::printLn("Price: {$object->price->asGBP()}");
+                break;
             case LargeSceneryObject::class:
                 $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
                 Util::printLn("Price: {$object->price->asGBP()}");

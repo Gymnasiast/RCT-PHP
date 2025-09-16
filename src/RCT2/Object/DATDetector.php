@@ -17,7 +17,7 @@ final class DATDetector extends \RCTPHP\Sawyer\Object\DATDetector
         DATHeader::OBJECT_TYPE_SMALL_SCENERY => SmallSceneryObject::class,
         DATHeader::OBJECT_TYPE_LARGE_SCENERY => LargeSceneryObject::class,
         DATHeader::OBJECT_TYPE_WALLS => WallObject::class,
-        DATHeader::OBJECT_TYPE_BANNERS => null,
+        DATHeader::OBJECT_TYPE_BANNERS => BannerObject::class,
         DATHeader::OBJECT_TYPE_PATHS => PathObject::class,
         DATHeader::OBJECT_TYPE_PATH_ADDITIONS => null,
         DATHeader::OBJECT_TYPE_SCENERY_GROUP => SceneryGroupObject::class,
