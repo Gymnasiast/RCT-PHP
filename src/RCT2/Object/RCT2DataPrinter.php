@@ -43,6 +43,13 @@ class RCT2DataPrinter extends DatDataPrinter
                 Util::printLn("Removal price: {$object->removalPrice->asGBP()}");
                 Util::printLn("Attaches to: {$attachTo}");
                 break;
+            case PathAdditionObject::class:
+                $attachTo = $object->attachTo ? $object->attachTo->getAsOriginalId() : 'N/A';
+                Util::printLn("Draw type: {$object->drawType->name}");
+                Util::printLn("Cursor ID: {$object->cursorId->name}");
+                Util::printLn("Price: {$object->price->asGBP()}");
+                Util::printLn("Attaches to: {$attachTo}");
+                break;
             case ScenarioTextObject::class:
                 $isSixFlags = $object->isSixFlags ? 'yes' : 'no';
                 Util::printLn("Six Flags park: {$isSixFlags}");
