@@ -55,6 +55,13 @@ class RCT2DataPrinter extends DatDataPrinter
                 Util::printLn("Price: {$object->price->asGBP()}");
                 Util::printLn("Attaches to: {$attachTo}");
                 break;
+            case RideObject::class:
+                Util::printLn("Ride type 0: {$object->assocRide0?->name}");
+                Util::printLn("Ride type 1: {$object->assocRide1?->name}");
+                Util::printLn("Ride type 2: {$object->assocRide2?->name}");
+                Util::printLn("Cars per train: min {$object->minCarsPerTrain}, max {$object->maxCarsPerTrain}");
+                Util::printLn("Num ‘zero cars’: {$object->numZeroCars}");
+                break;
             case ScenarioTextObject::class:
                 $isSixFlags = $object->isSixFlags ? 'yes' : 'no';
                 Util::printLn("Six Flags park: {$isSixFlags}");

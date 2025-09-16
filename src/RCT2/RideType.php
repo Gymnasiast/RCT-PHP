@@ -96,4 +96,21 @@ enum RideType : int
     case MINE_RIDE = 88;
     case _59 = 89;
     case LIM_LAUNCHED_ROLLER_COASTER = 90;
+
+    public function isShopOrFacility(): bool
+    {
+        switch ($this)
+        {
+            case self::TOILETS:
+            case self::SHOP:
+            case self::DRINK_STALL:
+            case self::FOOD_STALL:
+            case self::INFORMATION_KIOSK:
+            case self::CASH_MACHINE:
+            case self::FIRST_AID:
+                return true;
+        }
+
+        return false;
+    }
 }
