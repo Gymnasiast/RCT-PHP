@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\Sawyer\ImageTable;
 
 use GdImage;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Util\RGB;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function array_fill;
@@ -75,21 +76,7 @@ final class ImageTable
                     $decoded = $this->readImage($currentEntry, $dataForThisImage);
                 }
 
-                $image = imagecreate($currentEntry->width, $currentEntry->height);
-                assert($image !== false);
-                // FIXME: Use a proper palette!
-                foreach (\RCTPHP\RCT1\TrackDesign\PALETTE as $index => $color)
-                {
-                    if ($index == 226)
-                    {
-                        $color = new RGB(0x37, 0x4b, 0x4b);
-                    }
-                    $id = imagecolorallocate($image, $color->r, $color->g, $color->b);
-                    if ($id !== $index)
-                    {
-                        throw new \Exception("Incorrect index for color {$index}!");
-                    }
-                }
+                $image = ImageHelper::allocatePalettedImage($currentEntry->width, $currentEntry->height);
 
                 for ($y = 0; $y < $currentEntry->height; $y++)
                 {

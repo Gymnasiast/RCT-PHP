@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use Cyndaron\BinaryHandler\BinaryReader;
+use GdImage;
 use RCTPHP\RCT2\Color;
 use RCTPHP\RCT2\RideType;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
@@ -12,8 +13,9 @@ use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\WithPreview;
 
-class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner
+class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
     public const MAX_CAR_TYPES = 4;
 
@@ -228,5 +230,17 @@ class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner
         $reader->seek(4);
 
         return $car;
+    }
+
+    public function getPreview(): GdImage
+    {
+        if ($this->assocRide0 !== null)
+            return $this->imageTable->gdImageData[0];
+        else if ($this->assocRide1 !== null)
+            return $this->imageTable->gdImageData[1];
+        else if ($this->assocRide2 !== null)
+            return $this->imageTable->gdImageData[2];
+
+        return $this->imageTable->gdImageData[0];
     }
 }

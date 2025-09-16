@@ -40,6 +40,7 @@ abstract class DatDataPrinter
         $this->printObjectSpecificData();
         $this->printStringTables();
         $this->printImageTable();
+        $this->printPreview();
 
         if ($this->object instanceof ObjectWithOpenRCT2Counterpart)
         {
@@ -98,5 +99,25 @@ abstract class DatDataPrinter
             $filename = "{$exportDir2}/{$index}.png";
             imagepng($image, $filename);
         }
+    }
+
+    public function printPreview(): void
+    {
+        if (!$this->isDebug || !($this->object instanceof WithPreview))
+        {
+            return;
+        }
+
+        $gdData = $this->object->getPreview();
+
+        $name = trim($this->header->name);
+        $exportDir = __DIR__ . "/../../../export/{$name}";
+        if (!file_exists($exportDir))
+        {
+            mkdir($exportDir, recursive: true);
+        }
+
+        $filename = "{$exportDir}/preview.png";
+        imagepng($gdData, $filename);
     }
 }

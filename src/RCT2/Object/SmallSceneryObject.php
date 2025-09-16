@@ -3,22 +3,28 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use GdImage;
 use RCTPHP\OpenRCT2\Object\BaseObject;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart
+class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart, WithPreview
 {
     use DATFromFile;
     use StringTableDecoder;
+
+    public const SMALL_SCENERY_FLAG_FULL_TILE = (1 << 0);
+    public const SMALL_SCENERY_FLAG_VOFFSET_CENTER = (1 << 1);
 
     public readonly DATHeader $header;
 
@@ -98,5 +104,22 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
         $ret->images = $this->imageTable;
         $ret->strings = ['name' => $this->stringTable['name']->toArray()];
         return $ret;
+    }
+
+    public function getPreview(): GdImage
+    {
+        $preview = ImageHelper::allocatePalettedImage(112, 112);
+
+        $image = $this->imageTable->gdImageData[0];
+        $y = 56 + ($this->height->internal / 2);
+        $y = min($y, $this->height->internal - 16);
+        if (($this->flags & self::SMALL_SCENERY_FLAG_FULL_TILE) && ($this->flags & self::SMALL_SCENERY_FLAG_VOFFSET_CENTER))
+        {
+            $y -= 12;
+        }
+
+        ImageHelper::copyImage($image, $preview, 56, $y);
+
+        return $preview;
     }
 }

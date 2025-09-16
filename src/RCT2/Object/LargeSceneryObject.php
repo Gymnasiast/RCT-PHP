@@ -3,18 +3,21 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT2\Object;
 
+use GdImage;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Sawyer\SawyerPrice;
 use RCTPHP\Sawyer\SawyerTileHeight;
 use Cyndaron\BinaryHandler\BinaryReader;
 use function strlen;
 
-class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner
+class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -125,5 +128,16 @@ class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
         }
 
         return $tiles;
+    }
+
+    public function getPreview(): GdImage
+    {
+        $preview = ImageHelper::allocatePalettedImage(112, 112);
+
+        $image = $this->imageTable->gdImageData[0];
+
+        ImageHelper::copyImage($image, $preview, 56, 56 - 39);
+
+        return $preview;
     }
 }

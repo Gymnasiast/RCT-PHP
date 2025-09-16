@@ -4,15 +4,18 @@ declare(strict_types=1);
 namespace RCTPHP\RCT2\Object;
 
 use Cyndaron\BinaryHandler\BinaryReader;
+use GdImage;
+use RCTPHP\Sawyer\ImageHelper;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Sawyer\Object\DATFromFile;
 use RCTPHP\Sawyer\Object\ImageTableOwner;
 use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
+use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Sawyer\SawyerPrice;
 
-class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner
+class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
     use DATFromFile;
     use StringTableDecoder;
@@ -52,5 +55,19 @@ class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner
 
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
 
+    }
+
+    public function getPreview(): GdImage
+    {
+        $preview = ImageHelper::allocatePalettedImage(112, 112);
+
+        // TODO: implement remap support
+        $image0 = $this->imageTable->gdImageData[0];
+        $image1 = $this->imageTable->gdImageData[1];
+
+        ImageHelper::copyImage($image0, $preview, 56 - 12, 56 + 8);
+        ImageHelper::copyImage($image1, $preview, 56 - 12, 56 + 8);
+
+        return $preview;
     }
 }
