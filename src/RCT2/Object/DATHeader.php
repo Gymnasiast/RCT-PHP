@@ -14,7 +14,7 @@ final class DATHeader extends \RCTPHP\Sawyer\Object\DATHeader
     public const OBJECT_TYPE_WALLS = 3;
     public const OBJECT_TYPE_BANNERS = 4;
     public const OBJECT_TYPE_PATHS = 5;
-    public const OBJECT_TYPE_PATH_BITS = 6;
+    public const OBJECT_TYPE_PATH_ADDITIONS = 6;
     public const OBJECT_TYPE_SCENERY_GROUP = 7;
     public const OBJECT_TYPE_PARK_ENTRANCE = 8;
     public const OBJECT_TYPE_WATER = 9;
