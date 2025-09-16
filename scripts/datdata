@@ -7,7 +7,7 @@ use RCTPHP\RCT2\Object\RCT2DataPrinter;
 
 if ($argc < 2)
 {
-    echo "No filename specified!\n";
+    echo "datdata <filename> <isLocomotion> <isDebug>\n";
     exit(1);
 }
 
