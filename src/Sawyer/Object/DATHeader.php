@@ -26,7 +26,7 @@ abstract class DATHeader implements ReadableInterface
 
     private function isNull(): bool
     {
-        return $this->flags === 0xFFFFFFFF;
+        return ($this->flags & 0xFF) === 0xFF;
     }
 
     final public static function fromReader(ReaderInterface&IntegerReaderInterface $reader): static
