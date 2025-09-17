@@ -129,6 +129,7 @@ class SceneryGroupObject implements RCT2Object, StringTableOwner, ImageTableOwne
     public function getPreview(): GdImage
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
+        ImageHelper::setPrimaryRemap($preview, 141);
 
         ImageHelper::copyImageTableEntry($this->imageTable, 1, $preview, 56 - 15, 56 - 14);
 

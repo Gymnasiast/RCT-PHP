@@ -109,6 +109,7 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     public function getPreview(): GdImage
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
+        ImageHelper::setPrimaryRemap($preview, 57);
 
         $y = 56 + (int)($this->height->internal / 2);
 //        $y = min($y, $this->height->internal - 16);

@@ -39,19 +39,20 @@ final class ImageHelper
         $srcWidth = imagesx($src);
         $srcHeight = imagesy($src);
 
-//        for ($y = 0; $y < $srcHeight; $y++)
-//        {
-//            for ($x = 0; $x < $srcWidth; $x++)
-//            {
-//                $colorIndex = imagecolorat($src, $x, $y);
-//                if ($colorIndex !== 0)
-//                {
-//                    //imagecolorset($dst, )
-//                }
-//            }
-//        }
+        // Needed to copy the palette index.
+        for ($y = 0; $y < $srcHeight; $y++)
+        {
+            for ($x = 0; $x < $srcWidth; $x++)
+            {
+                $colorIndex = imagecolorat($src, $x, $y);
+                if ($colorIndex !== 0)
+                {
+                    imagesetpixel($dst, $destX + $x, $destY + $y, $colorIndex);
+                }
+            }
+        }
 
-        imagecopy($dst, $src, $destX, $destY, 0, 0, $srcWidth, $srcHeight);
+        //imagecopy($dst, $src, $destX, $destY, 0, 0, $srcWidth, $srcHeight);
     }
 
     public static function copyImageTableEntry(ImageTable $imageTable, int $index, GdImage $dst, int $destX, int $destY): void
@@ -86,6 +87,15 @@ final class ImageHelper
             imagecolorset($image, WaterObject::WAVE_START + $j, $rgb->r, $rgb->g, $rgb->b);
             $rgb = $colorsSparkles[$subIndex];
             imagecolorset($image, WaterObject::SPARKLE_START + $j, $rgb->r, $rgb->g, $rgb->b);
+        }
+    }
+
+    public static function setPrimaryRemap(GdImage $image, int $colorIndexStart): void
+    {
+        for ($offset = 0; $offset < 12; $offset++)
+        {
+            $newColorInfo = imagecolorsforindex($image, $colorIndexStart + $offset);
+            imagecolorset($image, 243 + $offset, $newColorInfo['red'], $newColorInfo['green'], $newColorInfo['blue']);
         }
     }
 }
