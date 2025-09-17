@@ -50,13 +50,6 @@ class LocomotionDataPrinter extends DatDataPrinter
 
                 Util::printLn('Tunnel: ' . ($object->tunnel ? $object->tunnel->name : 'N/A'));
                 break;
-            case WaterObject::class:
-                var_dump($object->imageTable);
-                foreach ($object->imageTable->paletteParts as $paletteParts)
-                {
-                    echo "Palette part at index {$paletteParts->index} with {$paletteParts->numColors} colors.\n";
-                }
-                break;
         }
     }
 }

@@ -198,18 +198,15 @@ final class TD6
     public static function createFromFile(string $filename): self
     {
         $reader = BinaryReader::fromFile($filename);
-        return self::createFromCompressedStream($reader, basename($filename));
+        return self::createFromCompressedStream($reader);
     }
 
-    public static function createFromCompressedStream(BinaryReader $stream, $filename): self
+    public static function createFromCompressedStream(BinaryReader $stream): self
     {
         $size = $stream->getSize();
         // Skip the checksum at the end
         $undecoded = $stream->readBytes($size - 4);
         $decoded = (new RLEString($undecoded))->decode();
-        echo 'Decoded length: ' . strlen($decoded) . PHP_EOL;
-        //file_put_contents('/home/michael/td6-' . $filename, $decoded);
-        die();
 
         $reader = BinaryReader::fromString($decoded);
         return new self($reader);
