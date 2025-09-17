@@ -90,12 +90,27 @@ final class ImageHelper
         }
     }
 
-    public static function setPrimaryRemap(GdImage $image, int $colorIndexStart): void
+    private static function setRemap(GdImage $image, int $remapStart, int $colorIndexStart)
     {
         for ($offset = 0; $offset < 12; $offset++)
         {
             $newColorInfo = imagecolorsforindex($image, $colorIndexStart + $offset);
-            imagecolorset($image, 243 + $offset, $newColorInfo['red'], $newColorInfo['green'], $newColorInfo['blue']);
+            imagecolorset($image, $remapStart + $offset, $newColorInfo['red'], $newColorInfo['green'], $newColorInfo['blue']);
         }
+    }
+
+    public static function setPrimaryRemap(GdImage $image, int $colorIndexStart): void
+    {
+        self::setRemap($image, 243, $colorIndexStart);
+    }
+
+    public static function setSecondaryRemap(GdImage $image, int $colorIndexStart): void
+    {
+        self::setRemap($image, 202, $colorIndexStart);
+    }
+
+    public static function setTertiaryRemap(GdImage $image, int $colorIndexStart): void
+    {
+        self::setRemap($image, 46, $colorIndexStart);
     }
 }

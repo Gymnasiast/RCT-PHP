@@ -133,7 +133,9 @@ class LargeSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
     public function getPreview(): GdImage
     {
         $preview = ImageHelper::allocatePalettedImage(112, 112);
+        // RCT2 would always remap large scenery, regardless of flags
         ImageHelper::setPrimaryRemap($preview, 57);
+        ImageHelper::setSecondaryRemap($preview, 45);
 
         ImageHelper::copyImageTableEntry($this->imageTable, 0, $preview, 56, 56 - 39);
 
