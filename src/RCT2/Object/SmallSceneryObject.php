@@ -66,6 +66,8 @@ class SmallSceneryObject implements RCT2Object, StringTableOwner, ImageTableOwne
         $this->animationMask = $reader->readUint16();
         $this->numFrames = $reader->readUint16();
 
+        $reader->seek(2);
+
         $this->readStringTable($reader, 'name');
 
         $attachTo = DATHeader::tryFromReader($reader);
