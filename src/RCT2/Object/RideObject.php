@@ -14,6 +14,8 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\WithPreview;
+use function assert;
+use function strlen;
 
 class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
@@ -196,7 +198,7 @@ class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithP
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
     }
 
-    function readCar(BinaryReader $reader): RideCarObject
+    public function readCar(BinaryReader $reader): RideCarObject
     {
         $car = new RideCarObject();
         $car->tabRotationMask = $reader->readUint16();
@@ -235,11 +237,17 @@ class RideObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithP
     public function getPreview(): GdImage
     {
         if ($this->assocRide0 !== null)
+        {
             return $this->imageTable->gdImageData[0];
-        else if ($this->assocRide1 !== null)
+        }
+        elseif ($this->assocRide1 !== null)
+        {
             return $this->imageTable->gdImageData[1];
-        else if ($this->assocRide2 !== null)
+        }
+        elseif ($this->assocRide2 !== null)
+        {
             return $this->imageTable->gdImageData[2];
+        }
 
         return $this->imageTable->gdImageData[0];
     }

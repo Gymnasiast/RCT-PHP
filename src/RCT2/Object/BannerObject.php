@@ -14,6 +14,7 @@ use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Sawyer\SawyerPrice;
+use function strlen;
 
 class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
@@ -54,7 +55,6 @@ class BannerObject implements RCT2Object, StringTableOwner, ImageTableOwner, Wit
         $this->attachTo = ($attachTo !== null && !$attachTo->isBlank()) ? $attachTo : null;
 
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
-
     }
 
     public function getPreview(): GdImage

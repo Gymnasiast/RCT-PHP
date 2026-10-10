@@ -14,6 +14,7 @@ use RCTPHP\Sawyer\Object\StringTable;
 use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\WithPreview;
+use function strlen;
 
 class PathObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {
@@ -48,7 +49,6 @@ class PathObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithP
 
         $this->readStringTable($reader, 'name');
         $this->imageTable = new ImageTable($reader->readBytes(strlen($decoded) - $reader->getPosition()));
-
     }
 
     public function getPreview(): GdImage

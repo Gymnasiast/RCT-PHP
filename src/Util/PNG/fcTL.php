@@ -7,6 +7,7 @@ use Cyndaron\BinaryHandler\BinaryWriter;
 use function fopen;
 use function fread;
 use function rewind;
+use function assert;
 
 final class fcTL extends Chunk
 {

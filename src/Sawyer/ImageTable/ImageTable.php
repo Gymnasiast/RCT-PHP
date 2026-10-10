@@ -19,6 +19,7 @@ use function substr;
 use function ord;
 use function assert;
 use function mkdir;
+use function count;
 
 require_once __DIR__ . '/../../RCT1/TrackDesign/Palette.php';
 

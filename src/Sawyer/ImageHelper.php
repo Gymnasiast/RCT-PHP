@@ -8,6 +8,16 @@ use RCTPHP\OpenRCT2\Object\WaterObject;
 use RCTPHP\OpenRCT2\Object\WaterPaletteGroup;
 use RCTPHP\Sawyer\ImageTable\ImageTable;
 use RCTPHP\Util\RGB;
+use function imagecreate;
+use function assert;
+use function imagecolorallocate;
+use function imagecolortransparent;
+use function imagesx;
+use function imagesy;
+use function imagecolorat;
+use function imagesetpixel;
+use function imagecolorsforindex;
+use function imagecolorset;
 
 final class ImageHelper
 {

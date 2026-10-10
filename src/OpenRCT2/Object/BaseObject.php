@@ -5,6 +5,7 @@ namespace RCTPHP\OpenRCT2\Object;
 
 use RCTPHP\RCT2\Object\DATHeader;
 use RCTPHP\RCT2\Object\SourceGame as RCT2SourceGame;
+use function strtolower;
 
 abstract class BaseObject
 {
@@ -23,7 +24,7 @@ abstract class BaseObject
     {
         $this->originalId = $header->getAsOriginalId();
         $rct2SourceGame = $header->getSourceGame();
-        $this->authors = match($rct2SourceGame)
+        $this->authors = match ($rct2SourceGame)
         {
             RCT2SourceGame::RCT2 => ['Chris Sawyer', 'Simon Foster'],
             RCT2SourceGame::WW => ['Frontier Studios'],

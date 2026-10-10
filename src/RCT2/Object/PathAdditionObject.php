@@ -17,6 +17,7 @@ use RCTPHP\Sawyer\Object\StringTableDecoder;
 use RCTPHP\Sawyer\Object\StringTableOwner;
 use RCTPHP\Sawyer\Object\WithPreview;
 use RCTPHP\Sawyer\SawyerPrice;
+use function strlen;
 
 class PathAdditionObject implements RCT2Object, StringTableOwner, ImageTableOwner, WithPreview
 {

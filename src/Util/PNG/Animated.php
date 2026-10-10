@@ -7,6 +7,8 @@ use function count;
 use function unpack;
 use function substr;
 use function pack;
+use function assert;
+use function is_array;
 
 final class Animated
 {
@@ -51,8 +53,8 @@ final class Animated
             $this->chunks[] = $plte;
         }
 
-        $width = $this->getUint32BE(substr($ihdr->data, 0, 4));;
-        $height = $this->getUint32BE(substr($ihdr->data, 4, 4));;
+        $width = $this->getUint32BE(substr($ihdr->data, 0, 4));
+        $height = $this->getUint32BE(substr($ihdr->data, 4, 4));
 
         $sequenceNum = 0;
         foreach ($files as $fileNum => $file)

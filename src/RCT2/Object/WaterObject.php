@@ -24,6 +24,7 @@ use function json_encode;
 use function strlen;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
+use function imagecreatefrompng;
 
 class WaterObject implements RCT2Object, StringTableOwner, ImageTableOwner, ObjectWithOpenRCT2Counterpart, WithPreview
 {
