@@ -5,8 +5,11 @@ namespace RCTPHP\RCT2\S6;
 
 use Cyndaron\BinaryHandler\BinaryReader;
 use RCTPHP\RCT12\Research\List\ResearchLists;
+use RCTPHP\RCT2\Object\DATHeader;
+use RCTPHP\RCT2\Research\Hydrator;
 use RCTPHP\RCT2\S6\Chunks\AvailableItemsChunk;
 use RCTPHP\RCT2\S6\Chunks\Chunk;
+use RCTPHP\RCT2\S6\Chunks\ChunkHeader;
 use RCTPHP\RCT2\S6\Chunks\HeaderChunk;
 use RCTPHP\RCT2\S6\Chunks\TileElementsChunk;
 use RCTPHP\RCT2\S6\Chunks\TimeChunk;
@@ -27,20 +30,20 @@ final class S6
     public static function createFromFilename(string $filename): self
     {
         $isScenario = str_ends_with(strtolower($filename), '.sc6');
-        $reader = \Cyndaron\BinaryHandler\BinaryReader::fromFile($filename);
+        $reader = BinaryReader::fromFile($filename);
 
         return self::createFromReader($reader, $isScenario);
     }
 
     private static function readSV6(BinaryReader $reader): self
     {
-        $headerChunk = \RCTPHP\RCT2\S6\Chunks\HeaderChunk::fromReader($reader);
+        $headerChunk = HeaderChunk::fromReader($reader);
 
         // Skip past all of them
         for ($i = 0; $i < $headerChunk->numPackedObjects; $i++)
         {
-            $datHeader = \RCTPHP\RCT2\Object\DATHeader::tryFromReader($reader);
-            $chunkHeader = \RCTPHP\RCT2\S6\Chunks\ChunkHeader::createFromReader($reader);
+            $datHeader = DATHeader::tryFromReader($reader);
+            $chunkHeader = ChunkHeader::createFromReader($reader);
             $reader->seek($chunkHeader->length);
         }
 
@@ -51,27 +54,27 @@ final class S6
 
         $chunk6 = Chunk::createFromReader($reader);
 
-        $secondReader = \Cyndaron\BinaryHandler\BinaryReader::fromString($chunk6->decodedContents);
+        $secondReader = BinaryReader::fromString($chunk6->decodedContents);
         $secondReader->moveTo(0x27248C);
 
-        $hydrator = new \RCTPHP\RCT2\Research\Hydrator($secondReader, 500);
+        $hydrator = new Hydrator($secondReader, 500);
         $entries = $hydrator->readAllEntries();
-        $list = \RCTPHP\RCT12\Research\List\ResearchLists::createFromResearchItemList($entries);
+        $list = ResearchLists::createFromResearchItemList($entries);
 
         return new self($headerChunk, $availableItemsChunk, $list);
     }
 
     private static function readSC6(BinaryReader $reader): self
     {
-        $headerChunk = \RCTPHP\RCT2\S6\Chunks\HeaderChunk::fromReader($reader);
+        $headerChunk = HeaderChunk::fromReader($reader);
         // Read info chunk
         $chunk1 = Chunk::createFromReader($reader);
 
         // Skip past all of them
         for ($i = 0; $i < $headerChunk->numPackedObjects; $i++)
         {
-            $datHeader = \RCTPHP\RCT2\Object\DATHeader::tryFromReader($reader);
-            $chunkHeader = \RCTPHP\RCT2\S6\Chunks\ChunkHeader::createFromReader($reader);
+            $datHeader = DATHeader::tryFromReader($reader);
+            $chunkHeader = ChunkHeader::createFromReader($reader);
             $reader->seek($chunkHeader->length);
         }
 
@@ -89,12 +92,12 @@ final class S6
         $chunk12 = Chunk::createFromReader($reader);
         $chunk13 = Chunk::createFromReader($reader);
 
-        $secondReader = \Cyndaron\BinaryHandler\BinaryReader::fromString($chunk13->decodedContents);
+        $secondReader = BinaryReader::fromString($chunk13->decodedContents);
         $secondReader->moveTo(0x104);
 
-        $hydrator = new \RCTPHP\RCT2\Research\Hydrator($secondReader, 500);
+        $hydrator = new Hydrator($secondReader, 500);
         $entries = $hydrator->readAllEntries();
-        $list = \RCTPHP\RCT12\Research\List\ResearchLists::createFromResearchItemList($entries);
+        $list = ResearchLists::createFromResearchItemList($entries);
 
         return new self($headerChunk, $availableItemsChunk, $list);
     }
