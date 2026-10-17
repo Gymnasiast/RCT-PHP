@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace RCTPHP\RCT1\S4;
 
+use Cyndaron\BinaryHandler\BinaryReader;
 use Cyndaron\BinaryHandler\Reader\Interfaces\IntegerReaderInterface;
 use Cyndaron\BinaryHandler\Reader\Interfaces\ReaderInterface;
+use RCTPHP\RCT1\GameVersion;
+use RCTPHP\RCT1\Research\Hydrator;
 use RCTPHP\RCT12\Research\List\ResearchLists;
+use RCTPHP\Sawyer\RLE\RLEString;
 use RCTPHP\Util;
 use RCTPHP\Util\Reader\ReadableInterface;
 use RCTPHP\Util\Reader\TryFromReaderTrait;
@@ -14,12 +18,15 @@ use function min;
 use function chr;
 use function ord;
 use function abs;
+use function in_array;
 
 final class S4 implements ReadableInterface
 {
     use TryFromReaderTrait;
 
     public function __construct(
+        public readonly GameVersion $edition,
+        public readonly int $scenarioIndex,
         public readonly ResearchLists $researchLists,
     ) {
     }
@@ -79,20 +86,30 @@ final class S4 implements ReadableInterface
         $gameVersion = abs($difference);
         $isScenario = $difference < 0;
 
-        $isAA = $gameVersion >= 110000 && $gameVersion < 120000;
-        $isLL = $gameVersion >= 120000 || $gameVersion === 0;
+        $edition = GameVersion::BASE_GAME;
+        if ($gameVersion >= 110000 && $gameVersion < 120000)
+        {
+            $edition = GameVersion::ADDED_ATTRACTIONS;
+        }
+        elseif ($gameVersion >= 120000 || $gameVersion === 0)
+        {
+            $edition = GameVersion::LOOPY_LANDSCAPES;
+        }
 
-        $rleString = new \RCTPHP\Sawyer\RLE\RLEString($rle);
+        $rleString = new RLEString($rle);
         $unRLE = $rleString->decode();
 
-        if (($isAA || $isLL) && $isScenario)
+        if (in_array($edition, [GameVersion::ADDED_ATTRACTIONS, GameVersion::LOOPY_LANDSCAPES], true) && $isScenario)
         {
             $unRLE = self::decodeAALLSC4($unRLE);
         }
 
-        $unRLEReader = \Cyndaron\BinaryHandler\BinaryReader::fromString($unRLE);
+        $unRLEReader = BinaryReader::fromString($unRLE);
 
-        if (!$isLL)
+        $unRLEReader->moveTo(2065234);
+        $scenarioIndex = $unRLEReader->readUint16();
+
+        if ($edition != GameVersion::LOOPY_LANDSCAPES)
         {
             $unRLEReader->moveTo(0x199150);
             $tableSize = 200;
@@ -103,10 +120,15 @@ final class S4 implements ReadableInterface
             $tableSize = 300;// 180;
         }
 
-        $hydrator = new \RCTPHP\RCT1\Research\Hydrator($unRLEReader, $tableSize);
+        $hydrator = new Hydrator($unRLEReader, $tableSize);
         $entries = $hydrator->readAllEntries();
         $researchLists = ResearchLists::createFromResearchItemList($entries);
 
-        return new self($researchLists);
+        return new self($edition, $scenarioIndex, $researchLists);
+    }
+
+    public function getScenarioIndexIfKnown(): ScenarioIndex|null
+    {
+        return ScenarioIndex::tryFrom($this->scenarioIndex);
     }
 }
