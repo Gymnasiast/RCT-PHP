@@ -156,12 +156,17 @@ final class TP4File
      * @throws RuntimeException If the file cannot be written.
      * @return void
      */
-    public function writeImage(string $filename): void
+    public function writePNG(string $filename): void
     {
         $result = imagepng($this->image, $filename);
         if (!$result)
         {
             throw new RuntimeException("Could not write output image to {$filename}!");
         }
+    }
+
+    public function getGdImage(): GdImage
+    {
+        return $this->image;
     }
 }

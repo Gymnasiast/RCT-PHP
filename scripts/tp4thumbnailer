@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Cyndaron\BinaryHandler\BinaryReader;
+use RCTPHP\RCT1\TrackDesign\TP4File;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$inputFile = $argv[1] ?? '';
+if (!file_exists($inputFile))
+{
+    echo "Input file does not exist!\n";
+    exit(1);
+}
+
+$outputFile = $argv[2] ?? '';
+if (empty($outputFile))
+{
+    echo "No output file specified!\n";
+    exit(2);
+}
+
+$reader = BinaryReader::fromFile($inputFile);
+$tp4 = TP4File::createFromFile($reader);
+$tp4->writePNG($outputFile);

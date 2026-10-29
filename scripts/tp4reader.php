@@ -15,4 +15,4 @@ $outputFilename = $argv[2];
 
 $reader = \Cyndaron\BinaryHandler\BinaryReader::fromFile($inputFilename);
 $tp4File = TP4File::createFromFile($reader);
-$tp4File->writeImage($outputFilename);
+$tp4File->writePNG($outputFilename);
