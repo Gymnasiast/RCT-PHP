@@ -26,7 +26,6 @@ final class ObjectSerializer
     public function serializeToArray(): array
     {
         $copy = clone $this->object;
-        unset($copy->images);
         $firstPass = json_encode($copy, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         /** @var array<string, mixed> $vars */
         $vars = json_decode($firstPass, true, 512, JSON_THROW_ON_ERROR);
